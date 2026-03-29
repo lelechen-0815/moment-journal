@@ -40,7 +40,8 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .cat-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #E5E7EB;color:#6B7280;background:#fff;transition:all .18s;position:relative;}
 .cat-chip:hover{border-color:#6EE7B7;color:#059669;}
 .cat-chip.active{background:#ECFDF5;border-color:#6EE7B7;color:#059669;}
-.cat-edit-btn{font-size:11px;margin-left:2px;opacity:.5;}
+.cat-chip.custom{user-select:none;-webkit-user-select:none;}
+.cat-chip.custom.pressing{opacity:.6;transform:scale(0.95);}
 
 /* ── Custom cat section ── */
 .custom-cats-label{font-size:11px;color:#9CA3AF;padding:12px 18px 6px;font-weight:500;letter-spacing:.04em;}
@@ -267,13 +268,19 @@ function renderHomeCats(){
   // 系统分类
   document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>`
     <div class="cat-chip${activeCat===c.id?' active':''}" onclick="setActiveCat('${c.id}')">
-      <span style="font-size:14px">${c.emoji}</span>${c.name}
+      ${c.emoji?'<span style="font-size:14px">'+c.emoji+'</span>':''}${c.name}
     </div>`).join('');
   // 自定义分类（可编辑）
   document.getElementById('home-custom-cats').innerHTML=customCats.length?customCats.map(c=>`
-    <div class="cat-chip${activeCat===c.id?' active':''}" onclick="setActiveCat('${c.id}')">
-      <span style="font-size:14px">${c.emoji}</span>${c.name}
-      <span class="cat-edit-btn" onclick="event.stopPropagation();openCatModal('${c.id}')">✏️</span>
+    <div class="cat-chip custom${activeCat===c.id?' active':''}"
+      onclick="setActiveCat('${c.id}')"
+      onmousedown="startPress('${c.id}',this)"
+      onmouseup="endPress()"
+      onmouseleave="endPress()"
+      ontouchstart="startPress('${c.id}',this)"
+      ontouchend="endPress()"
+      ontouchcancel="endPress()">
+      ${c.emoji?'<span style="font-size:14px">'+c.emoji+'</span>':''}${c.name}
     </div>`).join(''):'';
   // 写记录的分类选择器
   const sel=document.getElementById('write-cat-sel');
@@ -284,7 +291,7 @@ function renderHomeCats(){
 function renderHistCats(){
   document.getElementById('hist-cats').innerHTML=allCats().map(c=>`
     <div class="cat-chip${histCat===c.id?' active':''}" onclick="setHistCat('${c.id}')">
-      <span style="font-size:14px">${c.emoji}</span>${c.name}
+      ${c.emoji?'<span style="font-size:14px">'+c.emoji+'</span>':''}${c.name}
     </div>`).join('');
 }
 
@@ -307,18 +314,42 @@ function addCat(){
   if(!name)return;
   if(allCats().find(c=>c.name===name)){toast('分类名称已存在');inp.value='';return;}
   const id='cat_'+Date.now();
-  const emoji=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+  
   const pal=[
     {color:'#059669',bg:'#ECFDF5'},{color:'#B45309',bg:'#FFFBEB'},
     {color:'#B91C1C',bg:'#FEF2F2'},{color:'#1D4ED8',bg:'#EFF6FF'},
     {color:'#7C3AED',bg:'#F5F3FF'},{color:'#92400E',bg:'#FFFBEB'},
   ];
   const p=pal[customCats.length%pal.length];
-  customCats.push({id,name,emoji,...p});
+  customCats.push({id,name,emoji:"",color:p.color,bg:p.bg});
   sv('mj_custom_cats',customCats);
   inp.value='';
   renderHomeCats();renderHistCats();
-  toast('已添加分类 '+emoji);
+  if(!hintShown){
+    setTimeout(()=>toast('💡 长按分类标签可以编辑或删除'),400);
+    hintShown=true;sv('mj_hint_shown',true);
+  } else {
+    toast('已添加分类');
+  }
+}
+
+// ── Long press ──
+let pressTimer=null;
+let pressEl=null;
+let hintShown=ld('mj_hint_shown',false);
+
+function startPress(id,el){
+  pressEl=el;
+  el.classList.add('pressing');
+  pressTimer=setTimeout(()=>{
+    el.classList.remove('pressing');
+    navigator.vibrate&&navigator.vibrate(30);
+    openCatModal(id);
+  },600);
+}
+function endPress(){
+  if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}
+  if(pressEl){pressEl.classList.remove('pressing');pressEl=null;}
 }
 
 // ── Cat modal ──
