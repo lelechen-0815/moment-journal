@@ -13,38 +13,31 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
 html,body{height:100%;background:#fff;}
 body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
-
 .app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column;}
 
-/* ── Tab bar ── */
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #F3F4F6;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 8px;cursor:pointer;transition:all .15s;gap:3px;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 8px;cursor:pointer;gap:3px;}
 .tab-icon{font-size:22px;line-height:1;}
 .tab-label{font-size:11px;color:#9CA3AF;font-weight:500;}
 .tab.active .tab-label{color:#34D399;}
 
-/* ── Pages ── */
 .page{display:none;flex:1;overflow-y:auto;padding-bottom:70px;}
 .page.active{display:block;}
 
-/* ── Topbar ── */
 .topbar{padding:52px 18px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;border-bottom:1px solid #F3F4F6;}
 .topbar-brand{font-size:22px;font-weight:700;color:#1a1a1a;letter-spacing:-.5px;}
 .topbar-brand span{color:#34D399;}
 .topbar-sub{font-size:12px;color:#9CA3AF;margin-top:2px;}
 .topbar-count{background:#ECFDF5;color:#059669;font-size:12px;font-weight:600;padding:4px 11px;border-radius:20px;white-space:nowrap;}
 
-/* ── Cats ── */
 .cats-scroll{padding:12px 18px 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
 .cats-scroll::-webkit-scrollbar{display:none;}
-.cat-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #E5E7EB;color:#6B7280;background:#fff;transition:all .18s;position:relative;}
+.cat-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #E5E7EB;color:#6B7280;background:#fff;transition:all .18s;user-select:none;-webkit-user-select:none;}
 .cat-chip:hover{border-color:#6EE7B7;color:#059669;}
 .cat-chip.active{background:#ECFDF5;border-color:#6EE7B7;color:#059669;}
-.cat-chip.custom{user-select:none;-webkit-user-select:none;}
 .cat-chip.custom.pressing{opacity:.6;transform:scale(0.95);}
 
-/* ── Custom cat section ── */
-.custom-cats-label{font-size:11px;color:#9CA3AF;padding:12px 18px 6px;font-weight:500;letter-spacing:.04em;}
+.custom-cats-label{font-size:11px;color:#9CA3AF;padding:12px 18px 4px;font-weight:500;letter-spacing:.04em;}
 .add-cat-wrap{padding:4px 18px 12px;display:flex;gap:8px;}
 .add-cat-input{flex:1;height:38px;padding:0 14px;border:1.5px solid #E5E7EB;border-radius:18px;font-size:13px;background:#fff;color:#1a1a1a;outline:none;transition:border-color .15s;}
 .add-cat-input:focus{border-color:#34D399;}
@@ -54,7 +47,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 
 .divider{height:1px;background:#F3F4F6;margin:4px 18px 12px;}
 
-/* ── Write card ── */
 .write-card{margin:0 18px 16px;background:#fff;border-radius:20px;border:1.5px solid #E5E7EB;padding:16px;}
 .write-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .write-avatar{width:36px;height:36px;border-radius:50%;background:#ECFDF5;border:1.5px solid #6EE7B7;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
@@ -81,30 +73,27 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .send-btn:active{transform:scale(0.97);}
 .rec-timer{font-size:12px;color:#B45309;font-weight:600;}
 
-/* ── History page ── */
-.hist-topbar{padding:52px 18px 12px;position:sticky;top:0;background:#fff;z-index:10;border-bottom:1px solid #F3F4F6;}
+.hist-topbar{padding:52px 18px 0;background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid #F3F4F6;}
 .hist-title{font-size:22px;font-weight:700;color:#1a1a1a;}
 .hist-title span{color:#34D399;}
-.hist-cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:12px 0 4px;}
-.hist-cats::-webkit-scrollbar{display:none;}
 
-.section-head{display:flex;align-items:center;justify-content:space-between;padding:8px 18px 10px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 8px;}
 .section-label{font-size:13px;font-weight:600;color:#374151;}
 .section-count{font-size:12px;color:#9CA3AF;}
 
-/* ── Entry cards ── */
 .entries{padding:0 18px 32px;display:flex;flex-direction:column;gap:10px;}
-.entry-card{background:#fff;border:1.5px solid #F3F4F6;border-radius:18px;padding:14px 16px;transition:all .18s;}
-.entry-card:hover{border-color:#6EE7B7;}
-.entry-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.entry-card{background:#fff;border:1.5px solid #F3F4F6;border-radius:18px;padding:14px 16px;transition:border-color .18s;}
+.entry-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .entry-badge{display:flex;align-items:center;gap:4px;font-size:12px;padding:3px 10px;border-radius:10px;font-weight:600;}
-.entry-meta{display:flex;align-items:center;gap:4px;}
+.entry-right{display:flex;align-items:center;gap:8px;}
 .entry-time{font-size:12px;color:#9CA3AF;}
-.entry-actions{display:flex;gap:2px;}
-.edit-btn{font-size:12px;color:#D1D5DB;background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:6px;transition:all .15s;}
-.edit-btn:hover{color:#34D399;background:#ECFDF5;}
-.del-btn{font-size:12px;color:#E5E7EB;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .15s;}
-.del-btn:hover{color:#EF4444;background:#FEF2F2;}
+.more-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:none;background:none;cursor:pointer;color:#C4B5FD;font-size:16px;font-weight:700;letter-spacing:1px;line-height:1;transition:all .15s;position:relative;}
+.more-btn:hover{background:#F3F4F6;color:#374151;}
+.dropdown{position:absolute;top:34px;right:0;background:#fff;border:1.5px solid #E5E7EB;border-radius:14px;padding:6px;min-width:110px;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+.dropdown-item{display:flex;align-items:center;padding:9px 14px;border-radius:10px;font-size:14px;cursor:pointer;border:none;background:none;width:100%;text-align:left;color:#374151;transition:background .12s;}
+.dropdown-item:hover{background:#F3F4F6;}
+.dropdown-item.danger{color:#EF4444;}
+.dropdown-item.danger:hover{background:#FEF2F2;}
 .entry-text{font-size:15px;color:#374151;line-height:1.7;word-break:break-all;cursor:pointer;}
 .entry-text.clamped{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 .expand-hint{font-size:12px;color:#34D399;margin-top:5px;font-weight:500;cursor:pointer;}
@@ -112,17 +101,11 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .entry-img{width:80px;height:80px;border-radius:10px;object-fit:cover;border:1.5px solid #F3F4F6;}
 .entry-audio{margin-top:8px;}
 .entry-audio audio{width:100%;height:32px;}
-.entry-footer{display:flex;align-items:center;justify-content:flex-end;margin-top:8px;padding-top:8px;border-top:1px solid #F9FAFB;}
-.like-btn{display:flex;align-items:center;gap:4px;font-size:13px;color:#D1D5DB;background:none;border:none;cursor:pointer;padding:4px 10px;border-radius:8px;transition:all .15s;}
-.like-btn:hover,.like-btn.liked{color:#F472B6;}
+.edit-area{width:100%;border:1.5px solid #34D399;border-radius:12px;padding:10px 12px;font-size:15px;line-height:1.7;color:#1a1a1a;background:#fff;outline:none;resize:none;font-family:inherit;margin-top:4px;}
+.edit-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
+.save-edit-btn{padding:7px 18px;background:#34D399;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;}
+.cancel-edit-btn{padding:7px 14px;background:#fff;color:#6B7280;border:1.5px solid #E5E7EB;border-radius:12px;font-size:13px;cursor:pointer;}
 
-/* ── Edit textarea inline ── */
-.entry-edit-area{width:100%;border:1.5px solid #34D399;border-radius:12px;padding:10px 12px;font-size:15px;line-height:1.7;color:#1a1a1a;background:#fff;outline:none;resize:none;font-family:inherit;margin-top:4px;}
-.entry-edit-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
-.save-edit-btn{padding:6px 16px;background:#34D399;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;}
-.cancel-edit-btn{padding:6px 14px;background:#fff;color:#6B7280;border:1.5px solid #E5E7EB;border-radius:12px;font-size:13px;cursor:pointer;}
-
-/* ── Modal (edit custom cat) ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-overlay.show{display:flex;}
 .modal{background:#fff;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;}
@@ -146,7 +129,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 <body>
 <div class="app">
 
-  <!-- ══ PAGE: 首页 ══ -->
+  <!-- 首页 -->
   <div class="page active" id="page-home">
     <div class="topbar">
       <div>
@@ -155,21 +138,14 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
       </div>
       <div class="topbar-count" id="total-count">0 条</div>
     </div>
-
-    <!-- 系统分类（只读） -->
     <div class="cats-scroll" id="home-sys-cats"></div>
-
-    <!-- 自定义分类 -->
     <div class="custom-cats-label">我的分类</div>
     <div class="cats-scroll" id="home-custom-cats"></div>
     <div class="add-cat-wrap">
       <input class="add-cat-input" id="new-cat-input" placeholder="输入新分类名称…" maxlength="10">
       <button class="add-cat-btn" onclick="addCat()">+ 添加</button>
     </div>
-
     <div class="divider"></div>
-
-    <!-- 写记录 -->
     <div class="write-card">
       <div class="write-top">
         <div class="write-avatar">🌱</div>
@@ -194,11 +170,11 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     </div>
   </div>
 
-  <!-- ══ PAGE: 历史记录 ══ -->
+  <!-- 历史记录 -->
   <div class="page" id="page-history">
     <div class="hist-topbar">
       <div class="hist-title">历史记录<span> 📖</span></div>
-      <div class="hist-cats" id="hist-cats"></div>
+      <div class="cats-scroll" id="hist-cats"></div>
     </div>
     <div class="section-head">
       <span class="section-label" id="hist-label">🌈 全部记录</span>
@@ -207,7 +183,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     <div class="entries" id="entries-list"></div>
   </div>
 
-  <!-- ══ Tab Bar ══ -->
+  <!-- Tab bar -->
   <div class="tabbar">
     <div class="tab active" id="tab-home" onclick="switchTab('home')">
       <div class="tab-icon">🌱</div>
@@ -220,7 +196,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
   </div>
 </div>
 
-<!-- ══ Modal: 编辑自定义分类 ══ -->
+<!-- 编辑分类 Modal -->
 <div class="modal-overlay" id="cat-modal" onclick="closeCatModal(event)">
   <div class="modal">
     <div class="modal-title">编辑分类</div>
@@ -244,8 +220,11 @@ const SYS_CATS=[
   {id:'travel',name:'旅行', emoji:'✈️',color:'#059669',bg:'#ECFDF5'},
   {id:'event', name:'活动', emoji:'🎉',color:'#7C3AED',bg:'#F5F3FF'},
 ];
-const EMOJIS=['🌸','🎯','🍀','⚡','🌙','🎨','🦋','🌊','🍓','🎵','🌺','🦜','🍵','🎸','🧁','🏔️','🎭','🛶'];
-const SYS_IDS=new Set(SYS_CATS.map(c=>c.id));
+const CAT_COLORS=[
+  {color:'#059669',bg:'#ECFDF5'},{color:'#B45309',bg:'#FFFBEB'},
+  {color:'#B91C1C',bg:'#FEF2F2'},{color:'#1D4ED8',bg:'#EFF6FF'},
+  {color:'#7C3AED',bg:'#F5F3FF'},{color:'#92400E',bg:'#FFFBEB'},
+];
 
 function ld(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch{return d;}}
 function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
@@ -253,59 +232,46 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 
 let customCats=ld('mj_custom_cats',[]);
 let entries=ld('mj_entries',[]);
-let likes=ld('mj_likes',{});
-let activeCat='all';
 let histCat='all';
-let currentTab='home';
 let editingCatId=null;
 let editingEntryId=null;
 let pendingImgs=[],pendingAudio=null;
 let mediaRecorder=null,audioChunks=[],recSeconds=0,recInterval=null;
+let pressTimer=null,pressEl=null;
+let hintShown=ld('mj_hint_shown',false);
 
 function allCats(){return[...SYS_CATS,...customCats];}
 
 function renderHomeCats(){
-  // 系统分类
-  document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>`
-    <div class="cat-chip${activeCat===c.id?' active':''}" onclick="setActiveCat('${c.id}')">
-      ${c.emoji?'<span style="font-size:14px">'+c.emoji+'</span>':''}${c.name}
+  document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>
+    `<div class="cat-chip" onclick="setWriteCat('${c.id}')">
+      <span style="font-size:14px">${c.emoji}</span>${c.name}
     </div>`).join('');
-  // 自定义分类（可编辑）
-  document.getElementById('home-custom-cats').innerHTML=customCats.length?customCats.map(c=>`
-    <div class="cat-chip custom${activeCat===c.id?' active':''}"
-      onclick="setActiveCat('${c.id}')"
-      onmousedown="startPress('${c.id}',this)"
-      onmouseup="endPress()"
-      onmouseleave="endPress()"
-      ontouchstart="startPress('${c.id}',this)"
-      ontouchend="endPress()"
-      ontouchcancel="endPress()">
-      ${c.emoji?'<span style="font-size:14px">'+c.emoji+'</span>':''}${c.name}
-    </div>`).join(''):'';
-  // 写记录的分类选择器
-  const sel=document.getElementById('write-cat-sel');
-  sel.innerHTML=allCats().filter(c=>c.id!=='all').map(c=>
+  document.getElementById('home-custom-cats').innerHTML=customCats.length
+    ?customCats.map(c=>
+      `<div class="cat-chip custom"
+        onmousedown="startPress('${c.id}',this)" onmouseup="endPress()" onmouseleave="endPress()"
+        ontouchstart="startPress('${c.id}',this)" ontouchend="endPress()" ontouchcancel="endPress()">
+        ${c.name}
+      </div>`).join('')
+    :'<div style="padding:4px 0;font-size:13px;color:#D1D5DB;">还没有自定义分类</div>';
+  document.getElementById('write-cat-sel').innerHTML=allCats().filter(c=>c.id!=='all').map(c=>
     `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
 }
 
 function renderHistCats(){
-  document.getElementById('hist-cats').innerHTML=allCats().map(c=>`
-    <div class="cat-chip${histCat===c.id?' active':''}" onclick="setHistCat('${c.id}')">
-      ${c.emoji?'<span style="font-size:14px">'+c.emoji+'</span>':''}${c.name}
+  document.getElementById('hist-cats').innerHTML=allCats().map(c=>
+    `<div class="cat-chip${histCat===c.id?' active':''}" onclick="setHistCat('${c.id}')">
+      <span style="font-size:14px">${c.emoji}</span>${c.name}
     </div>`).join('');
 }
 
-function setActiveCat(id){
-  activeCat=id;
-  renderHomeCats();
-}
-
+function setWriteCat(id){}
 function setHistCat(id){
   histCat=id;
   const f=allCats().find(c=>c.id===id);
   document.getElementById('hist-label').textContent=(f?.emoji||'')+' '+(id==='all'?'全部记录':f?.name||'');
-  renderHistCats();
-  renderEntries();
+  renderHistCats();renderEntries();
 }
 
 function addCat(){
@@ -314,33 +280,19 @@ function addCat(){
   if(!name)return;
   if(allCats().find(c=>c.name===name)){toast('分类名称已存在');inp.value='';return;}
   const id='cat_'+Date.now();
-  
-  const pal=[
-    {color:'#059669',bg:'#ECFDF5'},{color:'#B45309',bg:'#FFFBEB'},
-    {color:'#B91C1C',bg:'#FEF2F2'},{color:'#1D4ED8',bg:'#EFF6FF'},
-    {color:'#7C3AED',bg:'#F5F3FF'},{color:'#92400E',bg:'#FFFBEB'},
-  ];
-  const p=pal[customCats.length%pal.length];
-  customCats.push({id,name,emoji:"",color:p.color,bg:p.bg});
+  const p=CAT_COLORS[customCats.length%CAT_COLORS.length];
+  customCats.push({id,name,emoji:'',color:p.color,bg:p.bg});
   sv('mj_custom_cats',customCats);
   inp.value='';
   renderHomeCats();renderHistCats();
   if(!hintShown){
     setTimeout(()=>toast('💡 长按分类标签可以编辑或删除'),400);
     hintShown=true;sv('mj_hint_shown',true);
-  } else {
-    toast('已添加分类');
-  }
+  }else{toast('分类已添加');}
 }
 
-// ── Long press ──
-let pressTimer=null;
-let pressEl=null;
-let hintShown=ld('mj_hint_shown',false);
-
 function startPress(id,el){
-  pressEl=el;
-  el.classList.add('pressing');
+  pressEl=el;el.classList.add('pressing');
   pressTimer=setTimeout(()=>{
     el.classList.remove('pressing');
     navigator.vibrate&&navigator.vibrate(30);
@@ -352,7 +304,6 @@ function endPress(){
   if(pressEl){pressEl.classList.remove('pressing');pressEl=null;}
 }
 
-// ── Cat modal ──
 function openCatModal(id){
   editingCatId=id;
   const cat=customCats.find(c=>c.id===id);
@@ -371,7 +322,7 @@ function saveCat(){
   if(!name){toast('请输入分类名称');return;}
   if(allCats().find(c=>c.name===name&&c.id!==editingCatId)){toast('分类名称已存在');return;}
   const cat=customCats.find(c=>c.id===editingCatId);
-  if(cat){cat.name=name;}
+  if(cat)cat.name=name;
   sv('mj_custom_cats',customCats);
   document.getElementById('cat-modal').classList.remove('show');
   editingCatId=null;
@@ -382,7 +333,6 @@ function deleteCat(){
   if(!confirm('删除这个分类？该分类下的记录不会删除。'))return;
   customCats=customCats.filter(c=>c.id!==editingCatId);
   sv('mj_custom_cats',customCats);
-  if(activeCat===editingCatId)activeCat='all';
   if(histCat===editingCatId)histCat='all';
   document.getElementById('cat-modal').classList.remove('show');
   editingCatId=null;
@@ -390,7 +340,6 @@ function deleteCat(){
   toast('分类已删除');
 }
 
-// ── Write ──
 function updateChar(){document.getElementById('char-hint').textContent=document.getElementById('write-text').value.length+' / 500';}
 function triggerImg(){document.getElementById('img-input').click();}
 function handleImgs(e){
@@ -457,47 +406,55 @@ function saveEntry(){
   }catch{toast('存储空间不足，请清理部分记录');}
 }
 
-// ── Entry list ──
+function toggleMenu(id){
+  const m=document.getElementById(id);
+  const show=m.style.display==='none';
+  document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
+  m.style.display=show?'block':'none';
+  if(show){
+    setTimeout(()=>document.addEventListener('click',function h(e){
+      if(!m.contains(e.target)){m.style.display='none';document.removeEventListener('click',h);}
+    },10));
+  }
+}
+function closeMenu(id){document.getElementById(id).style.display='none';}
+
+function startEditEntry(id){
+  document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
+  editingEntryId=id;
+  renderEntries();
+  setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);
+}
+function cancelEditEntry(){editingEntryId=null;renderEntries();}
+function saveEditEntry(id){
+  const ta=document.getElementById('edit-ta-'+id);
+  if(!ta)return;
+  const e=entries.find(e=>e.id===id);
+  if(e)e.text=ta.value.trim();
+  sv('mj_entries',entries);
+  editingEntryId=null;
+  renderEntries();toast('已保存');
+}
 function deleteEntry(id){
+  document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
   if(!confirm('确定删除这条记录？'))return;
   entries=entries.filter(e=>e.id!==id);
   sv('mj_entries',entries);
   renderEntries();renderCount();toast('已删除');
 }
-
-function startEdit(id){
-  editingEntryId=id;
-  renderEntries();
-  setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);
-}
-function cancelEdit(){editingEntryId=null;renderEntries();}
-function saveEdit(id){
-  const ta=document.getElementById('edit-ta-'+id);
-  if(!ta)return;
-  const text=ta.value.trim();
-  const e=entries.find(e=>e.id===id);
-  if(e){e.text=text;}
-  sv('mj_entries',entries);
-  editingEntryId=null;
-  renderEntries();toast('已保存 ✓');
-}
-
 function toggleExpand(id){
   const e=entries.find(e=>e.id===id);
   if(e){e.expanded=!e.expanded;renderEntries();}
 }
-function toggleLike(id){
-  likes[id]=!likes[id];sv('mj_likes',likes);
-  const btn=document.querySelector(`[data-like="${id}"]`);
-  if(btn){btn.classList.toggle('liked',likes[id]);btn.querySelector('.lc').textContent=likes[id]?'1':'0';}
-}
 
 function fmtTime(iso){
-  const d=new Date(iso),now=new Date(),diff=(now-d)/1000;
-  if(diff<60)return'刚刚 🌱';
-  if(diff<3600)return Math.floor(diff/60)+'分钟前';
-  if(diff<86400)return Math.floor(diff/3600)+'小时前';
-  return String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  const d=new Date(iso);
+  const yyyy=d.getFullYear();
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const dd=String(d.getDate()).padStart(2,'0');
+  const hh=String(d.getHours()).padStart(2,'0');
+  const mn=String(d.getMinutes()).padStart(2,'0');
+  return yyyy+'/'+mm+'/'+dd+' '+hh+':'+mn;
 }
 
 function renderEntries(){
@@ -512,16 +469,15 @@ function renderEntries(){
   list.innerHTML=filtered.map(e=>{
     const cat=cats.find(c=>c.id===e.catId)||SYS_CATS[1];
     const long=e.text&&e.text.length>100;
-    const liked=likes[e.id]||false;
     const isEditing=editingEntryId===e.id;
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>`<img class="entry-img" src="${s}">`).join('')}</div>`:'';
     const audio=e.audio?`<div class="entry-audio"><audio controls src="${e.audio}"></audio></div>`:'';
     const textBlock=isEditing
-      ?`<textarea class="entry-edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
-         <div class="entry-edit-footer">
-           <button class="cancel-edit-btn" onclick="cancelEdit()">取消</button>
-           <button class="save-edit-btn" onclick="saveEdit(${e.id})">保存</button>
-         </div>`
+      ?`<textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
+        <div class="edit-footer">
+          <button class="cancel-edit-btn" onclick="cancelEditEntry()">取消</button>
+          <button class="save-edit-btn" onclick="saveEditEntry(${e.id})">保存</button>
+        </div>`
       :`${e.text?`<div class="entry-text${long&&!e.expanded?' clamped':''}" onclick="toggleExpand(${e.id})">${e.text}</div>`:''}
         ${long?`<div class="expand-hint" onclick="toggleExpand(${e.id})">${e.expanded?'↑ 收起':'↓ 展开'}</div>`:''}`;
     return`<div class="entry-card">
@@ -529,20 +485,19 @@ function renderEntries(){
         <div class="entry-badge" style="background:${cat.bg};color:${cat.color}">
           <span style="font-size:13px">${cat.emoji}</span>${cat.name}
         </div>
-        <div class="entry-meta">
+        <div class="entry-right">
           <span class="entry-time">${fmtTime(e.ts)}</span>
-          <div class="entry-actions">
-            <button class="edit-btn" onclick="startEdit(${e.id})" title="编辑">✏️</button>
-            <button class="del-btn" onclick="deleteEntry(${e.id})">✕</button>
+          <div style="position:relative">
+            <button class="more-btn" onclick="toggleMenu('menu-${e.id}')">···</button>
+            <div class="dropdown" id="menu-${e.id}" style="display:none">
+              <button class="dropdown-item" onclick="startEditEntry(${e.id})">编辑</button>
+              <button class="dropdown-item" onclick="closeMenu('menu-${e.id}')">取消</button>
+              <button class="dropdown-item danger" onclick="deleteEntry(${e.id})">删除</button>
+            </div>
           </div>
         </div>
       </div>
       ${textBlock}${imgs}${audio}
-      <div class="entry-footer">
-        <button class="like-btn${liked?' liked':''}" data-like="${e.id}" onclick="toggleLike(${e.id})">
-          🩷 <span class="lc">${liked?'1':'0'}</span>
-        </button>
-      </div>
     </div>`;
   }).join('');
 }
@@ -551,9 +506,7 @@ function renderCount(){
   document.getElementById('total-count').textContent=entries.length+' 条';
 }
 
-// ── Tab switching ──
 function switchTab(tab){
-  currentTab=tab;
   document.getElementById('page-home').classList.toggle('active',tab==='home');
   document.getElementById('page-history').classList.toggle('active',tab==='history');
   document.getElementById('tab-home').classList.toggle('active',tab==='home');
@@ -561,7 +514,6 @@ function switchTab(tab){
   if(tab==='history'){renderEntries();}
 }
 
-// ── Init ──
 renderHomeCats();
 renderHistCats();
 renderCount();
