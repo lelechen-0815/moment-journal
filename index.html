@@ -136,7 +136,10 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
         <div class="topbar-brand">我的时刻<span> 🌿</span></div>
         <div class="topbar-sub">记录每一个真实瞬间</div>
       </div>
-      <div class="topbar-count" id="total-count">0 条</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button id="clear-btn" onclick="clearAllData()" style="display:none;font-size:11px;padding:3px 10px;border:1px solid #FCA5A5;border-radius:12px;background:#FEF2F2;color:#EF4444;cursor:pointer;">清除数据</button>
+        <div class="topbar-count" id="total-count">0 条</div>
+      </div>
     </div>
     <div class="cats-scroll" id="home-sys-cats"></div>
     <div class="custom-cats-label">我的分类</div>
@@ -227,6 +230,15 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 
 let customCats=ld('mj_custom_cats',[]);
 let entries=ld('mj_entries',[]);
+
+// 清理损坏的音频数据
+entries=entries.map(e=>{
+  if(e.audio&&!e.audio.startsWith('data:audio')){return{...e,audio:null};}
+  if(e.audio&&e.audio.length<100){return{...e,audio:null};}
+  return e;
+});
+sv('mj_entries',entries);
+
 let activeCat=SYS_CATS[0].id;
 let histCat='all';
 let editingCatId=null;
@@ -507,7 +519,25 @@ function renderEntries(){
   }).join('');
 }
 
-function renderCount(){document.getElementById('total-count').textContent=entries.length+' 条';}
+function clearAllData(){
+  if(!confirm('清除所有本地数据？记录和分类都会删除，无法恢复。'))return;
+  localStorage.clear();
+  location.reload();
+}
+
+function renderCount(){
+  const count=entries.length;
+  document.getElementById('total-count').textContent=count+' 条';
+  const hasStaleAudio=entries.some(e=>e.audio&&e.audio==='stale');
+  document.getElementById('clear-btn').style.display=hasStaleAudio?'block':'none';
+}
+
+// 检测是否有问题数据，显示清除按钮
+(function detectStale(){
+  const raw=ld('mj_entries',[]);
+  const hasIssue=raw.some(e=>e.audio&&!e.audio.startsWith('data:audio'));
+  if(hasIssue)setTimeout(()=>document.getElementById('clear-btn').style.display='block',500);
+})();
 
 function switchTab(tab){
   document.getElementById('page-home').classList.toggle('active',tab==='home');
