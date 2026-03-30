@@ -387,10 +387,12 @@ async function toggleRecord(){
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
     audioChunks=[];
-    mediaRecorder=new MediaRecorder(stream);
+    const mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':
+                   MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'';
+    mediaRecorder=mimeType?new MediaRecorder(stream,{mimeType}):new MediaRecorder(stream);
     mediaRecorder.ondataavailable=e=>{if(e.data.size>0)audioChunks.push(e.data);};
     mediaRecorder.onstop=()=>{
-      const blob=new Blob(audioChunks,{type:'audio/webm'});
+      const blob=new Blob(audioChunks,{type:mimeType||'audio/mp4'});
       const r=new FileReader();r.onload=ev=>{pendingAudio=ev.target.result;renderAudioPrev();toast('录音完成 🎙️');};r.readAsDataURL(blob);
       stream.getTracks().forEach(t=>t.stop());
     };
