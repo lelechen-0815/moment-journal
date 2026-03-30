@@ -37,7 +37,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .cat-chip.active{background:#ECFDF5;border-color:#6EE7B7;color:#059669;}
 .cat-chip.custom.pressing{opacity:.6;transform:scale(0.95);}
 
-.custom-cats-label{font-size:11px;color:#9CA3AF;padding:12px 18px 4px;font-weight:500;letter-spacing:.04em;}
+.custom-cats-label{font-size:11px;color:#9CA3AF;padding:10px 18px 4px;font-weight:500;letter-spacing:.04em;}
 .add-cat-wrap{padding:4px 18px 12px;display:flex;gap:8px;}
 .add-cat-input{flex:1;height:38px;padding:0 14px;border:1.5px solid #E5E7EB;border-radius:18px;font-size:13px;background:#fff;color:#1a1a1a;outline:none;transition:border-color .15s;}
 .add-cat-input:focus{border-color:#34D399;}
@@ -45,13 +45,12 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .add-cat-btn{height:38px;padding:0 16px;border:1.5px solid #E5E7EB;border-radius:18px;font-size:13px;cursor:pointer;background:#fff;color:#6B7280;font-weight:500;transition:all .15s;}
 .add-cat-btn:hover{border-color:#6EE7B7;color:#059669;background:#ECFDF5;}
 
-.divider{height:1px;background:#F3F4F6;margin:4px 18px 12px;}
+.divider{height:1px;background:#F3F4F6;margin:0 18px 12px;}
 
-.write-card{margin:0 18px 16px;background:#fff;border-radius:20px;border:1.5px solid #E5E7EB;padding:16px;}
-.write-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.write-avatar{width:36px;height:36px;border-radius:50%;background:#ECFDF5;border:1.5px solid #6EE7B7;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-.write-cat-sel{flex:1;font-size:13px;padding:6px 12px;border-radius:12px;border:1.5px solid #E5E7EB;background:#fff;color:#374151;cursor:pointer;outline:none;transition:border-color .15s;-webkit-appearance:none;}
-.write-cat-sel:focus{border-color:#34D399;}
+.write-card{margin:0 18px 16px;background:#fff;border-radius:20px;border:1.5px solid #6EE7B7;padding:16px;}
+.write-cat-badge{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.current-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:12px;font-size:13px;font-weight:600;}
+.badge-hint{font-size:12px;color:#9CA3AF;}
 .write-textarea{width:100%;border:none;outline:none;resize:none;font-size:16px;line-height:1.75;color:#1a1a1a;background:transparent;min-height:88px;font-family:inherit;}
 .write-textarea::placeholder{color:#D1D5DB;}
 .media-bar{display:flex;gap:8px;padding:10px 0 8px;border-top:1px solid #F3F4F6;}
@@ -83,6 +82,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 
 .entries{padding:0 18px 32px;display:flex;flex-direction:column;gap:10px;}
 .entry-card{background:#fff;border:1.5px solid #F3F4F6;border-radius:18px;padding:14px 16px;transition:border-color .18s;}
+.entry-card:hover{border-color:#6EE7B7;}
 .entry-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .entry-badge{display:flex;align-items:center;gap:4px;font-size:12px;padding:3px 10px;border-radius:10px;font-weight:600;}
 .entry-right{display:flex;align-items:center;gap:8px;}
@@ -147,10 +147,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     </div>
     <div class="divider"></div>
     <div class="write-card">
-      <div class="write-top">
-        <div class="write-avatar">🌱</div>
-        <select class="write-cat-sel" id="write-cat-sel"></select>
-      </div>
+      <div class="write-cat-badge" id="write-cat-badge"></div>
       <textarea class="write-textarea" id="write-text" placeholder="此刻的感受、想法、发现…" maxlength="500" oninput="updateChar()"></textarea>
       <div id="img-previews" class="img-previews"></div>
       <div id="audio-preview"></div>
@@ -183,7 +180,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     <div class="entries" id="entries-list"></div>
   </div>
 
-  <!-- Tab bar -->
   <div class="tabbar">
     <div class="tab active" id="tab-home" onclick="switchTab('home')">
       <div class="tab-icon">🌱</div>
@@ -196,7 +192,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
   </div>
 </div>
 
-<!-- 编辑分类 Modal -->
 <div class="modal-overlay" id="cat-modal" onclick="closeCatModal(event)">
   <div class="modal">
     <div class="modal-title">编辑分类</div>
@@ -213,13 +208,13 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 
 <script>
 const SYS_CATS=[
-  {id:'all',   name:'全部', emoji:'🌈',color:'#059669',bg:'#ECFDF5'},
-  {id:'daily', name:'日常', emoji:'☀️',color:'#B45309',bg:'#FFFBEB'},
-  {id:'food',  name:'吃饭', emoji:'🍜',color:'#B91C1C',bg:'#FEF2F2'},
-  {id:'shop',  name:'购物', emoji:'🛍️',color:'#1D4ED8',bg:'#EFF6FF'},
-  {id:'travel',name:'旅行', emoji:'✈️',color:'#059669',bg:'#ECFDF5'},
-  {id:'event', name:'活动', emoji:'🎉',color:'#7C3AED',bg:'#F5F3FF'},
+  {id:'daily', name:'日常', emoji:'☀️', color:'#B45309', bg:'#FFFBEB'},
+  {id:'food',  name:'吃饭', emoji:'🍜', color:'#B91C1C', bg:'#FEF2F2'},
+  {id:'shop',  name:'购物', emoji:'🛍️', color:'#1D4ED8', bg:'#EFF6FF'},
+  {id:'travel',name:'旅行', emoji:'✈️', color:'#059669', bg:'#ECFDF5'},
+  {id:'event', name:'活动', emoji:'🎉', color:'#7C3AED', bg:'#F5F3FF'},
 ];
+const HIST_ALL={id:'all',name:'全部',emoji:'🌈',color:'#059669',bg:'#ECFDF5'};
 const CAT_COLORS=[
   {color:'#059669',bg:'#ECFDF5'},{color:'#B45309',bg:'#FFFBEB'},
   {color:'#B91C1C',bg:'#FEF2F2'},{color:'#1D4ED8',bg:'#EFF6FF'},
@@ -232,6 +227,7 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 
 let customCats=ld('mj_custom_cats',[]);
 let entries=ld('mj_entries',[]);
+let activeCat=SYS_CATS[0].id;
 let histCat='all';
 let editingCatId=null;
 let editingEntryId=null;
@@ -241,35 +237,50 @@ let pressTimer=null,pressEl=null;
 let hintShown=ld('mj_hint_shown',false);
 
 function allCats(){return[...SYS_CATS,...customCats];}
+function allHistCats(){return[HIST_ALL,...SYS_CATS,...customCats];}
 
 function renderHomeCats(){
-  document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>
-    `<div class="cat-chip" onclick="setWriteCat('${c.id}')">
+  document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>`
+    <div class="cat-chip${activeCat===c.id?' active':''}" onclick="selectWriteCat('${c.id}')">
       <span style="font-size:14px">${c.emoji}</span>${c.name}
     </div>`).join('');
   document.getElementById('home-custom-cats').innerHTML=customCats.length
-    ?customCats.map(c=>
-      `<div class="cat-chip custom"
+    ?customCats.map(c=>`
+      <div class="cat-chip custom${activeCat===c.id?' active':''}"
+        onclick="selectWriteCat('${c.id}')"
         onmousedown="startPress('${c.id}',this)" onmouseup="endPress()" onmouseleave="endPress()"
         ontouchstart="startPress('${c.id}',this)" ontouchend="endPress()" ontouchcancel="endPress()">
         ${c.name}
       </div>`).join('')
-    :'<div style="padding:4px 0;font-size:13px;color:#D1D5DB;">还没有自定义分类</div>';
-  document.getElementById('write-cat-sel').innerHTML=allCats().filter(c=>c.id!=='all').map(c=>
-    `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
+    :'<span style="font-size:13px;color:#D1D5DB;padding:4px 0;">还没有自定义分类</span>';
+}
+
+function renderWriteBadge(){
+  const cat=allCats().find(c=>c.id===activeCat);
+  if(!cat)return;
+  document.getElementById('write-cat-badge').innerHTML=`
+    <div class="current-badge" style="background:${cat.bg};color:${cat.color}">
+      ${cat.emoji||''}${cat.name}
+    </div>
+    <span class="badge-hint">点击上方可切换分类</span>`;
+}
+
+function selectWriteCat(id){
+  activeCat=id;
+  renderHomeCats();
+  renderWriteBadge();
 }
 
 function renderHistCats(){
-  document.getElementById('hist-cats').innerHTML=allCats().map(c=>
-    `<div class="cat-chip${histCat===c.id?' active':''}" onclick="setHistCat('${c.id}')">
+  document.getElementById('hist-cats').innerHTML=allHistCats().map(c=>`
+    <div class="cat-chip${histCat===c.id?' active':''}" onclick="setHistCat('${c.id}')">
       <span style="font-size:14px">${c.emoji}</span>${c.name}
     </div>`).join('');
 }
 
-function setWriteCat(id){}
 function setHistCat(id){
   histCat=id;
-  const f=allCats().find(c=>c.id===id);
+  const f=allHistCats().find(c=>c.id===id);
   document.getElementById('hist-label').textContent=(f?.emoji||'')+' '+(id==='all'?'全部记录':f?.name||'');
   renderHistCats();renderEntries();
 }
@@ -291,15 +302,19 @@ function addCat(){
   }else{toast('分类已添加');}
 }
 
+let pressActive=false;
 function startPress(id,el){
+  pressActive=true;
   pressEl=el;el.classList.add('pressing');
   pressTimer=setTimeout(()=>{
+    if(!pressActive)return;
     el.classList.remove('pressing');
     navigator.vibrate&&navigator.vibrate(30);
     openCatModal(id);
   },600);
 }
 function endPress(){
+  pressActive=false;
   if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}
   if(pressEl){pressEl.classList.remove('pressing');pressEl=null;}
 }
@@ -333,10 +348,11 @@ function deleteCat(){
   if(!confirm('删除这个分类？该分类下的记录不会删除。'))return;
   customCats=customCats.filter(c=>c.id!==editingCatId);
   sv('mj_custom_cats',customCats);
+  if(activeCat===editingCatId)activeCat=SYS_CATS[0].id;
   if(histCat===editingCatId)histCat='all';
   document.getElementById('cat-modal').classList.remove('show');
   editingCatId=null;
-  renderHomeCats();renderHistCats();renderEntries();
+  renderHomeCats();renderWriteBadge();renderHistCats();renderEntries();
   toast('分类已删除');
 }
 
@@ -394,9 +410,8 @@ function rmAudio(){pendingAudio=null;renderAudioPrev();}
 function saveEntry(){
   const text=document.getElementById('write-text').value.trim();
   if(!text&&!pendingImgs.length&&!pendingAudio){toast('请输入内容再记录');return;}
-  const catId=document.getElementById('write-cat-sel').value;
   try{
-    entries.unshift({id:Date.now(),catId,text,imgs:[...pendingImgs],audio:pendingAudio,ts:new Date().toISOString(),expanded:false});
+    entries.unshift({id:Date.now(),catId:activeCat,text,imgs:[...pendingImgs],audio:pendingAudio,ts:new Date().toISOString(),expanded:false});
     sv('mj_entries',entries);
     document.getElementById('write-text').value='';
     pendingImgs=[];pendingAudio=null;
@@ -414,15 +429,14 @@ function toggleMenu(id){
   if(show){
     setTimeout(()=>document.addEventListener('click',function h(e){
       if(!m.contains(e.target)){m.style.display='none';document.removeEventListener('click',h);}
-    },10));
+    }),10);
   }
 }
 function closeMenu(id){document.getElementById(id).style.display='none';}
 
 function startEditEntry(id){
   document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
-  editingEntryId=id;
-  renderEntries();
+  editingEntryId=id;renderEntries();
   setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);
 }
 function cancelEditEntry(){editingEntryId=null;renderEntries();}
@@ -432,29 +446,20 @@ function saveEditEntry(id){
   const e=entries.find(e=>e.id===id);
   if(e)e.text=ta.value.trim();
   sv('mj_entries',entries);
-  editingEntryId=null;
-  renderEntries();toast('已保存');
+  editingEntryId=null;renderEntries();toast('已保存');
 }
 function deleteEntry(id){
   document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
   if(!confirm('确定删除这条记录？'))return;
   entries=entries.filter(e=>e.id!==id);
-  sv('mj_entries',entries);
-  renderEntries();renderCount();toast('已删除');
+  sv('mj_entries',entries);renderEntries();renderCount();toast('已删除');
 }
-function toggleExpand(id){
-  const e=entries.find(e=>e.id===id);
-  if(e){e.expanded=!e.expanded;renderEntries();}
-}
+function toggleExpand(id){const e=entries.find(e=>e.id===id);if(e){e.expanded=!e.expanded;renderEntries();}}
 
 function fmtTime(iso){
   const d=new Date(iso);
-  const yyyy=d.getFullYear();
-  const mm=String(d.getMonth()+1).padStart(2,'0');
-  const dd=String(d.getDate()).padStart(2,'0');
-  const hh=String(d.getHours()).padStart(2,'0');
-  const mn=String(d.getMinutes()).padStart(2,'0');
-  return yyyy+'/'+mm+'/'+dd+' '+hh+':'+mn;
+  return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+
+    ' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
 
 function renderEntries(){
@@ -467,7 +472,7 @@ function renderEntries(){
     return;
   }
   list.innerHTML=filtered.map(e=>{
-    const cat=cats.find(c=>c.id===e.catId)||SYS_CATS[1];
+    const cat=cats.find(c=>c.id===e.catId)||SYS_CATS[0];
     const long=e.text&&e.text.length>100;
     const isEditing=editingEntryId===e.id;
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>`<img class="entry-img" src="${s}">`).join('')}</div>`:'';
@@ -483,7 +488,7 @@ function renderEntries(){
     return`<div class="entry-card">
       <div class="entry-top">
         <div class="entry-badge" style="background:${cat.bg};color:${cat.color}">
-          <span style="font-size:13px">${cat.emoji}</span>${cat.name}
+          <span style="font-size:13px">${cat.emoji||''}</span>${cat.name}
         </div>
         <div class="entry-right">
           <span class="entry-time">${fmtTime(e.ts)}</span>
@@ -502,9 +507,7 @@ function renderEntries(){
   }).join('');
 }
 
-function renderCount(){
-  document.getElementById('total-count').textContent=entries.length+' 条';
-}
+function renderCount(){document.getElementById('total-count').textContent=entries.length+' 条';}
 
 function switchTab(tab){
   document.getElementById('page-home').classList.toggle('active',tab==='home');
@@ -515,6 +518,7 @@ function switchTab(tab){
 }
 
 renderHomeCats();
+renderWriteBadge();
 renderHistCats();
 renderCount();
 document.getElementById('new-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')addCat();});
