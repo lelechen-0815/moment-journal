@@ -310,28 +310,43 @@ async function doAuth(){
   const password=document.getElementById('auth-password').value;
   const btn=document.getElementById('auth-btn');
   const err=document.getElementById('auth-err');
+  err.style.color='#EF4444';
   if(!email||!password){err.textContent='请填写邮箱和密码';return;}
+  if(password.length<6){err.textContent='密码至少 6 位';return;}
   btn.disabled=true;btn.textContent='处理中…';err.textContent='';
   try{
-    let result;
     if(authMode==='login'){
-      result=await sb.auth.signInWithPassword({email,password});
+      const{data,error}=await sb.auth.signInWithPassword({email,password});
+      if(error){
+        if(error.message.includes('Invalid login credentials'))throw new Error('邮箱或密码错误');
+        throw new Error('登录失败，请重试');
+      }
+      currentUser=data.user;
+      await initApp();
     }else{
-      result=await sb.auth.signUp({email,password});
-      if(!result.error&&result.data.user&&!result.data.session){
-        err.style.color='#059669';
-        err.textContent='注册成功！请查收验证邮件后登录';
-        btn.disabled=false;btn.textContent='注册';
-        switchAuthTab('login');return;
+      const{data,error}=await sb.auth.signUp({email,password});
+      if(error){
+        if(error.message.includes('already registered')||error.message.includes('User already registered'))
+          throw new Error('该邮箱已注册，请直接登录');
+        throw new Error('注册失败：'+error.message);
+      }
+      // 注册成功，直接用返回的 session 登录
+      if(data.session){
+        currentUser=data.user;
+        await initApp();
+      }else{
+        // 没有 session 说明还需要验证，直接再登录一次
+        const{data:ld,error:le}=await sb.auth.signInWithPassword({email,password});
+        if(le)throw new Error('注册成功，但登录失败，请手动登录');
+        currentUser=ld.user;
+        await initApp();
       }
     }
-    if(result.error)throw result.error;
-    currentUser=result.data.user;
-    await initApp();
   }catch(e){
     err.style.color='#EF4444';
-    err.textContent=e.message==='Invalid login credentials'?'邮箱或密码错误':e.message;
-    btn.disabled=false;btn.textContent=authMode==='login'?'登录':'注册';
+    err.textContent=e.message||'操作失败，请重试';
+    btn.disabled=false;
+    btn.textContent=authMode==='login'?'登录':'注册';
   }
 }
 
