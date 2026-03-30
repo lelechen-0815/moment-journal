@@ -15,6 +15,25 @@ html,body{height:100%;background:#fff;}
 body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column;}
 
+/* ── Auth page ── */
+.auth-page{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 24px;}
+.auth-logo{font-size:48px;margin-bottom:12px;}
+.auth-title{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:4px;}
+.auth-sub{font-size:14px;color:#9CA3AF;margin-bottom:36px;}
+.auth-card{width:100%;max-width:360px;background:#fff;border:1.5px solid #E5E7EB;border-radius:20px;padding:24px;}
+.auth-tabs{display:flex;gap:0;margin-bottom:20px;background:#F3F4F6;border-radius:12px;padding:3px;}
+.auth-tab{flex:1;text-align:center;padding:8px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;color:#6B7280;transition:all .15s;}
+.auth-tab.active{background:#fff;color:#1a1a1a;}
+.auth-field{margin-bottom:14px;}
+.auth-field label{display:block;font-size:13px;color:#6B7280;margin-bottom:6px;font-weight:500;}
+.auth-field input{width:100%;height:44px;padding:0 14px;border:1.5px solid #E5E7EB;border-radius:12px;font-size:15px;color:#1a1a1a;outline:none;transition:border-color .15s;}
+.auth-field input:focus{border-color:#34D399;}
+.auth-submit{width:100%;height:46px;background:#34D399;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:background .15s;}
+.auth-submit:hover{background:#10B981;}
+.auth-submit:disabled{background:#D1D5DB;cursor:not-allowed;}
+.auth-err{font-size:13px;color:#EF4444;text-align:center;margin-top:10px;min-height:18px;}
+
+/* ── Tab bar ── */
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #F3F4F6;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 8px;cursor:pointer;gap:3px;}
 .tab-icon{font-size:22px;line-height:1;}
@@ -24,19 +43,23 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .page{display:none;flex:1;overflow-y:auto;padding-bottom:70px;}
 .page.active{display:block;}
 
+/* ── Topbar ── */
 .topbar{padding:52px 18px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;border-bottom:1px solid #F3F4F6;}
 .topbar-brand{font-size:22px;font-weight:700;color:#1a1a1a;letter-spacing:-.5px;}
 .topbar-brand span{color:#34D399;}
 .topbar-sub{font-size:12px;color:#9CA3AF;margin-top:2px;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
 .topbar-count{background:#ECFDF5;color:#059669;font-size:12px;font-weight:600;padding:4px 11px;border-radius:20px;white-space:nowrap;}
+.logout-btn{font-size:12px;color:#9CA3AF;background:none;border:1px solid #E5E7EB;border-radius:12px;padding:4px 10px;cursor:pointer;}
+.logout-btn:hover{color:#EF4444;border-color:#FCA5A5;}
 
+/* ── Cats ── */
 .cats-scroll{padding:12px 18px 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
 .cats-scroll::-webkit-scrollbar{display:none;}
 .cat-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #E5E7EB;color:#6B7280;background:#fff;transition:all .18s;user-select:none;-webkit-user-select:none;}
 .cat-chip:hover{border-color:#6EE7B7;color:#059669;}
 .cat-chip.active{background:#ECFDF5;border-color:#6EE7B7;color:#059669;}
 .cat-chip.custom.pressing{opacity:.6;transform:scale(0.95);}
-
 .custom-cats-label{font-size:11px;color:#9CA3AF;padding:10px 18px 4px;font-weight:500;letter-spacing:.04em;}
 .add-cat-wrap{padding:4px 18px 12px;display:flex;gap:8px;}
 .add-cat-input{flex:1;height:38px;padding:0 14px;border:1.5px solid #E5E7EB;border-radius:18px;font-size:13px;background:#fff;color:#1a1a1a;outline:none;transition:border-color .15s;}
@@ -44,9 +67,9 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .add-cat-input::placeholder{color:#D1D5DB;}
 .add-cat-btn{height:38px;padding:0 16px;border:1.5px solid #E5E7EB;border-radius:18px;font-size:13px;cursor:pointer;background:#fff;color:#6B7280;font-weight:500;transition:all .15s;}
 .add-cat-btn:hover{border-color:#6EE7B7;color:#059669;background:#ECFDF5;}
-
 .divider{height:1px;background:#F3F4F6;margin:0 18px 12px;}
 
+/* ── Write card ── */
 .write-card{margin:0 18px 16px;background:#fff;border-radius:20px;border:1.5px solid #6EE7B7;padding:16px;}
 .write-cat-badge{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
 .current-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:12px;font-size:13px;font-weight:600;}
@@ -72,14 +95,13 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .send-btn:active{transform:scale(0.97);}
 .rec-timer{font-size:12px;color:#B45309;font-weight:600;}
 
+/* ── History ── */
 .hist-topbar{padding:52px 18px 0;background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid #F3F4F6;}
 .hist-title{font-size:22px;font-weight:700;color:#1a1a1a;}
 .hist-title span{color:#34D399;}
-
 .section-head{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 8px;}
 .section-label{font-size:13px;font-weight:600;color:#374151;}
 .section-count{font-size:12px;color:#9CA3AF;}
-
 .entries{padding:0 18px 32px;display:flex;flex-direction:column;gap:10px;}
 .entry-card{background:#fff;border:1.5px solid #F3F4F6;border-radius:18px;padding:14px 16px;transition:border-color .18s;}
 .entry-card:hover{border-color:#6EE7B7;}
@@ -106,6 +128,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .save-edit-btn{padding:7px 18px;background:#34D399;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;}
 .cancel-edit-btn{padding:7px 14px;background:#fff;color:#6B7280;border:1.5px solid #E5E7EB;border-radius:12px;font-size:13px;cursor:pointer;}
 
+/* ── Modal ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-overlay.show{display:flex;}
 .modal{background:#fff;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;}
@@ -124,11 +147,39 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.loading{display:flex;align-items:center;justify-content:center;padding:48px;color:#9CA3AF;font-size:14px;gap:8px;}
 </style>
 </head>
 <body>
-<div class="app">
 
+<!-- 登录/注册页 -->
+<div id="auth-page" style="display:none;">
+  <div class="auth-page">
+    <div class="auth-logo">🌿</div>
+    <div class="auth-title">我的时刻</div>
+    <div class="auth-sub">记录每一个真实瞬间</div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">登录</div>
+        <div class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">注册</div>
+      </div>
+      <div class="auth-field">
+        <label>邮箱</label>
+        <input type="email" id="auth-email" placeholder="your@email.com">
+      </div>
+      <div class="auth-field">
+        <label>密码</label>
+        <input type="password" id="auth-password" placeholder="至少 6 位" onkeydown="if(event.key==='Enter')doAuth()">
+      </div>
+      <button class="auth-submit" id="auth-btn" onclick="doAuth()">登录</button>
+      <div class="auth-err" id="auth-err"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 主 App -->
+<div class="app" id="main-app" style="display:none;">
   <!-- 首页 -->
   <div class="page active" id="page-home">
     <div class="topbar">
@@ -136,9 +187,9 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
         <div class="topbar-brand">我的时刻<span> 🌿</span></div>
         <div class="topbar-sub">记录每一个真实瞬间</div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <button id="clear-btn" onclick="clearAllData()" style="display:none;font-size:11px;padding:3px 10px;border:1px solid #FCA5A5;border-radius:12px;background:#FEF2F2;color:#EF4444;cursor:pointer;">清除数据</button>
+      <div class="topbar-right">
         <div class="topbar-count" id="total-count">0 条</div>
+        <button class="logout-btn" onclick="doLogout()">退出</button>
       </div>
     </div>
     <div class="cats-scroll" id="home-sys-cats"></div>
@@ -195,6 +246,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
   </div>
 </div>
 
+<!-- 编辑分类 Modal -->
 <div class="modal-overlay" id="cat-modal" onclick="closeCatModal(event)">
   <div class="modal">
     <div class="modal-title">编辑分类</div>
@@ -209,7 +261,12 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+const SUPABASE_URL='https://rwvhvfmfxjspnxsitsxj.supabase.co';
+const SUPABASE_KEY='sb_publishable_c1x7dVYf-NQ0jYo8osud7Q_4sp5EXrY';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
 const SYS_CATS=[
   {id:'daily', name:'日常', emoji:'☀️', color:'#B45309', bg:'#FFFBEB'},
   {id:'food',  name:'吃饭', emoji:'🍜', color:'#B91C1C', bg:'#FEF2F2'},
@@ -224,33 +281,202 @@ const CAT_COLORS=[
   {color:'#7C3AED',bg:'#F5F3FF'},{color:'#92400E',bg:'#FFFBEB'},
 ];
 
-function ld(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch{return d;}}
-function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 
-let customCats=ld('mj_custom_cats',[]);
-let entries=ld('mj_entries',[]);
-
-// 清理损坏的音频数据
-entries=entries.map(e=>{
-  if(e.audio&&!e.audio.startsWith('data:audio')){return{...e,audio:null};}
-  if(e.audio&&e.audio.length<100){return{...e,audio:null};}
-  return e;
-});
-sv('mj_entries',entries);
-
+let currentUser=null;
+let customCats=[];
+let entries=[];
 let activeCat=SYS_CATS[0].id;
 let histCat='all';
 let editingCatId=null;
 let editingEntryId=null;
 let pendingImgs=[],pendingAudio=null;
 let mediaRecorder=null,audioChunks=[],recSeconds=0,recInterval=null;
-let pressTimer=null,pressEl=null;
-let hintShown=ld('mj_hint_shown',false);
+let pressTimer=null,pressEl=null,pressActive=false;
+let hintShown=false;
+let authMode='login';
+
+// ── Auth ──────────────────────────────────────────────────────────
+function switchAuthTab(mode){
+  authMode=mode;
+  document.getElementById('tab-login').classList.toggle('active',mode==='login');
+  document.getElementById('tab-signup').classList.toggle('active',mode==='signup');
+  document.getElementById('auth-btn').textContent=mode==='login'?'登录':'注册';
+  document.getElementById('auth-err').textContent='';
+}
+
+async function doAuth(){
+  const email=document.getElementById('auth-email').value.trim();
+  const password=document.getElementById('auth-password').value;
+  const btn=document.getElementById('auth-btn');
+  const err=document.getElementById('auth-err');
+  if(!email||!password){err.textContent='请填写邮箱和密码';return;}
+  btn.disabled=true;btn.textContent='处理中…';err.textContent='';
+  try{
+    let result;
+    if(authMode==='login'){
+      result=await sb.auth.signInWithPassword({email,password});
+    }else{
+      result=await sb.auth.signUp({email,password});
+      if(!result.error&&result.data.user&&!result.data.session){
+        err.style.color='#059669';
+        err.textContent='注册成功！请查收验证邮件后登录';
+        btn.disabled=false;btn.textContent='注册';
+        switchAuthTab('login');return;
+      }
+    }
+    if(result.error)throw result.error;
+    currentUser=result.data.user;
+    await initApp();
+  }catch(e){
+    err.style.color='#EF4444';
+    err.textContent=e.message==='Invalid login credentials'?'邮箱或密码错误':e.message;
+    btn.disabled=false;btn.textContent=authMode==='login'?'登录':'注册';
+  }
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  currentUser=null;customCats=[];entries=[];
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('auth-page').style.display='block';
+  document.getElementById('auth-email').value='';
+  document.getElementById('auth-password').value='';
+  document.getElementById('auth-err').textContent='';
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+async function initApp(){
+  document.getElementById('auth-page').style.display='none';
+  document.getElementById('main-app').style.display='flex';
+  document.getElementById('entries-list').innerHTML='<div class="loading">加载中…</div>';
+  await loadCats();
+  await loadEntries();
+  activeCat=SYS_CATS[0].id;
+  renderHomeCats();renderWriteBadge();
+  renderHistCats();renderCount();
+}
+
+// ── Data: Cats ────────────────────────────────────────────────────
+async function loadCats(){
+  const{data}=await sb.from('custom_cats').select('*').order('created_at');
+  customCats=(data||[]).map(r=>({id:r.id,name:r.name,emoji:r.emoji||'',color:r.color,bg:r.bg}));
+}
 
 function allCats(){return[...SYS_CATS,...customCats];}
 function allHistCats(){return[HIST_ALL,...SYS_CATS,...customCats];}
 
+async function addCat(){
+  const inp=document.getElementById('new-cat-input');
+  const name=inp.value.trim();
+  if(!name)return;
+  if(allCats().find(c=>c.name===name)){toast('分类名称已存在');inp.value='';return;}
+  const id='cat_'+Date.now();
+  const p=CAT_COLORS[customCats.length%CAT_COLORS.length];
+  const newCat={id,name,emoji:'',color:p.color,bg:p.bg};
+  customCats.push(newCat);
+  inp.value='';
+  renderHomeCats();renderHistCats();
+  await sb.from('custom_cats').insert({id,user_id:currentUser.id,name,emoji:'',color:p.color,bg:p.bg});
+  if(!hintShown){setTimeout(()=>toast('💡 长按分类标签可以编辑或删除'),400);hintShown=true;}
+  else{toast('分类已添加');}
+}
+
+function startPress(id,el){
+  pressActive=true;pressEl=el;el.classList.add('pressing');
+  pressTimer=setTimeout(()=>{
+    if(!pressActive)return;
+    el.classList.remove('pressing');
+    navigator.vibrate&&navigator.vibrate(30);
+    openCatModal(id);
+  },600);
+}
+function endPress(){
+  pressActive=false;
+  if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}
+  if(pressEl){pressEl.classList.remove('pressing');pressEl=null;}
+}
+
+function openCatModal(id){
+  editingCatId=id;
+  const cat=customCats.find(c=>c.id===id);
+  if(!cat)return;
+  document.getElementById('modal-cat-input').value=cat.name;
+  document.getElementById('cat-modal').classList.add('show');
+  setTimeout(()=>document.getElementById('modal-cat-input').focus(),100);
+}
+function closeCatModal(e){
+  if(e&&e.target!==document.getElementById('cat-modal'))return;
+  document.getElementById('cat-modal').classList.remove('show');editingCatId=null;
+}
+async function saveCat(){
+  const name=document.getElementById('modal-cat-input').value.trim();
+  if(!name){toast('请输入分类名称');return;}
+  if(allCats().find(c=>c.name===name&&c.id!==editingCatId)){toast('分类名称已存在');return;}
+  const cat=customCats.find(c=>c.id===editingCatId);
+  if(cat)cat.name=name;
+  await sb.from('custom_cats').update({name}).eq('id',editingCatId);
+  document.getElementById('cat-modal').classList.remove('show');editingCatId=null;
+  renderHomeCats();renderHistCats();renderEntries();toast('分类已更新');
+}
+async function deleteCat(){
+  if(!confirm('删除这个分类？该分类下的记录不会删除。'))return;
+  await sb.from('custom_cats').delete().eq('id',editingCatId);
+  customCats=customCats.filter(c=>c.id!==editingCatId);
+  if(activeCat===editingCatId)activeCat=SYS_CATS[0].id;
+  if(histCat===editingCatId)histCat='all';
+  document.getElementById('cat-modal').classList.remove('show');editingCatId=null;
+  renderHomeCats();renderWriteBadge();renderHistCats();renderEntries();toast('分类已删除');
+}
+
+// ── Data: Entries ─────────────────────────────────────────────────
+async function loadEntries(){
+  const{data}=await sb.from('entries').select('*').order('ts',{ascending:false});
+  entries=(data||[]).map(r=>({
+    id:r.id,catId:r.cat_id,text:r.text||'',
+    imgs:r.imgs||[],audio:r.audio||null,
+    ts:r.ts,expanded:false
+  }));
+  renderEntries();renderCount();
+}
+
+async function saveEntry(){
+  const text=document.getElementById('write-text').value.trim();
+  if(!text&&!pendingImgs.length&&!pendingAudio){toast('请输入内容再记录');return;}
+  const id=Date.now();
+  const ts=new Date().toISOString();
+  const entry={id,catId:activeCat,text,imgs:[...pendingImgs],audio:pendingAudio,ts,expanded:false};
+  entries.unshift(entry);
+  document.getElementById('write-text').value='';
+  pendingImgs=[];pendingAudio=null;
+  updateChar();renderImgPrev();renderAudioPrev();renderCount();
+  toast('记录成功 🌿');
+  const{error}=await sb.from('entries').insert({
+    id,user_id:currentUser.id,cat_id:activeCat,
+    text,imgs:entry.imgs,audio:entry.audio,ts
+  });
+  if(error)toast('云端同步失败，请检查网络');
+}
+
+async function deleteEntry(id){
+  document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
+  if(!confirm('确定删除这条记录？'))return;
+  entries=entries.filter(e=>e.id!==id);
+  renderEntries();renderCount();toast('已删除');
+  await sb.from('entries').delete().eq('id',id);
+}
+
+async function saveEditEntry(id){
+  const ta=document.getElementById('edit-ta-'+id);
+  if(!ta)return;
+  const text=ta.value.trim();
+  const e=entries.find(e=>e.id===id);
+  if(e)e.text=text;
+  editingEntryId=null;renderEntries();toast('已保存');
+  await sb.from('entries').update({text}).eq('id',id);
+}
+
+// ── Render ────────────────────────────────────────────────────────
 function renderHomeCats(){
   document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>`
     <div class="cat-chip${activeCat===c.id?' active':''}" onclick="selectWriteCat('${c.id}')">
@@ -277,11 +503,7 @@ function renderWriteBadge(){
     <span class="badge-hint">点击上方可切换分类</span>`;
 }
 
-function selectWriteCat(id){
-  activeCat=id;
-  renderHomeCats();
-  renderWriteBadge();
-}
+function selectWriteCat(id){activeCat=id;renderHomeCats();renderWriteBadge();}
 
 function renderHistCats(){
   document.getElementById('hist-cats').innerHTML=allHistCats().map(c=>`
@@ -297,77 +519,59 @@ function setHistCat(id){
   renderHistCats();renderEntries();
 }
 
-function addCat(){
-  const inp=document.getElementById('new-cat-input');
-  const name=inp.value.trim();
-  if(!name)return;
-  if(allCats().find(c=>c.name===name)){toast('分类名称已存在');inp.value='';return;}
-  const id='cat_'+Date.now();
-  const p=CAT_COLORS[customCats.length%CAT_COLORS.length];
-  customCats.push({id,name,emoji:'',color:p.color,bg:p.bg});
-  sv('mj_custom_cats',customCats);
-  inp.value='';
-  renderHomeCats();renderHistCats();
-  if(!hintShown){
-    setTimeout(()=>toast('💡 长按分类标签可以编辑或删除'),400);
-    hintShown=true;sv('mj_hint_shown',true);
-  }else{toast('分类已添加');}
+function renderEntries(){
+  const list=document.getElementById('entries-list');
+  const cats=allCats();
+  const filtered=histCat==='all'?entries:entries.filter(e=>e.catId===histCat);
+  document.getElementById('hist-count').textContent=filtered.length?`共 ${filtered.length} 条`:'';
+  if(!filtered.length){
+    list.innerHTML=`<div class="empty-state"><div class="empty-emoji">🌿</div><div class="empty-text">还没有记录</div><div class="empty-sub">去首页记录你的第一个时刻吧～</div></div>`;
+    return;
+  }
+  list.innerHTML=filtered.map(e=>{
+    const cat=cats.find(c=>c.id===e.catId)||SYS_CATS[0];
+    const long=e.text&&e.text.length>100;
+    const isEditing=editingEntryId===e.id;
+    const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>`<img class="entry-img" src="${s}">`).join('')}</div>`:'';
+    const audio=e.audio?`<div class="entry-audio"><audio controls src="${e.audio}"></audio></div>`:'';
+    const textBlock=isEditing
+      ?`<textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
+        <div class="edit-footer">
+          <button class="cancel-edit-btn" onclick="cancelEditEntry()">取消</button>
+          <button class="save-edit-btn" onclick="saveEditEntry(${e.id})">保存</button>
+        </div>`
+      :`${e.text?`<div class="entry-text${long&&!e.expanded?' clamped':''}" onclick="toggleExpand(${e.id})">${e.text}</div>`:''}
+        ${long?`<div class="expand-hint" onclick="toggleExpand(${e.id})">${e.expanded?'↑ 收起':'↓ 展开'}</div>`:''}`;
+    return`<div class="entry-card">
+      <div class="entry-top">
+        <div class="entry-badge" style="background:${cat.bg};color:${cat.color}">
+          <span style="font-size:13px">${cat.emoji||''}</span>${cat.name}
+        </div>
+        <div class="entry-right">
+          <span class="entry-time">${fmtTime(e.ts)}</span>
+          <div style="position:relative">
+            <button class="more-btn" onclick="toggleMenu('menu-${e.id}')">···</button>
+            <div class="dropdown" id="menu-${e.id}" style="display:none">
+              <button class="dropdown-item" onclick="startEditEntry(${e.id})">编辑</button>
+              <button class="dropdown-item" onclick="closeMenu('menu-${e.id}')">取消</button>
+              <button class="dropdown-item danger" onclick="deleteEntry(${e.id})">删除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      ${textBlock}${imgs}${audio}
+    </div>`;
+  }).join('');
 }
 
-let pressActive=false;
-function startPress(id,el){
-  pressActive=true;
-  pressEl=el;el.classList.add('pressing');
-  pressTimer=setTimeout(()=>{
-    if(!pressActive)return;
-    el.classList.remove('pressing');
-    navigator.vibrate&&navigator.vibrate(30);
-    openCatModal(id);
-  },600);
-}
-function endPress(){
-  pressActive=false;
-  if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}
-  if(pressEl){pressEl.classList.remove('pressing');pressEl=null;}
-}
+function renderCount(){document.getElementById('total-count').textContent=entries.length+' 条';}
 
-function openCatModal(id){
-  editingCatId=id;
-  const cat=customCats.find(c=>c.id===id);
-  if(!cat)return;
-  document.getElementById('modal-cat-input').value=cat.name;
-  document.getElementById('cat-modal').classList.add('show');
-  setTimeout(()=>document.getElementById('modal-cat-input').focus(),100);
+// ── Utils ─────────────────────────────────────────────────────────
+function fmtTime(iso){
+  const d=new Date(iso);
+  return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+
+    ' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
-function closeCatModal(e){
-  if(e&&e.target!==document.getElementById('cat-modal'))return;
-  document.getElementById('cat-modal').classList.remove('show');
-  editingCatId=null;
-}
-function saveCat(){
-  const name=document.getElementById('modal-cat-input').value.trim();
-  if(!name){toast('请输入分类名称');return;}
-  if(allCats().find(c=>c.name===name&&c.id!==editingCatId)){toast('分类名称已存在');return;}
-  const cat=customCats.find(c=>c.id===editingCatId);
-  if(cat)cat.name=name;
-  sv('mj_custom_cats',customCats);
-  document.getElementById('cat-modal').classList.remove('show');
-  editingCatId=null;
-  renderHomeCats();renderHistCats();renderEntries();
-  toast('分类已更新');
-}
-function deleteCat(){
-  if(!confirm('删除这个分类？该分类下的记录不会删除。'))return;
-  customCats=customCats.filter(c=>c.id!==editingCatId);
-  sv('mj_custom_cats',customCats);
-  if(activeCat===editingCatId)activeCat=SYS_CATS[0].id;
-  if(histCat===editingCatId)histCat='all';
-  document.getElementById('cat-modal').classList.remove('show');
-  editingCatId=null;
-  renderHomeCats();renderWriteBadge();renderHistCats();renderEntries();
-  toast('分类已删除');
-}
-
 function updateChar(){document.getElementById('char-hint').textContent=document.getElementById('write-text').value.length+' / 500';}
 function triggerImg(){document.getElementById('img-input').click();}
 function handleImgs(e){
@@ -421,140 +625,39 @@ function renderAudioPrev(){
 }
 function rmAudio(){pendingAudio=null;renderAudioPrev();}
 
-function saveEntry(){
-  const text=document.getElementById('write-text').value.trim();
-  if(!text&&!pendingImgs.length&&!pendingAudio){toast('请输入内容再记录');return;}
-  try{
-    entries.unshift({id:Date.now(),catId:activeCat,text,imgs:[...pendingImgs],audio:pendingAudio,ts:new Date().toISOString(),expanded:false});
-    sv('mj_entries',entries);
-    document.getElementById('write-text').value='';
-    pendingImgs=[];pendingAudio=null;
-    updateChar();renderImgPrev();renderAudioPrev();
-    renderCount();
-    toast('记录成功 🌿');
-  }catch{toast('存储空间不足，请清理部分记录');}
-}
-
 function toggleMenu(id){
   const m=document.getElementById(id);
   const show=m.style.display==='none';
   document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
   m.style.display=show?'block':'none';
-  if(show){
-    setTimeout(()=>document.addEventListener('click',function h(e){
-      if(!m.contains(e.target)){m.style.display='none';document.removeEventListener('click',h);}
-    }),10);
-  }
+  if(show){setTimeout(()=>document.addEventListener('click',function h(e){if(!m.contains(e.target)){m.style.display='none';document.removeEventListener('click',h);}},10));}
 }
 function closeMenu(id){document.getElementById(id).style.display='none';}
-
-function startEditEntry(id){
-  document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
-  editingEntryId=id;renderEntries();
-  setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);
-}
+function startEditEntry(id){document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');editingEntryId=id;renderEntries();setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);}
 function cancelEditEntry(){editingEntryId=null;renderEntries();}
-function saveEditEntry(id){
-  const ta=document.getElementById('edit-ta-'+id);
-  if(!ta)return;
-  const e=entries.find(e=>e.id===id);
-  if(e)e.text=ta.value.trim();
-  sv('mj_entries',entries);
-  editingEntryId=null;renderEntries();toast('已保存');
-}
-function deleteEntry(id){
-  document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
-  if(!confirm('确定删除这条记录？'))return;
-  entries=entries.filter(e=>e.id!==id);
-  sv('mj_entries',entries);renderEntries();renderCount();toast('已删除');
-}
 function toggleExpand(id){const e=entries.find(e=>e.id===id);if(e){e.expanded=!e.expanded;renderEntries();}}
-
-function fmtTime(iso){
-  const d=new Date(iso);
-  return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+
-    ' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-}
-
-function renderEntries(){
-  const list=document.getElementById('entries-list');
-  const cats=allCats();
-  const filtered=histCat==='all'?entries:entries.filter(e=>e.catId===histCat);
-  document.getElementById('hist-count').textContent=filtered.length?`共 ${filtered.length} 条`:'';
-  if(!filtered.length){
-    list.innerHTML=`<div class="empty-state"><div class="empty-emoji">🌿</div><div class="empty-text">还没有记录</div><div class="empty-sub">去首页记录你的第一个时刻吧～</div></div>`;
-    return;
-  }
-  list.innerHTML=filtered.map(e=>{
-    const cat=cats.find(c=>c.id===e.catId)||SYS_CATS[0];
-    const long=e.text&&e.text.length>100;
-    const isEditing=editingEntryId===e.id;
-    const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>`<img class="entry-img" src="${s}">`).join('')}</div>`:'';
-    const audio=e.audio?`<div class="entry-audio"><audio controls src="${e.audio}"></audio></div>`:'';
-    const textBlock=isEditing
-      ?`<textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
-        <div class="edit-footer">
-          <button class="cancel-edit-btn" onclick="cancelEditEntry()">取消</button>
-          <button class="save-edit-btn" onclick="saveEditEntry(${e.id})">保存</button>
-        </div>`
-      :`${e.text?`<div class="entry-text${long&&!e.expanded?' clamped':''}" onclick="toggleExpand(${e.id})">${e.text}</div>`:''}
-        ${long?`<div class="expand-hint" onclick="toggleExpand(${e.id})">${e.expanded?'↑ 收起':'↓ 展开'}</div>`:''}`;
-    return`<div class="entry-card">
-      <div class="entry-top">
-        <div class="entry-badge" style="background:${cat.bg};color:${cat.color}">
-          <span style="font-size:13px">${cat.emoji||''}</span>${cat.name}
-        </div>
-        <div class="entry-right">
-          <span class="entry-time">${fmtTime(e.ts)}</span>
-          <div style="position:relative">
-            <button class="more-btn" onclick="toggleMenu('menu-${e.id}')">···</button>
-            <div class="dropdown" id="menu-${e.id}" style="display:none">
-              <button class="dropdown-item" onclick="startEditEntry(${e.id})">编辑</button>
-              <button class="dropdown-item" onclick="closeMenu('menu-${e.id}')">取消</button>
-              <button class="dropdown-item danger" onclick="deleteEntry(${e.id})">删除</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      ${textBlock}${imgs}${audio}
-    </div>`;
-  }).join('');
-}
-
-function clearAllData(){
-  if(!confirm('清除所有本地数据？记录和分类都会删除，无法恢复。'))return;
-  localStorage.clear();
-  location.reload();
-}
-
-function renderCount(){
-  const count=entries.length;
-  document.getElementById('total-count').textContent=count+' 条';
-  const hasStaleAudio=entries.some(e=>e.audio&&e.audio==='stale');
-  document.getElementById('clear-btn').style.display=hasStaleAudio?'block':'none';
-}
-
-// 检测是否有问题数据，显示清除按钮
-(function detectStale(){
-  const raw=ld('mj_entries',[]);
-  const hasIssue=raw.some(e=>e.audio&&!e.audio.startsWith('data:audio'));
-  if(hasIssue)setTimeout(()=>document.getElementById('clear-btn').style.display='block',500);
-})();
 
 function switchTab(tab){
   document.getElementById('page-home').classList.toggle('active',tab==='home');
   document.getElementById('page-history').classList.toggle('active',tab==='history');
   document.getElementById('tab-home').classList.toggle('active',tab==='home');
   document.getElementById('tab-history').classList.toggle('active',tab==='history');
-  if(tab==='history'){renderEntries();}
+  if(tab==='history')renderEntries();
 }
 
-renderHomeCats();
-renderWriteBadge();
-renderHistCats();
-renderCount();
 document.getElementById('new-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')addCat();});
 document.getElementById('modal-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveCat();});
+
+// ── Boot ──────────────────────────────────────────────────────────
+(async()=>{
+  const{data:{session}}=await sb.auth.getSession();
+  if(session){
+    currentUser=session.user;
+    await initApp();
+  }else{
+    document.getElementById('auth-page').style.display='block';
+  }
+})();
 </script>
 </body>
 </html>
