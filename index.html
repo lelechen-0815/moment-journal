@@ -21,17 +21,25 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .auth-title{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:4px;}
 .auth-sub{font-size:14px;color:#9CA3AF;margin-bottom:36px;}
 .auth-card{width:100%;max-width:360px;background:#fff;border:1.5px solid #E5E7EB;border-radius:20px;padding:24px;}
-.auth-tabs{display:flex;gap:0;margin-bottom:20px;background:#F3F4F6;border-radius:12px;padding:3px;}
+.auth-tabs{display:flex;margin-bottom:20px;background:#F3F4F6;border-radius:12px;padding:3px;}
 .auth-tab{flex:1;text-align:center;padding:8px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;color:#6B7280;transition:all .15s;}
 .auth-tab.active{background:#fff;color:#1a1a1a;font-weight:600;}
 .auth-field{margin-bottom:14px;}
 .auth-field label{display:block;font-size:13px;color:#6B7280;margin-bottom:6px;font-weight:500;}
 .auth-field input{width:100%;height:44px;padding:0 14px;border:1.5px solid #E5E7EB;border-radius:12px;font-size:15px;color:#1a1a1a;outline:none;transition:border-color .15s;}
 .auth-field input:focus{border-color:#34D399;}
-.auth-submit{width:100%;height:46px;background:#34D399;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:background .15s;}
+.field-hint{font-size:12px;margin-top:5px;}
+.field-hint.err{color:#EF4444;}
+.field-hint.ok{color:#059669;}
+.field-hint.gray{color:#9CA3AF;}
+.auth-submit{width:100%;height:46px;background:#34D399;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px;transition:background .15s;}
 .auth-submit:hover{background:#10B981;}
 .auth-submit:disabled{background:#D1D5DB;cursor:not-allowed;}
 .auth-err{font-size:13px;text-align:center;margin-top:10px;min-height:18px;font-weight:500;}
+.switch-hint{font-size:13px;color:#9CA3AF;text-align:center;margin-top:14px;}
+.switch-hint span{color:#34D399;cursor:pointer;font-weight:500;}
+.auth-pane{display:none;}
+.auth-pane.active{display:block;}
 
 /* ── Tabbar ── */
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #F3F4F6;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
@@ -49,7 +57,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .topbar-brand span{color:#34D399;}
 .topbar-sub{font-size:12px;color:#9CA3AF;margin-top:2px;}
 .topbar-count{background:#ECFDF5;color:#059669;font-size:12px;font-weight:600;padding:4px 11px;border-radius:20px;white-space:nowrap;}
-
 .cats-scroll{padding:12px 18px 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
 .cats-scroll::-webkit-scrollbar{display:none;}
 .cat-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #E5E7EB;color:#6B7280;background:#fff;transition:all .18s;user-select:none;-webkit-user-select:none;}
@@ -61,10 +68,9 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .add-cat-input{flex:1;height:38px;padding:0 14px;border:1.5px solid #E5E7EB;border-radius:18px;font-size:13px;background:#fff;color:#1a1a1a;outline:none;transition:border-color .15s;}
 .add-cat-input:focus{border-color:#34D399;}
 .add-cat-input::placeholder{color:#D1D5DB;}
-.add-cat-btn{height:38px;padding:0 16px;border:1.5px solid #E5E7EB;border-radius:18px;font-size:13px;cursor:pointer;background:#fff;color:#6B7280;font-weight:500;transition:all .15s;}
+.add-cat-btn{height:38px;padding:0 16px;border:1.5px solid #E5E7EB;border-radius:18px;font-size:13px;cursor:pointer;background:#fff;color:#6B7280;font-weight:500;}
 .add-cat-btn:hover{border-color:#6EE7B7;color:#059669;background:#ECFDF5;}
 .divider{height:1px;background:#F3F4F6;margin:0 18px 12px;}
-
 .write-card{margin:0 18px 16px;background:#fff;border-radius:20px;border:1.5px solid #6EE7B7;padding:16px;}
 .write-cat-badge{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
 .current-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:12px;font-size:13px;font-weight:600;}
@@ -167,7 +173,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .upload-label{font-size:10px;color:#9CA3AF;}
 .emoji-cancel{width:100%;height:44px;margin-top:14px;background:#F3F4F6;border:none;border-radius:14px;font-size:15px;color:#6B7280;cursor:pointer;}
 
-/* ── Modal 分类编辑 ── */
+/* ── Modal ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-overlay.show{display:flex;}
 .modal{background:#fff;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;}
@@ -201,16 +207,42 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
         <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">登录</div>
         <div class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">注册</div>
       </div>
-      <div class="auth-field">
-        <label>邮箱</label>
-        <input type="email" id="auth-email" placeholder="your@email.com">
+
+      <!-- 登录 -->
+      <div class="auth-pane active" id="pane-login">
+        <div class="auth-field">
+          <label>邮箱</label>
+          <input type="email" id="login-email" placeholder="your@email.com">
+        </div>
+        <div class="auth-field">
+          <label>密码</label>
+          <input type="password" id="login-pwd" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <button class="auth-submit" id="login-btn" onclick="doLogin()">登录</button>
+        <div class="auth-err" id="login-err"></div>
+        <div class="switch-hint">还没有账号？<span onclick="switchAuthTab('signup')">立即注册</span></div>
       </div>
-      <div class="auth-field">
-        <label>密码</label>
-        <input type="password" id="auth-password" placeholder="至少 6 位" onkeydown="if(event.key==='Enter')doAuth()">
+
+      <!-- 注册 -->
+      <div class="auth-pane" id="pane-signup">
+        <div class="auth-field">
+          <label>邮箱</label>
+          <input type="email" id="reg-email" placeholder="your@email.com" oninput="checkReg()">
+        </div>
+        <div class="auth-field">
+          <label>设置密码</label>
+          <input type="password" id="reg-pwd1" placeholder="至少 6 位" oninput="checkReg()">
+          <div class="field-hint gray" id="pwd1-hint">密码至少 6 位</div>
+        </div>
+        <div class="auth-field">
+          <label>确认密码</label>
+          <input type="password" id="reg-pwd2" placeholder="再次输入密码" oninput="checkReg()" onkeydown="if(event.key==='Enter')doSignup()">
+          <div class="field-hint gray" id="pwd2-hint"></div>
+        </div>
+        <button class="auth-submit" id="reg-btn" onclick="doSignup()" disabled>注册</button>
+        <div class="auth-err" id="reg-err"></div>
+        <div class="switch-hint">已有账号？<span onclick="switchAuthTab('login')">直接登录</span></div>
       </div>
-      <button class="auth-submit" id="auth-btn" onclick="doAuth()">登录</button>
-      <div class="auth-err" id="auth-err"></div>
     </div>
   </div>
 </div>
@@ -285,18 +317,9 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
       </div>
     </div>
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num" id="stat-entries">0</div>
-        <div class="stat-label">累计记录</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-days">0</div>
-        <div class="stat-label">连续天数</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-cats">0</div>
-        <div class="stat-label">我的分类</div>
-      </div>
+      <div class="stat-card"><div class="stat-num" id="stat-entries">0</div><div class="stat-label">累计记录</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-days">0</div><div class="stat-label">连续天数</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-cats">0</div><div class="stat-label">我的分类</div></div>
     </div>
     <div class="p-section">
       <div class="p-section-title">账号设置</div>
@@ -330,7 +353,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
       <div class="tab-label">回顾</div>
     </div>
     <div class="tab" id="tab-profile" onclick="switchTab('profile')">
-      <div class="tab-icon">🙂</div>
+      <div class="tab-icon">🧩</div>
       <div class="tab-label">个人</div>
     </div>
   </div>
@@ -349,7 +372,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
   </div>
 </div>
 
-<!-- 头像 Emoji 选择器 -->
+<!-- 头像选择器 -->
 <div class="emoji-overlay" id="emoji-picker" onclick="closeEmojiPicker(event)">
   <div class="emoji-sheet">
     <div class="emoji-sheet-title">选择头像</div>
@@ -384,86 +407,86 @@ const AVATAR_EMOJIS=['🪴','🌱','🌸','🦋','🌊','⭐','🎯','🍀','�
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 
-let currentUser=null;
-let customCats=[];
-let entries=[];
-let activeCat=SYS_CATS[0].id;
-let histCat='all';
-let editingCatId=null;
-let editingEntryId=null;
+let currentUser=null,customCats=[],entries=[];
+let activeCat=SYS_CATS[0].id,histCat='all';
+let editingCatId=null,editingEntryId=null;
 let pendingImgs=[],pendingAudio=null;
 let mediaRecorder=null,audioChunks=[],recSeconds=0,recInterval=null;
 let pressTimer=null,pressEl=null,pressActive=false;
-let hintShown=false;
-let authMode='login';
-let selectedAvatar='🪴';
+let hintShown=false,selectedAvatar='🪴';
 
 // ── Auth ──
-function switchAuthTab(mode, keepMsg=false){
-  authMode=mode;
+function switchAuthTab(mode,keepMsg=false){
   document.getElementById('tab-login').classList.toggle('active',mode==='login');
   document.getElementById('tab-signup').classList.toggle('active',mode==='signup');
-  document.getElementById('auth-btn').textContent=mode==='login'?'登录':'注册';
-  if(!keepMsg)document.getElementById('auth-err').textContent='';
+  document.getElementById('pane-login').classList.toggle('active',mode==='login');
+  document.getElementById('pane-signup').classList.toggle('active',mode==='signup');
+  if(!keepMsg){
+    document.getElementById('login-err').textContent='';
+    document.getElementById('reg-err').textContent='';
+  }
 }
 
-async function doAuth(){
-  const email=document.getElementById('auth-email').value.trim();
-  const password=document.getElementById('auth-password').value;
-  const btn=document.getElementById('auth-btn');
-  const err=document.getElementById('auth-err');
+function checkReg(){
+  const email=document.getElementById('reg-email').value.trim();
+  const p1=document.getElementById('reg-pwd1').value;
+  const p2=document.getElementById('reg-pwd2').value;
+  const h1=document.getElementById('pwd1-hint');
+  const h2=document.getElementById('pwd2-hint');
+  const btn=document.getElementById('reg-btn');
+  if(p1.length===0){h1.className='field-hint gray';h1.textContent='密码至少 6 位';}
+  else if(p1.length<6){h1.className='field-hint err';h1.textContent='密码至少 6 位';}
+  else{h1.className='field-hint ok';h1.textContent='✓ 密码强度符合要求';}
+  if(p2.length===0){h2.textContent='';}
+  else if(p1!==p2){h2.className='field-hint err';h2.textContent='两次密码不一致';}
+  else{h2.className='field-hint ok';h2.textContent='✓ 密码一致';}
+  btn.disabled=!(email&&p1.length>=6&&p1===p2);
+}
+
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pwd=document.getElementById('login-pwd').value;
+  const btn=document.getElementById('login-btn');
+  const err=document.getElementById('login-err');
   err.style.color='#EF4444';
-  if(!email||!password){err.textContent='请填写邮箱和密码';return;}
-  if(password.length<6){err.textContent='密码至少 6 位';return;}
-  btn.disabled=true;btn.textContent='处理中…';err.textContent='';
+  if(!email||!pwd){err.textContent='请填写邮箱和密码';return;}
+  btn.disabled=true;btn.textContent='登录中…';err.textContent='';
   try{
-    if(authMode==='login'){
-      const{data,error}=await sb.auth.signInWithPassword({email,password});
-      if(error){
-        if(error.message.includes('Invalid login credentials'))throw new Error('邮箱或密码错误');
-        throw new Error('登录失败，请重试');
-      }
+    const{data,error}=await sb.auth.signInWithPassword({email,password:pwd});
+    if(error){
+      if(error.message.includes('Invalid login credentials'))throw new Error('邮箱或密码错误');
+      throw new Error('登录失败，请重试');
+    }
+    currentUser=data.user;
+    await initApp();
+  }catch(e){
+    err.textContent=e.message||'登录失败，请重试';
+    btn.disabled=false;btn.textContent='登录';
+  }
+}
+
+async function doSignup(){
+  const email=document.getElementById('reg-email').value.trim();
+  const pwd=document.getElementById('reg-pwd1').value;
+  const btn=document.getElementById('reg-btn');
+  const err=document.getElementById('reg-err');
+  err.style.color='#EF4444';
+  btn.disabled=true;btn.textContent='注册中…';err.textContent='';
+  try{
+    const{data,error}=await sb.auth.signUp({email,password:pwd});
+    if(error)throw new Error('注册失败：'+error.message);
+    if(data.session){
       currentUser=data.user;
       await initApp();
     }else{
-      // 先尝试登录，判断邮箱是否已注册
-      const{data:tryLogin,error:tryErr}=await sb.auth.signInWithPassword({email,password});
-      if(!tryErr&&tryLogin.session){
-        // 直接登录成功（已注册且密码正确）
-        err.style.color='#D97706';
-        err.textContent='该邮箱已注册，已为你自动登录';
-        currentUser=tryLogin.user;
-        setTimeout(()=>initApp(),1500);
-        btn.disabled=false;btn.textContent='注册';
-        return;
-      }
-      if(tryErr&&tryErr.message.includes('Email not confirmed')){
-        // 已注册但未验证
-        err.style.color='#D97706';
-        err.textContent='该邮箱已注册但未验证，请查收验证邮件';
-        btn.disabled=false;btn.textContent='注册';
-        switchAuthTab('login',true);return;
-      }
-      // 真正的新用户，走注册流程
-      const{data,error}=await sb.auth.signUp({email,password});
-      if(error){
-        throw new Error('注册失败：'+error.message);
-      }
-      if(data.session){
-        currentUser=data.user;
-        await initApp();
-      }else{
-        err.style.color='#059669';
-        err.textContent='注册成功！验证邮件已发送，请查收并完成验证。';
-        btn.disabled=false;btn.textContent='注册';
-        switchAuthTab('login',true);return;
-      }
+      err.style.color='#059669';
+      err.textContent='注册成功！验证邮件已发送，请查收并完成验证。';
+      btn.disabled=false;btn.textContent='注册';
+      switchAuthTab('login',true);
     }
   }catch(e){
-    err.style.color='#EF4444';
-    err.textContent=e.message||'操作失败，请重试';
-    btn.disabled=false;
-    btn.textContent=authMode==='login'?'登录':'注册';
+    err.textContent=e.message||'注册失败，请重试';
+    btn.disabled=false;btn.textContent='注册';
   }
 }
 
@@ -472,9 +495,10 @@ async function doLogout(){
   currentUser=null;customCats=[];entries=[];
   document.getElementById('main-app').style.display='none';
   document.getElementById('auth-page').style.display='block';
-  document.getElementById('auth-email').value='';
-  document.getElementById('auth-password').value='';
-  document.getElementById('auth-err').textContent='';
+  document.getElementById('login-email').value='';
+  document.getElementById('login-pwd').value='';
+  document.getElementById('login-err').textContent='';
+  switchAuthTab('login');
 }
 
 // ── Init ──
@@ -482,12 +506,9 @@ async function initApp(){
   document.getElementById('auth-page').style.display='none';
   document.getElementById('main-app').style.display='flex';
   document.getElementById('entries-list').innerHTML='<div class="loading">加载中…</div>';
-  await loadCats();
-  await loadEntries();
+  await loadCats();await loadEntries();
   activeCat=SYS_CATS[0].id;
-  renderHomeCats();renderWriteBadge();
-  renderHistCats();renderCount();
-  updateProfilePage();
+  renderHomeCats();renderWriteBadge();renderHistCats();renderCount();updateProfilePage();
 }
 
 // ── Cats ──
@@ -497,7 +518,6 @@ async function loadCats(){
 }
 function allCats(){return[...SYS_CATS,...customCats];}
 function allHistCats(){return[HIST_ALL,...SYS_CATS,...customCats];}
-
 function renderHomeCats(){
   document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>`
     <div class="cat-chip${activeCat===c.id?' active':''}" onclick="selectWriteCat('${c.id}')">
@@ -533,7 +553,6 @@ function setHistCat(id){
   document.getElementById('hist-label').textContent=(f?.emoji||'')+' '+(id==='all'?'全部记录':f?.name||'');
   renderHistCats();renderEntries();
 }
-
 async function addCat(){
   const inp=document.getElementById('new-cat-input');
   const name=inp.value.trim();
@@ -542,13 +561,11 @@ async function addCat(){
   const id='cat_'+Date.now();
   const p=CAT_COLORS[customCats.length%CAT_COLORS.length];
   customCats.push({id,name,emoji:'',color:p.color,bg:p.bg});
-  inp.value='';
-  renderHomeCats();renderHistCats();updateProfilePage();
+  inp.value='';renderHomeCats();renderHistCats();updateProfilePage();
   await sb.from('custom_cats').insert({id,user_id:currentUser.id,name,emoji:'',color:p.color,bg:p.bg});
   if(!hintShown){setTimeout(()=>toast('💡 长按分类标签可以编辑或删除'),400);hintShown=true;}
-  else{toast('分类已添加');}
+  else toast('分类已添加');
 }
-
 function startPress(id,el){
   pressActive=true;pressEl=el;el.classList.add('pressing');
   pressTimer=setTimeout(()=>{
@@ -565,8 +582,7 @@ function endPress(){
 }
 function openCatModal(id){
   editingCatId=id;
-  const cat=customCats.find(c=>c.id===id);
-  if(!cat)return;
+  const cat=customCats.find(c=>c.id===id);if(!cat)return;
   document.getElementById('modal-cat-input').value=cat.name;
   document.getElementById('cat-modal').classList.add('show');
   setTimeout(()=>document.getElementById('modal-cat-input').focus(),100);
@@ -592,9 +608,7 @@ async function deleteCat(){
     ?`删除「${cat.name}」分类后，该分类下的 ${affected} 条记录将自动归入「日常」，是否继续？`
     :`确定删除「${cat.name}」分类？`;
   if(!confirm(msg))return;
-  // 本地更新
   entries.forEach(e=>{if(e.catId===editingCatId)e.catId='daily';});
-  // 云端更新
   await sb.from('entries').update({cat_id:'daily'}).eq('cat_id',editingCatId).eq('user_id',currentUser.id);
   await sb.from('custom_cats').delete().eq('id',editingCatId);
   customCats=customCats.filter(c=>c.id!==editingCatId);
@@ -614,8 +628,7 @@ async function loadEntries(){
 async function saveEntry(){
   const text=document.getElementById('write-text').value.trim();
   if(!text&&!pendingImgs.length&&!pendingAudio){toast('请输入内容再记录');return;}
-  const id=Date.now();
-  const ts=new Date().toISOString();
+  const id=Date.now(),ts=new Date().toISOString();
   const entry={id,catId:activeCat,text,imgs:[...pendingImgs],audio:pendingAudio,ts,expanded:false};
   entries.unshift(entry);
   document.getElementById('write-text').value='';
@@ -632,16 +645,12 @@ async function deleteEntry(id){
   await sb.from('entries').delete().eq('id',id);
 }
 async function saveEditEntry(id){
-  const ta=document.getElementById('edit-ta-'+id);
-  if(!ta)return;
+  const ta=document.getElementById('edit-ta-'+id);if(!ta)return;
   const text=ta.value.trim();
-  const e=entries.find(e=>e.id===id);
-  if(e)e.text=text;
+  const e=entries.find(e=>e.id===id);if(e)e.text=text;
   editingEntryId=null;renderEntries();toast('已保存');
   await sb.from('entries').update({text}).eq('id',id);
 }
-
-// ── Render entries ──
 function renderEntries(){
   const list=document.getElementById('entries-list');
   const filtered=histCat==='all'?entries:entries.filter(e=>e.catId===histCat);
@@ -685,7 +694,6 @@ function renderEntries(){
     </div>`;
   }).join('');
 }
-
 function renderCount(){document.getElementById('total-count').textContent=entries.length+' 条';}
 
 // ── 个人页 ──
@@ -696,54 +704,37 @@ function updateProfilePage(){
   document.getElementById('profile-joined').textContent=`加入于 ${d.getFullYear()}年${d.getMonth()+1}月`;
   document.getElementById('stat-entries').textContent=entries.length;
   document.getElementById('stat-cats').textContent=customCats.length;
-  // 连续天数
   const days=new Set(entries.map(e=>e.ts.slice(0,10)));
   let streak=0,d2=new Date();
   while(days.has(d2.toISOString().slice(0,10))){streak++;d2.setDate(d2.getDate()-1);}
   document.getElementById('stat-days').textContent=streak;
 }
-
-// ── 头像选择 ──
 function openEmojiPicker(){document.getElementById('emoji-picker').classList.add('show');}
 function closeEmojiPicker(e){if(!e||e.target===document.getElementById('emoji-picker'))document.getElementById('emoji-picker').classList.remove('show');}
-
 function setAvatar(emoji){
   selectedAvatar=emoji;
-  document.getElementById('avatar-content').textContent=emoji;
-  const av=document.getElementById('user-avatar');
-  av.innerHTML=`<span id="avatar-content">${emoji}</span>`;
+  document.getElementById('user-avatar').innerHTML=`<span id="avatar-content">${emoji}</span>`;
   document.querySelectorAll('.emoji-opt').forEach(o=>o.classList.remove('selected'));
   closeEmojiPicker();
 }
 function handleAvatarUpload(e){
   const file=e.target.files[0];if(!file)return;
   const r=new FileReader();
-  r.onload=ev=>{
-    const av=document.getElementById('user-avatar');
-    av.innerHTML=`<img src="${ev.target.result}">`;
-    closeEmojiPicker();
-  };
-  r.readAsDataURL(file);
-  e.target.value='';
+  r.onload=ev=>{document.getElementById('user-avatar').innerHTML=`<img src="${ev.target.result}">`;closeEmojiPicker();};
+  r.readAsDataURL(file);e.target.value='';
 }
-
-// 初始化 emoji grid
 (function(){
   const grid=document.getElementById('emoji-grid');
-  const uploadDiv=document.createElement('div');
-  uploadDiv.className='upload-opt';
-  uploadDiv.innerHTML='<div class="upload-plus">＋</div><div class="upload-label">上传图片</div>';
-  uploadDiv.onclick=()=>document.getElementById('avatar-upload').click();
-  grid.appendChild(uploadDiv);
+  const up=document.createElement('div');
+  up.className='upload-opt';
+  up.innerHTML='<div class="upload-plus">＋</div><div class="upload-label">上传图片</div>';
+  up.onclick=()=>document.getElementById('avatar-upload').click();
+  grid.appendChild(up);
   AVATAR_EMOJIS.forEach(e=>{
     const div=document.createElement('div');
     div.className='emoji-opt'+(e===selectedAvatar?' selected':'');
     div.textContent=e;
-    div.onclick=()=>{
-      document.querySelectorAll('.emoji-opt').forEach(o=>o.classList.remove('selected'));
-      div.classList.add('selected');
-      setAvatar(e);
-    };
+    div.onclick=()=>{document.querySelectorAll('.emoji-opt').forEach(o=>o.classList.remove('selected'));div.classList.add('selected');setAvatar(e);};
     grid.appendChild(div);
   });
 })();
@@ -772,8 +763,7 @@ async function toggleRecord(){
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
     audioChunks=[];
-    const mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':
-                   MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'';
+    const mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'';
     mediaRecorder=mimeType?new MediaRecorder(stream,{mimeType}):new MediaRecorder(stream);
     mediaRecorder.ondataavailable=e=>{if(e.data.size>0)audioChunks.push(e.data);};
     mediaRecorder.onstop=()=>{
@@ -816,7 +806,6 @@ function closeMenu(id){document.getElementById(id).style.display='none';}
 function startEditEntry(id){document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');editingEntryId=id;renderEntries();setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);}
 function cancelEditEntry(){editingEntryId=null;renderEntries();}
 function toggleExpand(id){const e=entries.find(e=>e.id===id);if(e){e.expanded=!e.expanded;renderEntries();}}
-
 function switchTab(tab){
   ['now','review','profile'].forEach(t=>{
     document.getElementById('page-'+t).classList.toggle('active',t===tab);
@@ -825,7 +814,6 @@ function switchTab(tab){
   if(tab==='review')renderEntries();
   if(tab==='profile')updateProfilePage();
 }
-
 document.getElementById('new-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')addCat();});
 document.getElementById('modal-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveCat();});
 
