@@ -426,14 +426,27 @@ async function doAuth(){
       currentUser=data.user;
       await initApp();
     }else{
+      // 先尝试登录，判断邮箱是否已注册
+      const{data:tryLogin,error:tryErr}=await sb.auth.signInWithPassword({email,password});
+      if(!tryErr&&tryLogin.session){
+        // 直接登录成功（已注册且密码正确）
+        err.style.color='#D97706';
+        err.textContent='该邮箱已注册，已为你自动登录';
+        currentUser=tryLogin.user;
+        setTimeout(()=>initApp(),1500);
+        btn.disabled=false;btn.textContent='注册';
+        return;
+      }
+      if(tryErr&&tryErr.message.includes('Email not confirmed')){
+        // 已注册但未验证
+        err.style.color='#D97706';
+        err.textContent='该邮箱已注册但未验证，请查收验证邮件';
+        btn.disabled=false;btn.textContent='注册';
+        switchAuthTab('login',true);return;
+      }
+      // 真正的新用户，走注册流程
       const{data,error}=await sb.auth.signUp({email,password});
       if(error){
-        if(error.message.includes('already registered')||error.message.includes('User already registered')){
-          err.style.color='#D97706';
-          err.textContent='该邮箱已注册，请直接登录';
-          btn.disabled=false;btn.textContent='注册';
-          switchAuthTab('login', true);return;
-        }
         throw new Error('注册失败：'+error.message);
       }
       if(data.session){
@@ -443,7 +456,7 @@ async function doAuth(){
         err.style.color='#059669';
         err.textContent='注册成功！验证邮件已发送，请查收并完成验证。';
         btn.disabled=false;btn.textContent='注册';
-        switchAuthTab('login', true);return;
+        switchAuthTab('login',true);return;
       }
     }
   }catch(e){
