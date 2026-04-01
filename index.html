@@ -291,7 +291,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
   <!-- 回顾 -->
   <div class="page" id="page-review">
     <div class="hist-topbar">
-      <div class="hist-title">回顾<span> 📖</span></div>
+      <div class="hist-title">历史记录<span> 📖</span></div>
       <div class="cats-scroll" id="hist-cats"></div>
     </div>
     <div class="section-head">
@@ -304,7 +304,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
   <!-- 个人 -->
   <div class="page" id="page-profile">
     <div class="profile-topbar">
-      <div class="profile-topbar-title">个人<span> 🌿</span></div>
+      <div class="profile-topbar-title">个人设置<span> 🧩</span></div>
     </div>
     <div class="profile-header">
       <div class="avatar-wrap" onclick="openEmojiPicker()">
@@ -479,10 +479,11 @@ async function doSignup(){
       currentUser=data.user;
       await initApp();
     }else{
-      err.style.color='#059669';
-      err.textContent='注册成功！验证邮件已发送，请查收并完成验证。';
-      btn.disabled=false;btn.textContent='注册';
       switchAuthTab('login',true);
+      const loginErr=document.getElementById('login-err');
+      loginErr.style.color='#059669';
+      loginErr.textContent='注册成功！验证邮件已发送，请查收并完成验证。';
+      btn.disabled=false;btn.textContent='注册';
     }
   }catch(e){
     err.textContent=e.message||'注册失败，请重试';
