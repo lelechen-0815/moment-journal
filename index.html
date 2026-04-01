@@ -665,36 +665,6 @@ document.getElementById('modal-cat-input').addEventListener('keydown',e=>{if(e.k
 
 // ── Boot ──────────────────────────────────────────────────────────
 (async()=>{
-  // 处理邮箱验证回调（URL 里带有 token_hash 或 access_token）
-  const hash=window.location.hash;
-  const params=new URLSearchParams(window.location.search);
-  const tokenHash=params.get('token_hash');
-  const type=params.get('type');
-
-  if(tokenHash&&type==='email'){
-    // 处理邮箱验证
-    const{data,error}=await sb.auth.verifyOtp({token_hash:tokenHash,type:'email'});
-    if(!error&&data.session){
-      currentUser=data.session.user;
-      window.history.replaceState({},'',window.location.pathname);
-      await initApp();
-      toast('邮箱验证成功！欢迎使用 🌿');
-      return;
-    }
-  }
-
-  if(hash&&hash.includes('access_token')){
-    // 处理旧版 token
-    const{data:{session},error}=await sb.auth.getSession();
-    if(!error&&session){
-      currentUser=session.user;
-      window.history.replaceState({},'',window.location.pathname);
-      await initApp();
-      toast('邮箱验证成功！欢迎使用 🌿');
-      return;
-    }
-  }
-
   const{data:{session}}=await sb.auth.getSession();
   if(session){
     currentUser=session.user;
