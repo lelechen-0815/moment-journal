@@ -35,15 +35,32 @@ const sb = supabase.createClient(
 
 // 自动处理验证 token
 (async()=>{
+  // 读取 hash 参数（Supabase 把 token 放在 # 后面）
+  const hash = window.location.hash.substring(1);
+  const hashParams = new URLSearchParams(hash);
+  const accessToken = hashParams.get('access_token');
+  const refreshToken = hashParams.get('refresh_token');
+  const errorCode = hashParams.get('error_code');
+
+  if(errorCode){
+    // 链接已过期
+    document.querySelector('.icon').textContent = '⚠️';
+    document.querySelector('.title').textContent = '验证链接已过期';
+    document.querySelector('.sub').textContent = '请重新注册或联系管理员重新发送验证邮件。';
+    return;
+  }
+
+  if(accessToken){
+    await sb.auth.setSession({access_token: accessToken, refresh_token: refreshToken});
+    await sb.auth.signOut(); // 验证完退出，让用户手动登录
+  }
+
+  // 也处理 query 参数格式
   const params = new URLSearchParams(window.location.search);
   const tokenHash = params.get('token_hash');
   const type = params.get('type');
   if(tokenHash && type === 'email'){
     await sb.auth.verifyOtp({token_hash: tokenHash, type: 'email'});
-  }
-  const hash = window.location.hash;
-  if(hash && hash.includes('access_token')){
-    await sb.auth.getSession();
   }
 })();
 </script>
