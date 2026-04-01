@@ -15,7 +15,7 @@ html,body{height:100%;background:#fff;}
 body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column;}
 
-/* ── Auth page ── */
+/* ── Auth ── */
 .auth-page{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 24px;}
 .auth-logo{font-size:48px;margin-bottom:12px;}
 .auth-title{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:4px;}
@@ -23,7 +23,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .auth-card{width:100%;max-width:360px;background:#fff;border:1.5px solid #E5E7EB;border-radius:20px;padding:24px;}
 .auth-tabs{display:flex;gap:0;margin-bottom:20px;background:#F3F4F6;border-radius:12px;padding:3px;}
 .auth-tab{flex:1;text-align:center;padding:8px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;color:#6B7280;transition:all .15s;}
-.auth-tab.active{background:#fff;color:#1a1a1a;}
+.auth-tab.active{background:#fff;color:#1a1a1a;font-weight:600;}
 .auth-field{margin-bottom:14px;}
 .auth-field label{display:block;font-size:13px;color:#6B7280;margin-bottom:6px;font-weight:500;}
 .auth-field input{width:100%;height:44px;padding:0 14px;border:1.5px solid #E5E7EB;border-radius:12px;font-size:15px;color:#1a1a1a;outline:none;transition:border-color .15s;}
@@ -31,9 +31,9 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .auth-submit{width:100%;height:46px;background:#34D399;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:background .15s;}
 .auth-submit:hover{background:#10B981;}
 .auth-submit:disabled{background:#D1D5DB;cursor:not-allowed;}
-.auth-err{font-size:13px;color:#EF4444;text-align:center;margin-top:10px;min-height:18px;}
+.auth-err{font-size:13px;text-align:center;margin-top:10px;min-height:18px;font-weight:500;}
 
-/* ── Tab bar ── */
+/* ── Tabbar ── */
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #F3F4F6;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 8px;cursor:pointer;gap:3px;}
 .tab-icon{font-size:22px;line-height:1;}
@@ -43,17 +43,13 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .page{display:none;flex:1;overflow-y:auto;padding-bottom:70px;}
 .page.active{display:block;}
 
-/* ── Topbar ── */
+/* ── 此刻页 ── */
 .topbar{padding:52px 18px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;border-bottom:1px solid #F3F4F6;}
 .topbar-brand{font-size:22px;font-weight:700;color:#1a1a1a;letter-spacing:-.5px;}
 .topbar-brand span{color:#34D399;}
 .topbar-sub{font-size:12px;color:#9CA3AF;margin-top:2px;}
-.topbar-right{display:flex;align-items:center;gap:8px;}
 .topbar-count{background:#ECFDF5;color:#059669;font-size:12px;font-weight:600;padding:4px 11px;border-radius:20px;white-space:nowrap;}
-.logout-btn{font-size:12px;color:#9CA3AF;background:none;border:1px solid #E5E7EB;border-radius:12px;padding:4px 10px;cursor:pointer;}
-.logout-btn:hover{color:#EF4444;border-color:#FCA5A5;}
 
-/* ── Cats ── */
 .cats-scroll{padding:12px 18px 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
 .cats-scroll::-webkit-scrollbar{display:none;}
 .cat-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #E5E7EB;color:#6B7280;background:#fff;transition:all .18s;user-select:none;-webkit-user-select:none;}
@@ -69,7 +65,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .add-cat-btn:hover{border-color:#6EE7B7;color:#059669;background:#ECFDF5;}
 .divider{height:1px;background:#F3F4F6;margin:0 18px 12px;}
 
-/* ── Write card ── */
 .write-card{margin:0 18px 16px;background:#fff;border-radius:20px;border:1.5px solid #6EE7B7;padding:16px;}
 .write-cat-badge{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
 .current-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:12px;font-size:13px;font-weight:600;}
@@ -87,7 +82,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .audio-preview{display:flex;align-items:center;gap:8px;background:#ECFDF5;border-radius:12px;padding:8px 12px;margin:6px 0 4px;}
 .audio-preview audio{flex:1;height:32px;}
 .audio-del{background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:20px;line-height:1;padding:0 4px;}
-.audio-del:hover{color:#EF4444;}
 .write-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
 .char-hint{font-size:12px;color:#D1D5DB;}
 .send-btn{display:flex;align-items:center;gap:6px;padding:9px 22px;background:#34D399;color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;}
@@ -95,7 +89,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .send-btn:active{transform:scale(0.97);}
 .rec-timer{font-size:12px;color:#B45309;font-weight:600;}
 
-/* ── History ── */
+/* ── 回顾页 ── */
 .hist-topbar{padding:52px 18px 0;background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid #F3F4F6;}
 .hist-title{font-size:22px;font-weight:700;color:#1a1a1a;}
 .hist-title span{color:#34D399;}
@@ -128,7 +122,52 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .save-edit-btn{padding:7px 18px;background:#34D399;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;}
 .cancel-edit-btn{padding:7px 14px;background:#fff;color:#6B7280;border:1.5px solid #E5E7EB;border-radius:12px;font-size:13px;cursor:pointer;}
 
-/* ── Modal ── */
+/* ── 个人页 ── */
+.profile-topbar{padding:52px 18px 16px;border-bottom:1px solid #F3F4F6;position:sticky;top:0;background:#fff;z-index:10;}
+.profile-topbar-title{font-size:22px;font-weight:700;color:#1a1a1a;}
+.profile-topbar-title span{color:#34D399;}
+.profile-header{display:flex;align-items:center;gap:16px;padding:20px 18px 16px;border-bottom:1px solid #F3F4F6;}
+.avatar-wrap{position:relative;cursor:pointer;flex-shrink:0;}
+.avatar{width:64px;height:64px;border-radius:50%;background:#ECFDF5;border:2px solid #6EE7B7;display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;transition:transform .15s;}
+.avatar:active{transform:scale(0.95);}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.avatar-edit-badge{position:absolute;bottom:0;right:0;width:20px;height:20px;background:#34D399;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid #fff;}
+.profile-info{flex:1;}
+.profile-email{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:3px;}
+.profile-joined{font-size:12px;color:#9CA3AF;}
+.stats-row{display:flex;padding:16px 18px;gap:12px;border-bottom:1px solid #F3F4F6;}
+.stat-card{flex:1;background:#F9FAFB;border-radius:14px;padding:14px 12px;text-align:center;}
+.stat-num{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:2px;}
+.stat-label{font-size:12px;color:#9CA3AF;}
+.p-section{padding:16px 18px 0;}
+.p-section-title{font-size:11px;color:#9CA3AF;font-weight:500;letter-spacing:.04em;margin-bottom:8px;}
+.menu-card{background:#fff;border:1.5px solid #F3F4F6;border-radius:16px;overflow:hidden;margin-bottom:16px;}
+.menu-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #F9FAFB;cursor:pointer;transition:background .15s;}
+.menu-item:last-child{border-bottom:none;}
+.menu-item:active{background:#F9FAFB;}
+.m-item-left{display:flex;align-items:center;gap:12px;}
+.m-item-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.m-item-label{font-size:15px;color:#1a1a1a;font-weight:500;}
+.m-item-arrow{color:#D1D5DB;font-size:18px;}
+.menu-item.logout .m-item-label{color:#EF4444;}
+.menu-item.logout .m-item-arrow{color:#FCA5A5;}
+
+/* ── Emoji picker ── */
+.emoji-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:flex-end;justify-content:center;}
+.emoji-overlay.show{display:flex;}
+.emoji-sheet{background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;max-width:480px;}
+.emoji-sheet-title{font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:16px;text-align:center;}
+.emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
+.emoji-opt{aspect-ratio:1;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;border:2px solid transparent;transition:all .15s;background:#F9FAFB;}
+.emoji-opt:active{transform:scale(0.9);}
+.emoji-opt.selected{border-color:#34D399;background:#ECFDF5;}
+.upload-opt{aspect-ratio:1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:2px dashed #D1D5DB;transition:all .15s;background:#F9FAFB;gap:2px;}
+.upload-opt:hover{border-color:#34D399;background:#ECFDF5;}
+.upload-plus{font-size:22px;color:#9CA3AF;line-height:1;}
+.upload-label{font-size:10px;color:#9CA3AF;}
+.emoji-cancel{width:100%;height:44px;margin-top:14px;background:#F3F4F6;border:none;border-radius:14px;font-size:15px;color:#6B7280;cursor:pointer;}
+
+/* ── Modal 分类编辑 ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-overlay.show{display:flex;}
 .modal{background:#fff;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;}
@@ -144,16 +183,14 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .empty-emoji{font-size:48px;margin-bottom:14px;}
 .empty-text{font-size:15px;font-weight:500;color:#9CA3AF;margin-bottom:6px;}
 .empty-sub{font-size:13px;color:#D1D5DB;}
-
+.loading{display:flex;align-items:center;justify-content:center;padding:48px;color:#9CA3AF;font-size:14px;}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-.loading{display:flex;align-items:center;justify-content:center;padding:48px;color:#9CA3AF;font-size:14px;gap:8px;}
 </style>
 </head>
 <body>
 
-<!-- 登录/注册页 -->
+<!-- 登录注册页 -->
 <div id="auth-page" style="display:none;">
   <div class="auth-page">
     <div class="auth-logo">🌿</div>
@@ -180,17 +217,15 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 
 <!-- 主 App -->
 <div class="app" id="main-app" style="display:none;">
-  <!-- 首页 -->
-  <div class="page active" id="page-home">
+
+  <!-- 此刻 -->
+  <div class="page active" id="page-now">
     <div class="topbar">
       <div>
         <div class="topbar-brand">我的时刻<span> 🌿</span></div>
         <div class="topbar-sub">记录每一个真实瞬间</div>
       </div>
-      <div class="topbar-right">
-        <div class="topbar-count" id="total-count">0 条</div>
-        <button class="logout-btn" onclick="doLogout()">退出</button>
-      </div>
+      <div class="topbar-count" id="total-count">0 条</div>
     </div>
     <div class="cats-scroll" id="home-sys-cats"></div>
     <div class="custom-cats-label">我的分类</div>
@@ -221,10 +256,10 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     </div>
   </div>
 
-  <!-- 历史记录 -->
-  <div class="page" id="page-history">
+  <!-- 回顾 -->
+  <div class="page" id="page-review">
     <div class="hist-topbar">
-      <div class="hist-title">历史记录<span> 📖</span></div>
+      <div class="hist-title">回顾<span> 📖</span></div>
       <div class="cats-scroll" id="hist-cats"></div>
     </div>
     <div class="section-head">
@@ -234,19 +269,74 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     <div class="entries" id="entries-list"></div>
   </div>
 
-  <div class="tabbar">
-    <div class="tab active" id="tab-home" onclick="switchTab('home')">
-      <div class="tab-icon">🌱</div>
-      <div class="tab-label">首页</div>
+  <!-- 个人 -->
+  <div class="page" id="page-profile">
+    <div class="profile-topbar">
+      <div class="profile-topbar-title">个人<span> 🌿</span></div>
     </div>
-    <div class="tab" id="tab-history" onclick="switchTab('history')">
+    <div class="profile-header">
+      <div class="avatar-wrap" onclick="openEmojiPicker()">
+        <div class="avatar" id="user-avatar"><span id="avatar-content">🪴</span></div>
+        <div class="avatar-edit-badge">✏️</div>
+      </div>
+      <div class="profile-info">
+        <div class="profile-email" id="profile-email">—</div>
+        <div class="profile-joined" id="profile-joined">—</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-entries">0</div>
+        <div class="stat-label">累计记录</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-days">0</div>
+        <div class="stat-label">连续天数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-cats">0</div>
+        <div class="stat-label">我的分类</div>
+      </div>
+    </div>
+    <div class="p-section">
+      <div class="p-section-title">账号设置</div>
+      <div class="menu-card">
+        <div class="menu-item">
+          <div class="m-item-left">
+            <div class="m-item-icon" style="background:#F5F3FF;">🔒</div>
+            <div class="m-item-label">修改密码</div>
+          </div>
+          <div class="m-item-arrow">›</div>
+        </div>
+        <div class="menu-item logout" onclick="doLogout()">
+          <div class="m-item-left">
+            <div class="m-item-icon" style="background:#FEF2F2;">🚪</div>
+            <div class="m-item-label">退出登录</div>
+          </div>
+          <div class="m-item-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabbar -->
+  <div class="tabbar">
+    <div class="tab active" id="tab-now" onclick="switchTab('now')">
+      <div class="tab-icon">🌱</div>
+      <div class="tab-label">此刻</div>
+    </div>
+    <div class="tab" id="tab-review" onclick="switchTab('review')">
       <div class="tab-icon">📖</div>
-      <div class="tab-label">历史记录</div>
+      <div class="tab-label">回顾</div>
+    </div>
+    <div class="tab" id="tab-profile" onclick="switchTab('profile')">
+      <div class="tab-icon">🙂</div>
+      <div class="tab-label">个人</div>
     </div>
   </div>
 </div>
 
-<!-- 编辑分类 Modal -->
+<!-- 分类编辑 Modal -->
 <div class="modal-overlay" id="cat-modal" onclick="closeCatModal(event)">
   <div class="modal">
     <div class="modal-title">编辑分类</div>
@@ -259,6 +349,16 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
   </div>
 </div>
 
+<!-- 头像 Emoji 选择器 -->
+<div class="emoji-overlay" id="emoji-picker" onclick="closeEmojiPicker(event)">
+  <div class="emoji-sheet">
+    <div class="emoji-sheet-title">选择头像</div>
+    <div class="emoji-grid" id="emoji-grid"></div>
+    <button class="emoji-cancel" onclick="closeEmojiPicker()">取消</button>
+  </div>
+</div>
+
+<input type="file" id="avatar-upload" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -280,6 +380,7 @@ const CAT_COLORS=[
   {color:'#B91C1C',bg:'#FEF2F2'},{color:'#1D4ED8',bg:'#EFF6FF'},
   {color:'#7C3AED',bg:'#F5F3FF'},{color:'#92400E',bg:'#FFFBEB'},
 ];
+const AVATAR_EMOJIS=['🪴','🌱','🌸','🦋','🌊','⭐','🎯','🍀','🌙','🎨','🐱','🐶','🦊','🐼','🐨','🌺','🍵','🎸','🏔️'];
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 
@@ -295,8 +396,9 @@ let mediaRecorder=null,audioChunks=[],recSeconds=0,recInterval=null;
 let pressTimer=null,pressEl=null,pressActive=false;
 let hintShown=false;
 let authMode='login';
+let selectedAvatar='🪴';
 
-// ── Auth ──────────────────────────────────────────────────────────
+// ── Auth ──
 function switchAuthTab(mode){
   authMode=mode;
   document.getElementById('tab-login').classList.toggle('active',mode==='login');
@@ -326,20 +428,22 @@ async function doAuth(){
     }else{
       const{data,error}=await sb.auth.signUp({email,password});
       if(error){
-        if(error.message.includes('already registered')||error.message.includes('User already registered'))
-          throw new Error('该邮箱已注册，请直接登录');
+        if(error.message.includes('already registered')||error.message.includes('User already registered')){
+          err.style.color='#D97706';
+          err.textContent='该邮箱已注册，请直接登录';
+          btn.disabled=false;btn.textContent='注册';
+          switchAuthTab('login');return;
+        }
         throw new Error('注册失败：'+error.message);
       }
-      // 注册成功，直接用返回的 session 登录
       if(data.session){
         currentUser=data.user;
         await initApp();
       }else{
-        // 没有 session 说明还需要验证，直接再登录一次
-        const{data:ld,error:le}=await sb.auth.signInWithPassword({email,password});
-        if(le)throw new Error('注册成功，但登录失败，请手动登录');
-        currentUser=ld.user;
-        await initApp();
+        err.style.color='#059669';
+        err.textContent='注册成功！验证邮件已发送，请查收并完成验证。';
+        btn.disabled=false;btn.textContent='注册';
+        switchAuthTab('login');return;
       }
     }
   }catch(e){
@@ -360,7 +464,7 @@ async function doLogout(){
   document.getElementById('auth-err').textContent='';
 }
 
-// ── Init ──────────────────────────────────────────────────────────
+// ── Init ──
 async function initApp(){
   document.getElementById('auth-page').style.display='none';
   document.getElementById('main-app').style.display='flex';
@@ -370,16 +474,52 @@ async function initApp(){
   activeCat=SYS_CATS[0].id;
   renderHomeCats();renderWriteBadge();
   renderHistCats();renderCount();
+  updateProfilePage();
 }
 
-// ── Data: Cats ────────────────────────────────────────────────────
+// ── Cats ──
 async function loadCats(){
   const{data}=await sb.from('custom_cats').select('*').order('created_at');
   customCats=(data||[]).map(r=>({id:r.id,name:r.name,emoji:r.emoji||'',color:r.color,bg:r.bg}));
 }
-
 function allCats(){return[...SYS_CATS,...customCats];}
 function allHistCats(){return[HIST_ALL,...SYS_CATS,...customCats];}
+
+function renderHomeCats(){
+  document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>`
+    <div class="cat-chip${activeCat===c.id?' active':''}" onclick="selectWriteCat('${c.id}')">
+      <span style="font-size:14px">${c.emoji}</span>${c.name}
+    </div>`).join('');
+  document.getElementById('home-custom-cats').innerHTML=customCats.length
+    ?customCats.map(c=>`
+      <div class="cat-chip custom${activeCat===c.id?' active':''}"
+        onclick="selectWriteCat('${c.id}')"
+        onmousedown="startPress('${c.id}',this)" onmouseup="endPress()" onmouseleave="endPress()"
+        ontouchstart="startPress('${c.id}',this)" ontouchend="endPress()" ontouchcancel="endPress()">
+        ${c.name}
+      </div>`).join('')
+    :'<span style="font-size:13px;color:#D1D5DB;padding:4px 0;">还没有自定义分类</span>';
+}
+function renderWriteBadge(){
+  const cat=allCats().find(c=>c.id===activeCat);
+  if(!cat)return;
+  document.getElementById('write-cat-badge').innerHTML=`
+    <div class="current-badge" style="background:${cat.bg};color:${cat.color}">${cat.emoji||''}${cat.name}</div>
+    <span class="badge-hint">点击上方可切换分类</span>`;
+}
+function selectWriteCat(id){activeCat=id;renderHomeCats();renderWriteBadge();}
+function renderHistCats(){
+  document.getElementById('hist-cats').innerHTML=allHistCats().map(c=>`
+    <div class="cat-chip${histCat===c.id?' active':''}" onclick="setHistCat('${c.id}')">
+      <span style="font-size:14px">${c.emoji}</span>${c.name}
+    </div>`).join('');
+}
+function setHistCat(id){
+  histCat=id;
+  const f=allHistCats().find(c=>c.id===id);
+  document.getElementById('hist-label').textContent=(f?.emoji||'')+' '+(id==='all'?'全部记录':f?.name||'');
+  renderHistCats();renderEntries();
+}
 
 async function addCat(){
   const inp=document.getElementById('new-cat-input');
@@ -388,10 +528,9 @@ async function addCat(){
   if(allCats().find(c=>c.name===name)){toast('分类名称已存在');inp.value='';return;}
   const id='cat_'+Date.now();
   const p=CAT_COLORS[customCats.length%CAT_COLORS.length];
-  const newCat={id,name,emoji:'',color:p.color,bg:p.bg};
-  customCats.push(newCat);
+  customCats.push({id,name,emoji:'',color:p.color,bg:p.bg});
   inp.value='';
-  renderHomeCats();renderHistCats();
+  renderHomeCats();renderHistCats();updateProfilePage();
   await sb.from('custom_cats').insert({id,user_id:currentUser.id,name,emoji:'',color:p.color,bg:p.bg});
   if(!hintShown){setTimeout(()=>toast('💡 长按分类标签可以编辑或删除'),400);hintShown=true;}
   else{toast('分类已添加');}
@@ -411,7 +550,6 @@ function endPress(){
   if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}
   if(pressEl){pressEl.classList.remove('pressing');pressEl=null;}
 }
-
 function openCatModal(id){
   editingCatId=id;
   const cat=customCats.find(c=>c.id===id);
@@ -435,26 +573,31 @@ async function saveCat(){
   renderHomeCats();renderHistCats();renderEntries();toast('分类已更新');
 }
 async function deleteCat(){
-  if(!confirm('删除这个分类？该分类下的记录不会删除。'))return;
+  const cat=customCats.find(c=>c.id===editingCatId);
+  const affected=entries.filter(e=>e.catId===editingCatId).length;
+  const msg=affected>0
+    ?`删除「${cat.name}」分类后，该分类下的 ${affected} 条记录将自动归入「日常」，是否继续？`
+    :`确定删除「${cat.name}」分类？`;
+  if(!confirm(msg))return;
+  // 本地更新
+  entries.forEach(e=>{if(e.catId===editingCatId)e.catId='daily';});
+  // 云端更新
+  await sb.from('entries').update({cat_id:'daily'}).eq('cat_id',editingCatId).eq('user_id',currentUser.id);
   await sb.from('custom_cats').delete().eq('id',editingCatId);
   customCats=customCats.filter(c=>c.id!==editingCatId);
   if(activeCat===editingCatId)activeCat=SYS_CATS[0].id;
   if(histCat===editingCatId)histCat='all';
   document.getElementById('cat-modal').classList.remove('show');editingCatId=null;
-  renderHomeCats();renderWriteBadge();renderHistCats();renderEntries();toast('分类已删除');
+  renderHomeCats();renderWriteBadge();renderHistCats();renderEntries();updateProfilePage();
+  toast(affected>0?`分类已删除，${affected} 条记录已归入「日常」`:'分类已删除');
 }
 
-// ── Data: Entries ─────────────────────────────────────────────────
+// ── Entries ──
 async function loadEntries(){
   const{data}=await sb.from('entries').select('*').order('ts',{ascending:false});
-  entries=(data||[]).map(r=>({
-    id:r.id,catId:r.cat_id,text:r.text||'',
-    imgs:r.imgs||[],audio:r.audio||null,
-    ts:r.ts,expanded:false
-  }));
+  entries=(data||[]).map(r=>({id:r.id,catId:r.cat_id,text:r.text||'',imgs:r.imgs||[],audio:r.audio||null,ts:r.ts,expanded:false}));
   renderEntries();renderCount();
 }
-
 async function saveEntry(){
   const text=document.getElementById('write-text').value.trim();
   if(!text&&!pendingImgs.length&&!pendingAudio){toast('请输入内容再记录');return;}
@@ -464,23 +607,17 @@ async function saveEntry(){
   entries.unshift(entry);
   document.getElementById('write-text').value='';
   pendingImgs=[];pendingAudio=null;
-  updateChar();renderImgPrev();renderAudioPrev();renderCount();
+  updateChar();renderImgPrev();renderAudioPrev();renderCount();updateProfilePage();
   toast('记录成功 🌿');
-  const{error}=await sb.from('entries').insert({
-    id,user_id:currentUser.id,cat_id:activeCat,
-    text,imgs:entry.imgs,audio:entry.audio,ts
-  });
-  if(error)toast('云端同步失败，请检查网络');
+  await sb.from('entries').insert({id,user_id:currentUser.id,cat_id:activeCat,text,imgs:entry.imgs,audio:entry.audio,ts});
 }
-
 async function deleteEntry(id){
   document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
   if(!confirm('确定删除这条记录？'))return;
   entries=entries.filter(e=>e.id!==id);
-  renderEntries();renderCount();toast('已删除');
+  renderEntries();renderCount();updateProfilePage();toast('已删除');
   await sb.from('entries').delete().eq('id',id);
 }
-
 async function saveEditEntry(id){
   const ta=document.getElementById('edit-ta-'+id);
   if(!ta)return;
@@ -491,60 +628,17 @@ async function saveEditEntry(id){
   await sb.from('entries').update({text}).eq('id',id);
 }
 
-// ── Render ────────────────────────────────────────────────────────
-function renderHomeCats(){
-  document.getElementById('home-sys-cats').innerHTML=SYS_CATS.map(c=>`
-    <div class="cat-chip${activeCat===c.id?' active':''}" onclick="selectWriteCat('${c.id}')">
-      <span style="font-size:14px">${c.emoji}</span>${c.name}
-    </div>`).join('');
-  document.getElementById('home-custom-cats').innerHTML=customCats.length
-    ?customCats.map(c=>`
-      <div class="cat-chip custom${activeCat===c.id?' active':''}"
-        onclick="selectWriteCat('${c.id}')"
-        onmousedown="startPress('${c.id}',this)" onmouseup="endPress()" onmouseleave="endPress()"
-        ontouchstart="startPress('${c.id}',this)" ontouchend="endPress()" ontouchcancel="endPress()">
-        ${c.name}
-      </div>`).join('')
-    :'<span style="font-size:13px;color:#D1D5DB;padding:4px 0;">还没有自定义分类</span>';
-}
-
-function renderWriteBadge(){
-  const cat=allCats().find(c=>c.id===activeCat);
-  if(!cat)return;
-  document.getElementById('write-cat-badge').innerHTML=`
-    <div class="current-badge" style="background:${cat.bg};color:${cat.color}">
-      ${cat.emoji||''}${cat.name}
-    </div>
-    <span class="badge-hint">点击上方可切换分类</span>`;
-}
-
-function selectWriteCat(id){activeCat=id;renderHomeCats();renderWriteBadge();}
-
-function renderHistCats(){
-  document.getElementById('hist-cats').innerHTML=allHistCats().map(c=>`
-    <div class="cat-chip${histCat===c.id?' active':''}" onclick="setHistCat('${c.id}')">
-      <span style="font-size:14px">${c.emoji}</span>${c.name}
-    </div>`).join('');
-}
-
-function setHistCat(id){
-  histCat=id;
-  const f=allHistCats().find(c=>c.id===id);
-  document.getElementById('hist-label').textContent=(f?.emoji||'')+' '+(id==='all'?'全部记录':f?.name||'');
-  renderHistCats();renderEntries();
-}
-
+// ── Render entries ──
 function renderEntries(){
   const list=document.getElementById('entries-list');
-  const cats=allCats();
   const filtered=histCat==='all'?entries:entries.filter(e=>e.catId===histCat);
   document.getElementById('hist-count').textContent=filtered.length?`共 ${filtered.length} 条`:'';
   if(!filtered.length){
-    list.innerHTML=`<div class="empty-state"><div class="empty-emoji">🌿</div><div class="empty-text">还没有记录</div><div class="empty-sub">去首页记录你的第一个时刻吧～</div></div>`;
+    list.innerHTML=`<div class="empty-state"><div class="empty-emoji">🌿</div><div class="empty-text">还没有记录</div><div class="empty-sub">去此刻记录你的第一个时刻吧～</div></div>`;
     return;
   }
   list.innerHTML=filtered.map(e=>{
-    const cat=cats.find(c=>c.id===e.catId)||SYS_CATS[0];
+    const cat=allCats().find(c=>c.id===e.catId)||SYS_CATS[0];
     const long=e.text&&e.text.length>100;
     const isEditing=editingEntryId===e.id;
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>`<img class="entry-img" src="${s}">`).join('')}</div>`:'';
@@ -581,7 +675,67 @@ function renderEntries(){
 
 function renderCount(){document.getElementById('total-count').textContent=entries.length+' 条';}
 
-// ── Utils ─────────────────────────────────────────────────────────
+// ── 个人页 ──
+function updateProfilePage(){
+  if(!currentUser)return;
+  document.getElementById('profile-email').textContent=currentUser.email||'—';
+  const d=new Date(currentUser.created_at);
+  document.getElementById('profile-joined').textContent=`加入于 ${d.getFullYear()}年${d.getMonth()+1}月`;
+  document.getElementById('stat-entries').textContent=entries.length;
+  document.getElementById('stat-cats').textContent=customCats.length;
+  // 连续天数
+  const days=new Set(entries.map(e=>e.ts.slice(0,10)));
+  let streak=0,d2=new Date();
+  while(days.has(d2.toISOString().slice(0,10))){streak++;d2.setDate(d2.getDate()-1);}
+  document.getElementById('stat-days').textContent=streak;
+}
+
+// ── 头像选择 ──
+function openEmojiPicker(){document.getElementById('emoji-picker').classList.add('show');}
+function closeEmojiPicker(e){if(!e||e.target===document.getElementById('emoji-picker'))document.getElementById('emoji-picker').classList.remove('show');}
+
+function setAvatar(emoji){
+  selectedAvatar=emoji;
+  document.getElementById('avatar-content').textContent=emoji;
+  const av=document.getElementById('user-avatar');
+  av.innerHTML=`<span id="avatar-content">${emoji}</span>`;
+  document.querySelectorAll('.emoji-opt').forEach(o=>o.classList.remove('selected'));
+  closeEmojiPicker();
+}
+function handleAvatarUpload(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const av=document.getElementById('user-avatar');
+    av.innerHTML=`<img src="${ev.target.result}">`;
+    closeEmojiPicker();
+  };
+  r.readAsDataURL(file);
+  e.target.value='';
+}
+
+// 初始化 emoji grid
+(function(){
+  const grid=document.getElementById('emoji-grid');
+  const uploadDiv=document.createElement('div');
+  uploadDiv.className='upload-opt';
+  uploadDiv.innerHTML='<div class="upload-plus">＋</div><div class="upload-label">上传图片</div>';
+  uploadDiv.onclick=()=>document.getElementById('avatar-upload').click();
+  grid.appendChild(uploadDiv);
+  AVATAR_EMOJIS.forEach(e=>{
+    const div=document.createElement('div');
+    div.className='emoji-opt'+(e===selectedAvatar?' selected':'');
+    div.textContent=e;
+    div.onclick=()=>{
+      document.querySelectorAll('.emoji-opt').forEach(o=>o.classList.remove('selected'));
+      div.classList.add('selected');
+      setAvatar(e);
+    };
+    grid.appendChild(div);
+  });
+})();
+
+// ── Utils ──
 function fmtTime(iso){
   const d=new Date(iso);
   return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+
@@ -600,7 +754,6 @@ function renderImgPrev(){
     `<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmImg(${i})">×</button></div>`).join('');
 }
 function rmImg(i){pendingImgs.splice(i,1);renderImgPrev();}
-
 async function toggleRecord(){
   if(mediaRecorder&&mediaRecorder.state==='recording'){stopRec();return;}
   try{
@@ -639,7 +792,6 @@ function renderAudioPrev(){
     `<div class="audio-preview"><audio controls src="${pendingAudio}"></audio><button class="audio-del" onclick="rmAudio()">×</button></div>`:'';
 }
 function rmAudio(){pendingAudio=null;renderAudioPrev();}
-
 function toggleMenu(id){
   const m=document.getElementById(id);
   const show=m.style.display==='none';
@@ -653,25 +805,22 @@ function cancelEditEntry(){editingEntryId=null;renderEntries();}
 function toggleExpand(id){const e=entries.find(e=>e.id===id);if(e){e.expanded=!e.expanded;renderEntries();}}
 
 function switchTab(tab){
-  document.getElementById('page-home').classList.toggle('active',tab==='home');
-  document.getElementById('page-history').classList.toggle('active',tab==='history');
-  document.getElementById('tab-home').classList.toggle('active',tab==='home');
-  document.getElementById('tab-history').classList.toggle('active',tab==='history');
-  if(tab==='history')renderEntries();
+  ['now','review','profile'].forEach(t=>{
+    document.getElementById('page-'+t).classList.toggle('active',t===tab);
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+  });
+  if(tab==='review')renderEntries();
+  if(tab==='profile')updateProfilePage();
 }
 
 document.getElementById('new-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')addCat();});
 document.getElementById('modal-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveCat();});
 
-// ── Boot ──────────────────────────────────────────────────────────
+// ── Boot ──
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
-  if(session){
-    currentUser=session.user;
-    await initApp();
-  }else{
-    document.getElementById('auth-page').style.display='block';
-  }
+  if(session){currentUser=session.user;await initApp();}
+  else{document.getElementById('auth-page').style.display='block';}
 })();
 </script>
 </body>
