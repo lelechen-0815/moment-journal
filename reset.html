@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重置密码 · 我的时刻</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,system-ui,sans-serif;background:#f9fafb;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.card{background:#fff;border-radius:24px;padding:40px 28px;text-align:center;max-width:360px;width:100%;box-shadow:0 4px 24px rgba(0,0,0,0.06);}
+.icon{font-size:48px;margin-bottom:16px;}
+.title{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.sub{font-size:14px;color:#6B7280;line-height:1.7;margin-bottom:24px;}
+.field{margin-bottom:14px;text-align:left;}
+.field label{display:block;font-size:13px;color:#6B7280;margin-bottom:6px;font-weight:500;}
+.input-wrap{position:relative;display:flex;align-items:center;}
+.input-wrap input{width:100%;height:44px;padding:0 44px 0 14px;border:1.5px solid #E5E7EB;border-radius:12px;font-size:15px;color:#1a1a1a;outline:none;transition:border-color .15s;}
+.input-wrap input:focus{border-color:#34D399;}
+.eye-btn{position:absolute;right:0;top:0;bottom:0;width:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;border-radius:0 12px 12px 0;}
+.eye-btn svg{width:18px;height:18px;stroke:#9CA3AF;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.field-hint{font-size:12px;margin-top:5px;}
+.field-hint.err{color:#EF4444;}
+.field-hint.ok{color:#059669;}
+.btn{width:100%;height:46px;background:#34D399;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px;}
+.btn:disabled{background:#D1D5DB;cursor:not-allowed;}
+.msg{font-size:13px;text-align:center;margin-top:10px;min-height:18px;font-weight:500;}
+.msg.ok{color:#059669;}
+.msg.err{color:#EF4444;}
+.back-link{display:inline-block;margin-top:16px;font-size:13px;color:#34D399;cursor:pointer;font-weight:500;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">🔒</div>
+  <div class="title">重置密码</div>
+  <div class="sub">请设置你的新登录密码</div>
+
+  <div id="form-area">
+    <div class="field">
+      <label>新密码</label>
+      <div class="input-wrap">
+        <input type="password" id="pwd1" placeholder="至少 6 位" oninput="check()">
+        <button class="eye-btn" onclick="toggleEye('pwd1',this)" tabindex="-1">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="field-hint" id="h1"></div>
+    </div>
+    <div class="field">
+      <label>确认新密码</label>
+      <div class="input-wrap">
+        <input type="password" id="pwd2" placeholder="再次输入密码" oninput="check()">
+        <button class="eye-btn" onclick="toggleEye('pwd2',this)" tabindex="-1">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="field-hint" id="h2"></div>
+    </div>
+    <button class="btn" id="submit-btn" onclick="submitReset()" disabled>确认重置</button>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div id="success-area" style="display:none;">
+    <div style="font-size:15px;color:#059669;font-weight:600;margin-bottom:8px;">🎉 密码重置成功！</div>
+    <div style="font-size:14px;color:#6B7280;margin-bottom:16px;">现在可以用新密码登录了</div>
+  </div>
+
+  <div class="back-link" onclick="goBack()">← 回到登录页</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const sb=supabase.createClient('https://rwvhvfmfxjspnxsitsxj.supabase.co','sb_publishable_c1x7dVYf-NQ0jYo8osud7Q_4sp5EXrY');
+
+const EYE_OPEN=`<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+const EYE_CLOSED=`<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+
+function toggleEye(id,btn){
+  const inp=document.getElementById(id);
+  const svg=btn.querySelector('svg');
+  if(inp.type==='password'){inp.type='text';svg.innerHTML=EYE_CLOSED;svg.style.stroke='#374151';}
+  else{inp.type='password';svg.innerHTML=EYE_OPEN;svg.style.stroke='';}
+}
+
+function check(){
+  const p1=document.getElementById('pwd1').value;
+  const p2=document.getElementById('pwd2').value;
+  const h1=document.getElementById('h1');
+  const h2=document.getElementById('h2');
+  const btn=document.getElementById('submit-btn');
+  if(!p1){h1.className='field-hint';h1.textContent='';}
+  else if(p1.length<6){h1.className='field-hint err';h1.textContent='密码至少 6 位';}
+  else{h1.className='field-hint ok';h1.textContent='✓ 密码强度符合要求';}
+  if(!p2){h2.textContent='';}
+  else if(p1!==p2){h2.className='field-hint err';h2.textContent='两次密码不一致';}
+  else{h2.className='field-hint ok';h2.textContent='✓ 密码一致';}
+  btn.disabled=!(p1.length>=6&&p1===p2);
+}
+
+async function submitReset(){
+  const pwd=document.getElementById('pwd1').value;
+  const btn=document.getElementById('submit-btn');
+  const msg=document.getElementById('msg');
+  btn.disabled=true;btn.textContent='重置中…';
+  const{error}=await sb.auth.updateUser({password:pwd});
+  if(error){
+    msg.className='msg err';msg.textContent='重置失败，链接可能已过期';
+    btn.disabled=false;btn.textContent='确认重置';
+  }else{
+    document.getElementById('form-area').style.display='none';
+    document.getElementById('success-area').style.display='block';
+  }
+}
+
+function goBack(){window.location.href='https://my-moment-journal.com';}
+
+// 处理 Supabase 重置链接的 token
+(async()=>{
+  const hash=window.location.hash.substring(1);
+  const params=new URLSearchParams(hash);
+  const accessToken=params.get('access_token');
+  const refreshToken=params.get('refresh_token');
+  if(accessToken){
+    await sb.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
+  }
+})();
+</script>
+</body>
+</html>

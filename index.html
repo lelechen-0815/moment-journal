@@ -26,8 +26,27 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .auth-tab.active{background:#fff;color:#1a1a1a;font-weight:600;}
 .auth-field{margin-bottom:14px;}
 .auth-field label{display:block;font-size:13px;color:#6B7280;margin-bottom:6px;font-weight:500;}
-.auth-field input{width:100%;height:44px;padding:0 14px;border:1.5px solid #E5E7EB;border-radius:12px;font-size:15px;color:#1a1a1a;outline:none;transition:border-color .15s;}
+.auth-field input{width:100%;height:44px;padding:0 44px 0 14px;border:1.5px solid #E5E7EB;border-radius:12px;font-size:15px;color:#1a1a1a;outline:none;transition:border-color .15s;}
+.auth-field input.no-icon{padding:0 14px;}
 .auth-field input:focus{border-color:#34D399;}
+.input-wrap{position:relative;display:flex;align-items:center;}
+.input-wrap input{flex:1;}
+.eye-btn{position:absolute;right:0;top:0;bottom:0;width:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;border-radius:0 12px 12px 0;}
+.eye-btn svg{width:18px;height:18px;stroke:#9CA3AF;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s;}
+.eye-btn:hover svg{stroke:#374151;}
+.forgot-row{text-align:right;margin-top:-6px;margin-bottom:10px;}
+.forgot-link{font-size:13px;color:#34D399;cursor:pointer;font-weight:500;}
+.spam-hint{font-size:12px;color:#9CA3AF;text-align:center;margin-top:6px;line-height:1.6;}
+.nickname-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.nickname-text{font-size:15px;font-weight:600;color:#1a1a1a;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.nickname-placeholder{font-size:15px;font-weight:500;color:#D1D5DB;flex:1;}
+.edit-nick-btn{width:22px;height:22px;border-radius:6px;border:1.5px solid #E5E7EB;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;}
+.edit-nick-btn:hover{border-color:#34D399;background:#ECFDF5;}
+.edit-nick-btn svg{width:11px;height:11px;stroke:#9CA3AF;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nickname-edit-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.nickname-input{flex:1;height:32px;padding:0 10px;border:1.5px solid #34D399;border-radius:10px;font-size:14px;color:#1a1a1a;outline:none;background:#fff;}
+.nick-save-btn{height:32px;padding:0 12px;background:#34D399;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.nick-cancel-btn{height:32px;width:32px;background:#F3F4F6;color:#6B7280;border:none;border-radius:10px;font-size:14px;cursor:pointer;}
 .field-hint{font-size:12px;margin-top:5px;}
 .field-hint.err{color:#EF4444;}
 .field-hint.ok{color:#059669;}
@@ -212,12 +231,16 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
       <div class="auth-pane active" id="pane-login">
         <div class="auth-field">
           <label>邮箱</label>
-          <input type="email" id="login-email" placeholder="your@email.com">
+          <input type="email" id="login-email" placeholder="your@email.com" class="no-icon">
         </div>
         <div class="auth-field">
           <label>密码</label>
-          <input type="password" id="login-pwd" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+          <div class="input-wrap">
+            <input type="password" id="login-pwd" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+            <button class="eye-btn" onclick="toggleEye('login-pwd',this)" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
         </div>
+        <div class="forgot-row"><span class="forgot-link" onclick="doForgotPwd()">忘记密码？</span></div>
         <button class="auth-submit" id="login-btn" onclick="doLogin()">登录</button>
         <div class="auth-err" id="login-err"></div>
         <div class="switch-hint">还没有账号？<span onclick="switchAuthTab('signup')">立即注册</span></div>
@@ -227,20 +250,27 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
       <div class="auth-pane" id="pane-signup">
         <div class="auth-field">
           <label>邮箱</label>
-          <input type="email" id="reg-email" placeholder="your@email.com" oninput="checkReg()">
+          <input type="email" id="reg-email" placeholder="your@email.com" class="no-icon" oninput="checkReg()">
         </div>
         <div class="auth-field">
           <label>设置密码</label>
-          <input type="password" id="reg-pwd1" placeholder="至少 6 位" oninput="checkReg()">
+          <div class="input-wrap">
+            <input type="password" id="reg-pwd1" placeholder="至少 6 位" oninput="checkReg()">
+            <button class="eye-btn" onclick="toggleEye('reg-pwd1',this)" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
           <div class="field-hint gray" id="pwd1-hint">密码至少 6 位</div>
         </div>
         <div class="auth-field">
           <label>确认密码</label>
-          <input type="password" id="reg-pwd2" placeholder="再次输入密码" oninput="checkReg()" onkeydown="if(event.key==='Enter')doSignup()">
+          <div class="input-wrap">
+            <input type="password" id="reg-pwd2" placeholder="再次输入密码" oninput="checkReg()" onkeydown="if(event.key==='Enter')doSignup()">
+            <button class="eye-btn" onclick="toggleEye('reg-pwd2',this)" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
           <div class="field-hint gray" id="pwd2-hint"></div>
         </div>
         <button class="auth-submit" id="reg-btn" onclick="doSignup()" disabled>注册</button>
         <div class="auth-err" id="reg-err"></div>
+        <div class="spam-hint">📬 若未收到邮件，请检查垃圾邮件文件夹</div>
         <div class="switch-hint">已有账号？<span onclick="switchAuthTab('login')">直接登录</span></div>
       </div>
     </div>
@@ -312,8 +342,27 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
         <div class="avatar-edit-badge">✏️</div>
       </div>
       <div class="profile-info">
-        <div class="profile-email" id="profile-email">—</div>
-        <div class="profile-joined" id="profile-joined">—</div>
+        <!-- 昵称显示 -->
+        <div id="nickname-display">
+          <div class="nickname-row">
+            <div id="nickname-show" class="nickname-placeholder">未设置昵称</div>
+            <div class="edit-nick-btn" onclick="startEditNick()">
+              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+          </div>
+          <div class="profile-email" id="profile-email">—</div>
+          <div class="profile-joined" id="profile-joined">—</div>
+        </div>
+        <!-- 昵称编辑 -->
+        <div id="nickname-edit" style="display:none;">
+          <div class="nickname-edit-row">
+            <input class="nickname-input" id="nickname-input" placeholder="输入昵称…" maxlength="20" onkeydown="if(event.key==='Enter')saveNick()">
+            <button class="nick-save-btn" onclick="saveNick()">保存</button>
+            <button class="nick-cancel-btn" onclick="cancelEditNick()">✕</button>
+          </div>
+          <div class="profile-email" id="profile-email2">—</div>
+          <div class="profile-joined" id="profile-joined2">—</div>
+        </div>
       </div>
     </div>
     <div class="stats-row">
@@ -414,6 +463,54 @@ let pendingImgs=[],pendingAudio=null;
 let mediaRecorder=null,audioChunks=[],recSeconds=0,recInterval=null;
 let pressTimer=null,pressEl=null,pressActive=false;
 let hintShown=false,selectedAvatar='🪴';
+let userNickname='';
+
+// ── 眼睛按钮 ──
+const EYE_OPEN=`<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+const EYE_CLOSED=`<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+function toggleEye(id,btn){
+  const inp=document.getElementById(id);
+  const svg=btn.querySelector('svg');
+  if(inp.type==='password'){inp.type='text';svg.innerHTML=EYE_CLOSED;svg.style.stroke='#374151';}
+  else{inp.type='password';svg.innerHTML=EYE_OPEN;svg.style.stroke='';}
+}
+
+// ── 忘记密码 ──
+async function doForgotPwd(){
+  const email=document.getElementById('login-email').value.trim();
+  const err=document.getElementById('login-err');
+  if(!email){err.style.color='#EF4444';err.textContent='请先填写邮箱';return;}
+  err.style.color='#9CA3AF';err.textContent='发送中…';
+  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://my-moment-journal.com/reset.html'});
+  if(error){err.style.color='#EF4444';err.textContent='发送失败，请重试';}
+  else{err.style.color='#059669';err.textContent='重置邮件已发送，请查收邮箱 📬';}
+}
+
+// ── 昵称 ──
+function renderNickname(){
+  const show=document.getElementById('nickname-show');
+  if(userNickname){show.textContent=userNickname;show.className='nickname-text';}
+  else{show.textContent='未设置昵称';show.className='nickname-placeholder';}
+}
+function startEditNick(){
+  document.getElementById('nickname-input').value=userNickname;
+  document.getElementById('nickname-display').style.display='none';
+  document.getElementById('nickname-edit').style.display='block';
+  setTimeout(()=>document.getElementById('nickname-input').focus(),50);
+}
+function cancelEditNick(){
+  document.getElementById('nickname-display').style.display='block';
+  document.getElementById('nickname-edit').style.display='none';
+}
+async function saveNick(){
+  const val=document.getElementById('nickname-input').value.trim();
+  userNickname=val;
+  renderNickname();
+  cancelEditNick();
+  toast(val?'昵称已保存 🌿':'昵称已清除');
+  // 存到 Supabase user metadata
+  await sb.auth.updateUser({data:{nickname:val}});
+}
 
 // ── Auth ──
 function switchAuthTab(mode,keepMsg=false){
@@ -700,9 +797,18 @@ function renderCount(){document.getElementById('total-count').textContent=entrie
 // ── 个人页 ──
 function updateProfilePage(){
   if(!currentUser)return;
-  document.getElementById('profile-email').textContent=currentUser.email||'—';
+  // 昵称
+  userNickname=currentUser.user_metadata?.nickname||'';
+  renderNickname();
+  // 邮箱和加入时间（显示/编辑两套 DOM 都更新）
+  const email=currentUser.email||'—';
   const d=new Date(currentUser.created_at);
-  document.getElementById('profile-joined').textContent=`加入于 ${d.getFullYear()}年${d.getMonth()+1}月`;
+  const joined=`加入于 ${d.getFullYear()}年${d.getMonth()+1}月`;
+  document.getElementById('profile-email').textContent=email;
+  document.getElementById('profile-joined').textContent=joined;
+  document.getElementById('profile-email2').textContent=email;
+  document.getElementById('profile-joined2').textContent=joined;
+  // 统计
   document.getElementById('stat-entries').textContent=entries.length;
   document.getElementById('stat-cats').textContent=customCats.length;
   const days=new Set(entries.map(e=>e.ts.slice(0,10)));
