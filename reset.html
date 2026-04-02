@@ -116,13 +116,36 @@ function goBack(){window.location.href='https://my-moment-journal.com';}
 
 // 处理 Supabase 重置链接的 token
 (async()=>{
+  // 先隐藏表单，显示加载状态
+  document.getElementById('form-area').style.display='none';
+  document.querySelector('.sub').textContent='正在验证链接…';
+
   const hash=window.location.hash.substring(1);
   const params=new URLSearchParams(hash);
   const accessToken=params.get('access_token');
   const refreshToken=params.get('refresh_token');
-  if(accessToken){
-    await sb.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
+  const errorCode=params.get('error_code');
+
+  if(errorCode){
+    document.querySelector('.icon').textContent='⚠️';
+    document.querySelector('.title').textContent='链接已失效';
+    document.querySelector('.sub').textContent='重置链接已过期，请重新申请';
+    return;
   }
+
+  if(accessToken){
+    const{error}=await sb.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
+    if(error){
+      document.querySelector('.icon').textContent='⚠️';
+      document.querySelector('.title').textContent='链接已失效';
+      document.querySelector('.sub').textContent='重置链接已过期，请重新申请';
+      return;
+    }
+  }
+
+  // session 建立成功，显示表单
+  document.querySelector('.sub').textContent='请设置你的新登录密码';
+  document.getElementById('form-area').style.display='block';
 })();
 </script>
 </body>
