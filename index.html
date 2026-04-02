@@ -373,7 +373,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     <div class="p-section">
       <div class="p-section-title">账号设置</div>
       <div class="menu-card">
-        <div class="menu-item">
+        <div class="menu-item" onclick="openChangePwdModal()">
           <div class="m-item-left">
             <div class="m-item-icon" style="background:#F5F3FF;">🔒</div>
             <div class="m-item-label">修改密码</div>
@@ -418,6 +418,33 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
       <button class="modal-del" onclick="deleteCat()">删除</button>
       <button class="modal-save" onclick="saveCat()">保存</button>
     </div>
+  </div>
+</div>
+
+<!-- 修改密码 Modal -->
+<div class="modal-overlay" id="pwd-modal" onclick="closeChangePwdModal(event)">
+  <div class="modal">
+    <div class="modal-title">🔒 修改密码</div>
+    <div class="auth-field" style="margin-bottom:12px;">
+      <label style="font-size:13px;color:#6B7280;font-weight:500;display:block;margin-bottom:6px;">新密码</label>
+      <div class="input-wrap" style="position:relative;">
+        <input type="password" id="pwd-new" class="modal-input" style="padding-right:44px;" placeholder="至少 6 位" oninput="checkPwdModal()">
+        <button class="eye-btn" onclick="toggleEye('pwd-new',this)" tabindex="-1" style="position:absolute;right:0;top:0;bottom:0;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#9CA3AF;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div class="auth-field" style="margin-bottom:4px;">
+      <label style="font-size:13px;color:#6B7280;font-weight:500;display:block;margin-bottom:6px;">确认新密码</label>
+      <div class="input-wrap" style="position:relative;">
+        <input type="password" id="pwd-new2" class="modal-input" style="padding-right:44px;" placeholder="再次输入新密码" oninput="checkPwdModal()" onkeydown="if(event.key==='Enter')doChangePwd()">
+        <button class="eye-btn" onclick="toggleEye('pwd-new2',this)" tabindex="-1" style="position:absolute;right:0;top:0;bottom:0;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#9CA3AF;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div class="field-hint gray" id="pwd-modal-hint" style="margin-bottom:12px;min-height:18px;"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeChangePwdModal()">取消</button>
+      <button class="modal-save" id="pwd-modal-btn" onclick="doChangePwd()" disabled>确认修改</button>
+    </div>
+    <div class="auth-err" id="pwd-modal-err" style="color:#EF4444;font-size:13px;text-align:center;margin-top:8px;min-height:18px;"></div>
   </div>
 </div>
 
@@ -923,6 +950,45 @@ function switchTab(tab){
 }
 document.getElementById('new-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')addCat();});
 document.getElementById('modal-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveCat();});
+
+// ── 修改密码 ──
+function openChangePwdModal(){
+  document.getElementById('pwd-new').value='';
+  document.getElementById('pwd-new2').value='';
+  document.getElementById('pwd-modal-hint').textContent='';
+  document.getElementById('pwd-modal-hint').className='field-hint gray';
+  document.getElementById('pwd-modal-err').textContent='';
+  document.getElementById('pwd-modal-btn').disabled=true;
+  document.getElementById('pwd-modal').classList.add('show');
+  setTimeout(()=>document.getElementById('pwd-new').focus(),100);
+}
+function closeChangePwdModal(e){
+  if(e&&e.target!==document.getElementById('pwd-modal'))return;
+  document.getElementById('pwd-modal').classList.remove('show');
+}
+function checkPwdModal(){
+  const p1=document.getElementById('pwd-new').value;
+  const p2=document.getElementById('pwd-new2').value;
+  const hint=document.getElementById('pwd-modal-hint');
+  const btn=document.getElementById('pwd-modal-btn');
+  document.getElementById('pwd-modal-err').textContent='';
+  if(!p1){hint.textContent='';hint.className='field-hint gray';btn.disabled=true;return;}
+  if(p1.length<6){hint.textContent='密码至少 6 位';hint.className='field-hint err';btn.disabled=true;return;}
+  if(!p2){hint.textContent='密码强度符合要求';hint.className='field-hint ok';btn.disabled=true;return;}
+  if(p1!==p2){hint.textContent='两次密码不一致';hint.className='field-hint err';btn.disabled=true;return;}
+  hint.textContent='✓ 密码一致';hint.className='field-hint ok';btn.disabled=false;
+}
+async function doChangePwd(){
+  const pwd=document.getElementById('pwd-new').value;
+  const btn=document.getElementById('pwd-modal-btn');
+  const errEl=document.getElementById('pwd-modal-err');
+  btn.disabled=true;btn.textContent='修改中…';
+  const{error}=await sb.auth.updateUser({password:pwd});
+  btn.textContent='确认修改';
+  if(error){errEl.textContent=error.message||'修改失败，请重试';btn.disabled=false;return;}
+  document.getElementById('pwd-modal').classList.remove('show');
+  toast('密码已修改 🔐');
+}
 
 // ── Boot ──
 (async()=>{
