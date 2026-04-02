@@ -119,6 +119,12 @@ function goBack(){window.location.href='https://my-moment-journal.com';}
   document.getElementById('form-area').style.display='none';
   document.querySelector('.sub').textContent='正在验证链接…';
 
+  function showError(hint){
+    document.querySelector('.icon').textContent='⚠️';
+    document.querySelector('.title').textContent='链接已失效';
+    document.querySelector('.sub').textContent=hint||'重置链接已过期，请重新申请';
+  }
+
   // 同时读取 hash 和 query 两种格式
   const hash=window.location.hash.substring(1);
   const hashParams=new URLSearchParams(hash);
@@ -130,40 +136,38 @@ function goBack(){window.location.href='https://my-moment-journal.com';}
   const type=hashParams.get('type')||queryParams.get('type');
   const errorCode=hashParams.get('error_code')||queryParams.get('error_code');
 
-  if(errorCode){
-    document.querySelector('.icon').textContent='⚠️';
-    document.querySelector('.title').textContent='链接已失效';
-    document.querySelector('.sub').textContent='重置链接已过期，请重新申请';
-    return;
-  }
+  // URL 里带了明确的错误标记
+  if(errorCode){showError('重置链接已过期，请重新申请');return;}
+
+  // 页面没有任何 token 参数，说明是直接访问
+  if(!tokenHash&&!accessToken){showError('请从邮件中的按钮直接打开此页面');return;}
+
+  // 先登出，确保不使用残留的旧 session
+  await sb.auth.signOut();
 
   let ok=false;
 
-  // 方式一：token_hash（新版 Supabase 格式）
+  // 方式一：token_hash（新版 Supabase PKCE 格式）
   if(tokenHash&&type==='recovery'){
     const{error}=await sb.auth.verifyOtp({token_hash:tokenHash,type:'recovery'});
-    if(!error)ok=true;
+    if(!error){ok=true;}
+    else{console.warn('verifyOtp error:',error.message);}
   }
 
-  // 方式二：access_token（旧版格式）
+  // 方式二：access_token（旧版隐式格式，hash fragment）
   if(!ok&&accessToken){
     const{error}=await sb.auth.setSession({access_token:accessToken,refresh_token:refreshToken||''});
-    if(!error)ok=true;
+    if(!error){ok=true;}
+    else{console.warn('setSession error:',error.message);}
   }
 
-  // 方式三：已有 session（从邮件链接自动建立）
-  if(!ok){
-    const{data}=await sb.auth.getSession();
-    if(data?.session)ok=true;
-  }
+  // 注意：不再用 getSession() 做兜底，避免残留 session 导致误判
 
   if(ok){
     document.querySelector('.sub').textContent='请设置你的新登录密码';
     document.getElementById('form-area').style.display='block';
   }else{
-    document.querySelector('.icon').textContent='⚠️';
-    document.querySelector('.title').textContent='链接已失效';
-    document.querySelector('.sub').textContent='重置链接已过期，请重新申请';
+    showError('重置链接已过期或已使用，请重新申请');
   }
 })();
 </script>
