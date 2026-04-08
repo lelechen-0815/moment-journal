@@ -615,7 +615,7 @@ async function initApp(){
 
 // ── Cats ──
 async function loadCats(){
-  const{data}=await sb.from('custom_cats').select('*').order('created_at');
+  const{data}=await sb.from('custom_cats').select('*').eq('user_id',currentUser.id).order('created_at');
   customCats=(data||[]).map(r=>({id:r.id,name:r.name,emoji:r.emoji||'',color:r.color,bg:r.bg}));
 }
 function allCats(){return[...SYS_CATS,...customCats];}
@@ -723,7 +723,7 @@ async function deleteCat(){
 
 // ── Entries ──
 async function loadEntries(){
-  const{data}=await sb.from('entries').select('*').order('ts',{ascending:false});
+  const{data}=await sb.from('entries').select('*').eq('user_id',currentUser.id).order('ts',{ascending:false});
   entries=(data||[]).map(r=>({id:r.id,catId:r.cat_id,text:r.text||'',imgs:r.imgs||[],audios:r.audios||(r.audio?[r.audio]:[]),ts:r.ts,expanded:false}));
   renderEntries();renderCount();
 }
