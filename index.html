@@ -567,7 +567,7 @@ async function doLogin(){
       throw new Error('登录失败，请重试');
     }
     currentUser=data.user;
-    await initApp();
+    await bootWithSession(data);
   }catch(e){
     err.textContent=e.message||'登录失败，请重试';
     btn.disabled=false;btn.textContent='登录';
@@ -586,7 +586,7 @@ async function doSignup(){
     if(error)throw new Error('注册失败：'+error.message);
     if(data.session){
       currentUser=data.user;
-      await initApp();
+      await bootWithSession(data);
     }else{
       switchAuthTab('login',true);
       const loginErr=document.getElementById('login-err');
@@ -623,7 +623,8 @@ async function initApp(){
 
 // ── Cats ──
 async function loadCats(){
-  const{data}=await sb.from('custom_cats').select('*').eq('user_id',currentUser.id).order('created_at');
+  const{data,error}=await sb.from('custom_cats').select('*').eq('user_id',currentUser.id).order('created_at');
+  if(error){toast('分类加载失败:'+error.message);console.error('loadCats error',error);}
   customCats=(data||[]).map(r=>({id:r.id,name:r.name,emoji:r.emoji||'',color:r.color,bg:r.bg}));
 }
 function allCats(){return[...SYS_CATS,...customCats];}
@@ -731,7 +732,9 @@ async function deleteCat(){
 
 // ── Entries ──
 async function loadEntries(){
-  const{data}=await sb.from('entries').select('*').eq('user_id',currentUser.id).order('ts',{ascending:false});
+  const{data,error}=await sb.from('entries').select('*').eq('user_id',currentUser.id).order('ts',{ascending:false});
+  if(error){toast('记录加载失败:'+error.message);console.error('loadEntries error',error);}
+  console.log('loadEntries uid=',currentUser?.id,'count=',data?.length,'error=',error);
   entries=(data||[]).map(r=>({id:r.id,catId:r.cat_id,text:r.text||'',imgs:r.imgs||[],audios:r.audios||(r.audio?[r.audio]:[]),ts:r.ts,expanded:false}));
   renderEntries();renderCount();
 }
@@ -1089,10 +1092,13 @@ function openVideoPlayer(src){
 
 // ── Boot ──
 let _booted=false;
-async function bootWithSession(session){
+async function bootWithSession(sessionOrData){
   if(_booted)return;
   _booted=true;
-  currentUser=session.user;
+  // 支持传入 session 对象或 {user, session} 对象
+  const user=sessionOrData.user||(sessionOrData.session&&sessionOrData.session.user);
+  if(user)currentUser=user;
+  if(!currentUser)return;
   document.getElementById('auth-page').style.display='none';
   await initApp();
 }
