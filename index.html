@@ -1088,14 +1088,19 @@ function openVideoPlayer(src){
 }
 
 // ── Boot ──
+let _booted=false;
+async function bootWithSession(session){
+  if(_booted)return;
+  _booted=true;
+  currentUser=session.user;
+  document.getElementById('auth-page').style.display='none';
+  await initApp();
+}
 sb.auth.onAuthStateChange(async(event,session)=>{
-  if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION'){
-    if(session&&!currentUser){
-      currentUser=session.user;
-      document.getElementById('auth-page').style.display='none';
-      await initApp();
-    }
+  if(session&&(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION')){
+    await bootWithSession(session);
   } else if(event==='SIGNED_OUT'){
+    _booted=false;
     currentUser=null;customCats=[];entries=[];
     document.getElementById('main-app').style.display='none';
     document.getElementById('auth-page').style.display='block';
@@ -1104,10 +1109,8 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
   if(session){
-    currentUser=session.user;
-    document.getElementById('auth-page').style.display='none';
-    await initApp();
-  } else {
+    await bootWithSession(session);
+  } else if(!_booted){
     document.getElementById('auth-page').style.display='block';
   }
 })();
