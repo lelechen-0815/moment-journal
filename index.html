@@ -103,10 +103,14 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .img-previews{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px;}
 .img-thumb{position:relative;width:72px;height:72px;border-radius:12px;overflow:hidden;border:1.5px solid #E5E7EB;}
 .img-thumb img{width:100%;height:100%;object-fit:cover;}
+.img-thumb video{width:100%;height:100%;object-fit:cover;}
+.img-thumb .video-badge{position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,0.5);color:#fff;font-size:9px;padding:1px 4px;border-radius:4px;pointer-events:none;}
 .img-del{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.4);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
-.audio-preview{display:flex;align-items:center;gap:8px;background:#ECFDF5;border-radius:12px;padding:8px 12px;margin:6px 0 4px;}
+.audio-preview{display:flex;align-items:center;gap:8px;background:#ECFDF5;border-radius:12px;padding:8px 12px;margin:4px 0;}
 .audio-preview audio{flex:1;height:32px;}
 .audio-del{background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:20px;line-height:1;padding:0 4px;}
+.audio-list{display:flex;flex-direction:column;gap:4px;margin:6px 0 4px;}
+.entry-video{width:100%;max-height:220px;border-radius:10px;margin-top:8px;object-fit:contain;background:#000;}
 .write-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
 .char-hint{font-size:12px;color:#D1D5DB;}
 .send-btn{display:flex;align-items:center;gap:6px;padding:9px 22px;background:#34D399;color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;}
@@ -303,14 +307,14 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
       <div id="img-previews" class="img-previews"></div>
       <div id="audio-preview"></div>
       <div class="media-bar">
-        <button class="media-btn" onclick="triggerImg()"><span style="font-size:16px">🖼️</span> 图片</button>
+        <button class="media-btn" onclick="triggerImg()"><span style="font-size:16px">🖼️</span> 图片/视频</button>
         <button class="media-btn" id="rec-btn" onclick="toggleRecord()">
           <span style="font-size:16px">🎙️</span>
           <span id="rec-label">语音</span>
           <span class="rec-timer" id="rec-timer" style="display:none"></span>
         </button>
       </div>
-      <input type="file" id="img-input" accept="image/*" multiple style="display:none" onchange="handleImgs(event)">
+      <input type="file" id="img-input" accept="image/*,image/gif,video/mp4,video/quicktime,video/webm" multiple style="display:none" onchange="handleImgs(event)">
       <div class="write-footer">
         <span class="char-hint" id="char-hint">0 / 500</span>
         <button class="send-btn" onclick="saveEntry()"><span style="font-size:16px">🌟</span> 记录</button>
@@ -373,7 +377,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     <div class="p-section">
       <div class="p-section-title">账号设置</div>
       <div class="menu-card">
-        <div class="menu-item" onclick="openChangePwdModal()">
+        <div class="menu-item">
           <div class="m-item-left">
             <div class="m-item-icon" style="background:#F5F3FF;">🔒</div>
             <div class="m-item-label">修改密码</div>
@@ -421,33 +425,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
   </div>
 </div>
 
-<!-- 修改密码 Modal -->
-<div class="modal-overlay" id="pwd-modal" onclick="closeChangePwdModal(event)">
-  <div class="modal">
-    <div class="modal-title">🔒 修改密码</div>
-    <div class="auth-field" style="margin-bottom:12px;">
-      <label style="font-size:13px;color:#6B7280;font-weight:500;display:block;margin-bottom:6px;">新密码</label>
-      <div class="input-wrap" style="position:relative;">
-        <input type="password" id="pwd-new" class="modal-input" style="padding-right:44px;" placeholder="至少 6 位" oninput="checkPwdModal()">
-        <button class="eye-btn" onclick="toggleEye('pwd-new',this)" tabindex="-1" style="position:absolute;right:0;top:0;bottom:0;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#9CA3AF;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-      </div>
-    </div>
-    <div class="auth-field" style="margin-bottom:4px;">
-      <label style="font-size:13px;color:#6B7280;font-weight:500;display:block;margin-bottom:6px;">确认新密码</label>
-      <div class="input-wrap" style="position:relative;">
-        <input type="password" id="pwd-new2" class="modal-input" style="padding-right:44px;" placeholder="再次输入新密码" oninput="checkPwdModal()" onkeydown="if(event.key==='Enter')doChangePwd()">
-        <button class="eye-btn" onclick="toggleEye('pwd-new2',this)" tabindex="-1" style="position:absolute;right:0;top:0;bottom:0;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#9CA3AF;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-      </div>
-    </div>
-    <div class="field-hint gray" id="pwd-modal-hint" style="margin-bottom:12px;min-height:18px;"></div>
-    <div class="modal-actions">
-      <button class="modal-cancel" onclick="closeChangePwdModal()">取消</button>
-      <button class="modal-save" id="pwd-modal-btn" onclick="doChangePwd()" disabled>确认修改</button>
-    </div>
-    <div class="auth-err" id="pwd-modal-err" style="color:#EF4444;font-size:13px;text-align:center;margin-top:8px;min-height:18px;"></div>
-  </div>
-</div>
-
 <!-- 头像选择器 -->
 <div class="emoji-overlay" id="emoji-picker" onclick="closeEmojiPicker(event)">
   <div class="emoji-sheet">
@@ -486,7 +463,7 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 let currentUser=null,customCats=[],entries=[];
 let activeCat=SYS_CATS[0].id,histCat='all';
 let editingCatId=null,editingEntryId=null;
-let pendingImgs=[],pendingAudio=null;
+let pendingImgs=[],pendingAudios=[];
 let mediaRecorder=null,audioChunks=[],recSeconds=0,recInterval=null;
 let pressTimer=null,pressEl=null,pressActive=false;
 let hintShown=false,selectedAvatar='🪴';
@@ -747,20 +724,20 @@ async function deleteCat(){
 // ── Entries ──
 async function loadEntries(){
   const{data}=await sb.from('entries').select('*').order('ts',{ascending:false});
-  entries=(data||[]).map(r=>({id:r.id,catId:r.cat_id,text:r.text||'',imgs:r.imgs||[],audio:r.audio||null,ts:r.ts,expanded:false}));
+  entries=(data||[]).map(r=>({id:r.id,catId:r.cat_id,text:r.text||'',imgs:r.imgs||[],audios:r.audios||(r.audio?[r.audio]:[]),ts:r.ts,expanded:false}));
   renderEntries();renderCount();
 }
 async function saveEntry(){
   const text=document.getElementById('write-text').value.trim();
-  if(!text&&!pendingImgs.length&&!pendingAudio){toast('请输入内容再记录');return;}
+  if(!text&&!pendingImgs.length&&!pendingAudios.length){toast('请输入内容再记录');return;}
   const id=Date.now(),ts=new Date().toISOString();
-  const entry={id,catId:activeCat,text,imgs:[...pendingImgs],audio:pendingAudio,ts,expanded:false};
+  const entry={id,catId:activeCat,text,imgs:[...pendingImgs],audios:[...pendingAudios],ts,expanded:false};
   entries.unshift(entry);
   document.getElementById('write-text').value='';
-  pendingImgs=[];pendingAudio=null;
-  updateChar();renderImgPrev();renderAudioPrev();renderCount();updateProfilePage();
+  pendingImgs=[];pendingAudios=[];
+  updateChar();renderImgPrev();renderAudioList();renderCount();updateProfilePage();
   toast('记录成功 🌿');
-  await sb.from('entries').insert({id,user_id:currentUser.id,cat_id:activeCat,text,imgs:entry.imgs,audio:entry.audio,ts});
+  await sb.from('entries').insert({id,user_id:currentUser.id,cat_id:activeCat,text,imgs:entry.imgs,audios:entry.audios,ts});
 }
 async function deleteEntry(id){
   document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
@@ -772,9 +749,13 @@ async function deleteEntry(id){
 async function saveEditEntry(id){
   const ta=document.getElementById('edit-ta-'+id);if(!ta)return;
   const text=ta.value.trim();
-  const e=entries.find(e=>e.id===id);if(e)e.text=text;
+  const e=entries.find(e=>e.id===id);if(!e)return;
+  e.text=text;
+  e.imgs=editImgs[id]||e.imgs;
+  e.audios=editAudios[id]||e.audios;
+  delete editImgs[id];delete editAudios[id];
   editingEntryId=null;renderEntries();toast('已保存');
-  await sb.from('entries').update({text}).eq('id',id);
+  await sb.from('entries').update({text,imgs:e.imgs,audios:e.audios}).eq('id',id);
 }
 function renderEntries(){
   const list=document.getElementById('entries-list');
@@ -788,10 +769,29 @@ function renderEntries(){
     const cat=allCats().find(c=>c.id===e.catId)||SYS_CATS[0];
     const long=e.text&&e.text.length>100;
     const isEditing=editingEntryId===e.id;
-    const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>`<img class="entry-img" src="${s}">`).join('')}</div>`:'';
-    const audio=e.audio?`<div class="entry-audio"><audio controls src="${e.audio}"></audio></div>`:'';
+    // 显示模式：图片/动图/视频缩略图
+    const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>{
+      const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
+      const isGif=s.startsWith('data:image/gif')||/\.gif/i.test(s);
+      if(isVid)return`<video class="entry-img" src="${s}" muted playsinline onclick="this.paused?this.play():this.pause()" style="cursor:pointer"></video>`;
+      return`<img class="entry-img" src="${s}"${isGif?' style="object-fit:contain"':''}>`;
+    }).join('')}</div>`:'';
+    const audios=(e.audios||[]).length?`<div class="entry-audio">${(e.audios||[]).map(a=>`<audio controls src="${a}" style="width:100%;height:32px;display:block;margin-bottom:4px"></audio>`).join('')}</div>`:'';
+    // 编辑模式
+    const curImgs=editImgs[e.id]||e.imgs||[];
+    const curAudios=editAudios[e.id]||e.audios||[];
     const textBlock=isEditing
       ?`<textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
+        <div class="img-previews" id="edit-img-prev-${e.id}">${curImgs.map((s,i)=>{
+          const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
+          return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmEditImg(${e.id},${i})">×</button></div>`;
+        }).join('')}</div>
+        <div class="audio-list" id="edit-audio-list-${e.id}">${curAudios.map((a,i)=>`<div class="audio-preview"><audio controls src="${a}"></audio><button class="audio-del" onclick="rmEditAudio(${e.id},${i})">×</button></div>`).join('')}</div>
+        <div class="media-bar" style="border-top:1px solid #F3F4F6;margin-top:4px;">
+          <button class="media-btn" onclick="triggerEditImg(${e.id})"><span style="font-size:15px">🖼️</span> 添加图片/视频</button>
+          <button class="media-btn" id="edit-rec-btn-${e.id}" onclick="toggleEditRecord(${e.id})"><span style="font-size:15px">🎙️</span> <span id="edit-rec-label-${e.id}">录音</span></button>
+        </div>
+        <input type="file" id="edit-img-input-${e.id}" accept="image/*,image/gif,video/mp4,video/quicktime,video/webm" multiple style="display:none" onchange="handleEditImgs(event,${e.id})">
         <div class="edit-footer">
           <button class="cancel-edit-btn" onclick="cancelEditEntry()">取消</button>
           <button class="save-edit-btn" onclick="saveEditEntry(${e.id})">保存</button>
@@ -815,7 +815,7 @@ function renderEntries(){
           </div>
         </div>
       </div>
-      ${textBlock}${imgs}${audio}
+      ${textBlock}${isEditing?'':imgs+audios}
     </div>`;
   }).join('');
 }
@@ -883,15 +883,23 @@ function updateChar(){document.getElementById('char-hint').textContent=document.
 function triggerImg(){document.getElementById('img-input').click();}
 function handleImgs(e){
   const files=[...e.target.files];
-  if(pendingImgs.length+files.length>9){toast('最多 9 张图片');return;}
-  files.forEach(f=>{const r=new FileReader();r.onload=ev=>{pendingImgs.push(ev.target.result);renderImgPrev();};r.readAsDataURL(f);});
+  if(pendingImgs.length+files.length>9){toast('最多 9 张图片/视频');return;}
+  files.forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{pendingImgs.push(ev.target.result);renderImgPrev();};
+    r.readAsDataURL(f);
+  });
   e.target.value='';
 }
 function renderImgPrev(){
-  document.getElementById('img-previews').innerHTML=pendingImgs.map((s,i)=>
-    `<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmImg(${i})">×</button></div>`).join('');
+  document.getElementById('img-previews').innerHTML=pendingImgs.map((s,i)=>{
+    const isVid=s.startsWith('data:video');
+    return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmImg(${i})">×</button></div>`;
+  }).join('');
 }
 function rmImg(i){pendingImgs.splice(i,1);renderImgPrev();}
+
+// ── 录音（支持多条）──
 async function toggleRecord(){
   if(mediaRecorder&&mediaRecorder.state==='recording'){stopRec();return;}
   try{
@@ -902,7 +910,7 @@ async function toggleRecord(){
     mediaRecorder.ondataavailable=e=>{if(e.data.size>0)audioChunks.push(e.data);};
     mediaRecorder.onstop=()=>{
       const blob=new Blob(audioChunks,{type:mimeType||'audio/mp4'});
-      const r=new FileReader();r.onload=ev=>{pendingAudio=ev.target.result;renderAudioPrev();toast('录音完成 🎙️');};r.readAsDataURL(blob);
+      const r=new FileReader();r.onload=ev=>{pendingAudios.push(ev.target.result);renderAudioList();toast('录音完成 🎙️');};r.readAsDataURL(blob);
       stream.getTracks().forEach(t=>t.stop());
     };
     mediaRecorder.start();recSeconds=0;
@@ -924,11 +932,82 @@ function stopRec(){
     document.getElementById('rec-timer').style.display='none';
   }
 }
-function renderAudioPrev(){
-  document.getElementById('audio-preview').innerHTML=pendingAudio?
-    `<div class="audio-preview"><audio controls src="${pendingAudio}"></audio><button class="audio-del" onclick="rmAudio()">×</button></div>`:'';
+function renderAudioList(){
+  document.getElementById('audio-preview').innerHTML=pendingAudios.length
+    ?`<div class="audio-list">${pendingAudios.map((a,i)=>`<div class="audio-preview"><audio controls src="${a}"></audio><button class="audio-del" onclick="rmAudio(${i})">×</button></div>`).join('')}</div>`
+    :'';
 }
-function rmAudio(){pendingAudio=null;renderAudioPrev();}
+function rmAudio(i){pendingAudios.splice(i,1);renderAudioList();}
+
+// ── 编辑模式媒体函数 ──
+const editImgs={};
+const editAudios={};
+const editRecorders={};
+
+function triggerEditImg(id){document.getElementById('edit-img-input-'+id).click();}
+function handleEditImgs(e,id){
+  const files=[...e.target.files];
+  if(!editImgs[id]){const entry=entries.find(x=>x.id===id);editImgs[id]=[...(entry?.imgs||[])];}
+  if(editImgs[id].length+files.length>9){toast('最多 9 张图片/视频');return;}
+  files.forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{editImgs[id].push(ev.target.result);renderEditImgPrev(id);};
+    r.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+function renderEditImgPrev(id){
+  const el=document.getElementById('edit-img-prev-'+id);if(!el)return;
+  el.innerHTML=(editImgs[id]||[]).map((s,i)=>{
+    const isVid=s.startsWith('data:video');
+    return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmEditImg(${id},${i})">×</button></div>`;
+  }).join('');
+}
+function rmEditImg(id,i){
+  if(!editImgs[id]){const entry=entries.find(x=>x.id===id);editImgs[id]=[...(entry?.imgs||[])];}
+  editImgs[id].splice(i,1);renderEditImgPrev(id);
+}
+async function toggleEditRecord(id){
+  if(editRecorders[id]&&editRecorders[id].state==='recording'){
+    editRecorders[id].stop();return;
+  }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const chunks=[];
+    const mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'';
+    const mr=mimeType?new MediaRecorder(stream,{mimeType}):new MediaRecorder(stream);
+    editRecorders[id]=mr;
+    mr.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+    mr.onstop=()=>{
+      const blob=new Blob(chunks,{type:mimeType||'audio/mp4'});
+      const r=new FileReader();
+      r.onload=ev=>{
+        if(!editAudios[id]){const entry=entries.find(x=>x.id===id);editAudios[id]=[...(entry?.audios||[])];}
+        editAudios[id].push(ev.target.result);
+        renderEditAudioList(id);toast('录音完成 🎙️');
+      };
+      r.readAsDataURL(blob);
+      stream.getTracks().forEach(t=>t.stop());
+      const btn=document.getElementById('edit-rec-btn-'+id);
+      const lbl=document.getElementById('edit-rec-label-'+id);
+      if(btn)btn.classList.remove('recording');
+      if(lbl)lbl.textContent='录音';
+    };
+    mr.start();
+    const btn=document.getElementById('edit-rec-btn-'+id);
+    const lbl=document.getElementById('edit-rec-label-'+id);
+    if(btn)btn.classList.add('recording');
+    if(lbl)lbl.textContent='停止';
+  }catch{toast('无法访问麦克风');}
+}
+function renderEditAudioList(id){
+  const el=document.getElementById('edit-audio-list-'+id);if(!el)return;
+  el.innerHTML=(editAudios[id]||[]).map((a,i)=>`<div class="audio-preview"><audio controls src="${a}"></audio><button class="audio-del" onclick="rmEditAudio(${id},${i})">×</button></div>`).join('');
+}
+function rmEditAudio(id,i){
+  if(!editAudios[id]){const entry=entries.find(x=>x.id===id);editAudios[id]=[...(entry?.audios||[])];}
+  editAudios[id].splice(i,1);renderEditAudioList(id);
+}
 function toggleMenu(id){
   const m=document.getElementById(id);
   const show=m.style.display==='none';
@@ -937,8 +1016,18 @@ function toggleMenu(id){
   if(show){setTimeout(()=>document.addEventListener('click',function h(e){if(!m.contains(e.target)){m.style.display='none';document.removeEventListener('click',h);}},10));}
 }
 function closeMenu(id){document.getElementById(id).style.display='none';}
-function startEditEntry(id){document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');editingEntryId=id;renderEntries();setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);}
-function cancelEditEntry(){editingEntryId=null;renderEntries();}
+function startEditEntry(id){
+  document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
+  // 初始化编辑媒体状态（从 entry 复制）
+  const entry=entries.find(e=>e.id===id);
+  if(entry){editImgs[id]=[...(entry.imgs||[])];editAudios[id]=[...(entry.audios||[])];}
+  editingEntryId=id;renderEntries();
+  setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);
+}
+function cancelEditEntry(){
+  if(editingEntryId){delete editImgs[editingEntryId];delete editAudios[editingEntryId];}
+  editingEntryId=null;renderEntries();
+}
 function toggleExpand(id){const e=entries.find(e=>e.id===id);if(e){e.expanded=!e.expanded;renderEntries();}}
 function switchTab(tab){
   ['now','review','profile'].forEach(t=>{
@@ -950,45 +1039,6 @@ function switchTab(tab){
 }
 document.getElementById('new-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')addCat();});
 document.getElementById('modal-cat-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveCat();});
-
-// ── 修改密码 ──
-function openChangePwdModal(){
-  document.getElementById('pwd-new').value='';
-  document.getElementById('pwd-new2').value='';
-  document.getElementById('pwd-modal-hint').textContent='';
-  document.getElementById('pwd-modal-hint').className='field-hint gray';
-  document.getElementById('pwd-modal-err').textContent='';
-  document.getElementById('pwd-modal-btn').disabled=true;
-  document.getElementById('pwd-modal').classList.add('show');
-  setTimeout(()=>document.getElementById('pwd-new').focus(),100);
-}
-function closeChangePwdModal(e){
-  if(e&&e.target!==document.getElementById('pwd-modal'))return;
-  document.getElementById('pwd-modal').classList.remove('show');
-}
-function checkPwdModal(){
-  const p1=document.getElementById('pwd-new').value;
-  const p2=document.getElementById('pwd-new2').value;
-  const hint=document.getElementById('pwd-modal-hint');
-  const btn=document.getElementById('pwd-modal-btn');
-  document.getElementById('pwd-modal-err').textContent='';
-  if(!p1){hint.textContent='';hint.className='field-hint gray';btn.disabled=true;return;}
-  if(p1.length<6){hint.textContent='密码至少 6 位';hint.className='field-hint err';btn.disabled=true;return;}
-  if(!p2){hint.textContent='密码强度符合要求';hint.className='field-hint ok';btn.disabled=true;return;}
-  if(p1!==p2){hint.textContent='两次密码不一致';hint.className='field-hint err';btn.disabled=true;return;}
-  hint.textContent='✓ 密码一致';hint.className='field-hint ok';btn.disabled=false;
-}
-async function doChangePwd(){
-  const pwd=document.getElementById('pwd-new').value;
-  const btn=document.getElementById('pwd-modal-btn');
-  const errEl=document.getElementById('pwd-modal-err');
-  btn.disabled=true;btn.textContent='修改中…';
-  const{error}=await sb.auth.updateUser({password:pwd});
-  btn.textContent='确认修改';
-  if(error){errEl.textContent=error.message||'修改失败，请重试';btn.disabled=false;return;}
-  document.getElementById('pwd-modal').classList.remove('show');
-  toast('密码已修改 🔐');
-}
 
 // ── Boot ──
 (async()=>{
