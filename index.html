@@ -601,7 +601,6 @@ async function doSignup(){
 }
 
 async function doLogout(){
-  await sb.auth.signOut();
   currentUser=null;customCats=[];entries=[];
   document.getElementById('main-app').style.display='none';
   document.getElementById('auth-page').style.display='block';
@@ -609,6 +608,7 @@ async function doLogout(){
   document.getElementById('login-pwd').value='';
   document.getElementById('login-err').textContent='';
   switchAuthTab('login');
+  try{await sb.auth.signOut();}catch(e){}
 }
 
 // ── Init ──
@@ -1088,26 +1088,26 @@ function openVideoPlayer(src){
 }
 
 // ── Boot ──
-(async()=>{
-  // 监听登录状态变化，确保刷新页面后 session 自动恢复
-  sb.auth.onAuthStateChange(async(event,session)=>{
+sb.auth.onAuthStateChange(async(event,session)=>{
+  if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION'){
     if(session&&!currentUser){
       currentUser=session.user;
       document.getElementById('auth-page').style.display='none';
       await initApp();
-    } else if(!session&&event==='SIGNED_OUT'){
-      currentUser=null;customCats=[];entries=[];
-      document.getElementById('main-app').style.display='none';
-      document.getElementById('auth-page').style.display='block';
     }
-  });
-  // 同时主动检查一次，避免事件触发延迟
+  } else if(event==='SIGNED_OUT'){
+    currentUser=null;customCats=[];entries=[];
+    document.getElementById('main-app').style.display='none';
+    document.getElementById('auth-page').style.display='block';
+  }
+});
+(async()=>{
   const{data:{session}}=await sb.auth.getSession();
-  if(session&&!currentUser){
+  if(session){
     currentUser=session.user;
     document.getElementById('auth-page').style.display='none';
     await initApp();
-  } else if(!session){
+  } else {
     document.getElementById('auth-page').style.display='block';
   }
 })();
