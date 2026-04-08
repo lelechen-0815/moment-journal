@@ -1089,9 +1089,27 @@ function openVideoPlayer(src){
 
 // ── Boot ──
 (async()=>{
+  // 监听登录状态变化，确保刷新页面后 session 自动恢复
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(session&&!currentUser){
+      currentUser=session.user;
+      document.getElementById('auth-page').style.display='none';
+      await initApp();
+    } else if(!session&&event==='SIGNED_OUT'){
+      currentUser=null;customCats=[];entries=[];
+      document.getElementById('main-app').style.display='none';
+      document.getElementById('auth-page').style.display='block';
+    }
+  });
+  // 同时主动检查一次，避免事件触发延迟
   const{data:{session}}=await sb.auth.getSession();
-  if(session){currentUser=session.user;await initApp();}
-  else{document.getElementById('auth-page').style.display='block';}
+  if(session&&!currentUser){
+    currentUser=session.user;
+    document.getElementById('auth-page').style.display='none';
+    await initApp();
+  } else if(!session){
+    document.getElementById('auth-page').style.display='block';
+  }
 })();
 </script>
 </body>
