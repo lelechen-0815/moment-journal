@@ -616,7 +616,12 @@ async function initApp(){
   document.getElementById('auth-page').style.display='none';
   document.getElementById('main-app').style.display='flex';
   document.getElementById('entries-list').innerHTML='<div class="loading">加载中…</div>';
-  await loadCats();await loadEntries();
+  try{
+    await loadCats();await loadEntries();
+  }catch(e){
+    console.error('initApp error',e);
+    toast('数据加载异常，请刷新页面重试');
+  }
   activeCat=SYS_CATS[0].id;
   renderHomeCats();renderWriteBadge();renderHistCats();renderCount();updateProfilePage();
 }
@@ -624,7 +629,7 @@ async function initApp(){
 // ── Cats ──
 async function loadCats(){
   const{data,error}=await sb.from('custom_cats').select('*').eq('user_id',currentUser.id).order('created_at');
-  if(error){toast('分类加载失败:'+error.message);console.error('loadCats error',error);}
+  if(error){toast('分类加载失败:'+error.message);console.error('loadCats error',error);return;}
   customCats=(data||[]).map(r=>({id:r.id,name:r.name,emoji:r.emoji||'',color:r.color,bg:r.bg}));
 }
 function allCats(){return[...SYS_CATS,...customCats];}
@@ -733,7 +738,7 @@ async function deleteCat(){
 // ── Entries ──
 async function loadEntries(){
   const{data,error}=await sb.from('entries').select('*').eq('user_id',currentUser.id).order('ts',{ascending:false});
-  if(error){toast('记录加载失败:'+error.message);console.error('loadEntries error',error);}
+  if(error){toast('记录加载失败:'+error.message);console.error('loadEntries error',error);renderEntries();renderCount();return;}
   console.log('loadEntries uid=',currentUser?.id,'count=',data?.length,'error=',error);
   entries=(data||[]).map(r=>({id:r.id,catId:r.cat_id,text:r.text||'',imgs:r.imgs||[],audios:r.audios||(r.audio?[r.audio]:[]),ts:r.ts,expanded:false}));
   renderEntries();renderCount();
