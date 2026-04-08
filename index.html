@@ -881,19 +881,35 @@ function fmtTime(iso){
 }
 function updateChar(){document.getElementById('char-hint').textContent=document.getElementById('write-text').value.length+' / 500';}
 function triggerImg(){document.getElementById('img-input').click();}
-function handleImgs(e){
+async function handleImgs(e){
   const files=[...e.target.files];
   if(pendingImgs.length+files.length>9){toast('最多 9 张图片/视频');return;}
-  files.forEach(f=>{
-    const r=new FileReader();
-    r.onload=ev=>{pendingImgs.push(ev.target.result);renderImgPrev();};
-    r.readAsDataURL(f);
-  });
+  for(const f of files){
+    const isVideo=f.type.startsWith('video/');
+    if(isVideo){
+      // 视频上传到 Supabase Storage，只存 URL
+      toast('视频上传中…');
+      const ext=f.name.split('.').pop()||'mp4';
+      const path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const{data,error}=await sb.storage.from('media').upload(path,f,{contentType:f.type,upsert:false});
+      if(error){toast('视频上传失败：'+error.message);continue;}
+      const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
+      pendingImgs.push(publicUrl);
+    }else{
+      // 图片继续用 base64
+      await new Promise(resolve=>{
+        const r=new FileReader();
+        r.onload=ev=>{pendingImgs.push(ev.target.result);resolve();};
+        r.readAsDataURL(f);
+      });
+    }
+    renderImgPrev();
+  }
   e.target.value='';
 }
 function renderImgPrev(){
   document.getElementById('img-previews').innerHTML=pendingImgs.map((s,i)=>{
-    const isVid=s.startsWith('data:video');
+    const isVid=s.startsWith('data:video')||(!s.startsWith('data:')&&/\.(mp4|webm|mov)/i.test(s));
     return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmImg(${i})">×</button></div>`;
   }).join('');
 }
@@ -945,21 +961,35 @@ const editAudios={};
 const editRecorders={};
 
 function triggerEditImg(id){document.getElementById('edit-img-input-'+id).click();}
-function handleEditImgs(e,id){
+async function handleEditImgs(e,id){
   const files=[...e.target.files];
   if(!editImgs[id]){const entry=entries.find(x=>x.id===id);editImgs[id]=[...(entry?.imgs||[])];}
   if(editImgs[id].length+files.length>9){toast('最多 9 张图片/视频');return;}
-  files.forEach(f=>{
-    const r=new FileReader();
-    r.onload=ev=>{editImgs[id].push(ev.target.result);renderEditImgPrev(id);};
-    r.readAsDataURL(f);
-  });
+  for(const f of files){
+    const isVideo=f.type.startsWith('video/');
+    if(isVideo){
+      toast('视频上传中…');
+      const ext=f.name.split('.').pop()||'mp4';
+      const path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const{data,error}=await sb.storage.from('media').upload(path,f,{contentType:f.type,upsert:false});
+      if(error){toast('视频上传失败：'+error.message);continue;}
+      const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
+      editImgs[id].push(publicUrl);
+    }else{
+      await new Promise(resolve=>{
+        const r=new FileReader();
+        r.onload=ev=>{editImgs[id].push(ev.target.result);resolve();};
+        r.readAsDataURL(f);
+      });
+    }
+    renderEditImgPrev(id);
+  }
   e.target.value='';
 }
 function renderEditImgPrev(id){
   const el=document.getElementById('edit-img-prev-'+id);if(!el)return;
   el.innerHTML=(editImgs[id]||[]).map((s,i)=>{
-    const isVid=s.startsWith('data:video');
+    const isVid=s.startsWith('data:video')||(!s.startsWith('data:')&&/\.(mp4|webm|mov)/i.test(s));
     return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmEditImg(${id},${i})">×</button></div>`;
   }).join('');
 }
