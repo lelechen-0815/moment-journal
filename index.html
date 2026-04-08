@@ -449,7 +449,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 <script>
 const SUPABASE_URL='https://rwvhvfmfxjspnxsitsxj.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3dmh2Zm1meGpzcG54c2l0c3hqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MjM4NDUsImV4cCI6MjA5MDM5OTg0NX0.KUbeye4vC9g3mC1gFyE7hF_4ZXY17xYEBDYrRcbvn-A';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storage:{getItem:(key)=>{try{return sessionStorage.getItem(key);}catch(e){return null;}},setItem:(key,val)=>{try{sessionStorage.setItem(key,val);}catch(e){}},removeItem:(key)=>{try{sessionStorage.removeItem(key);}catch(e){}}},storageKey:"sb-session",autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const SYS_CATS=[
   {id:'daily', name:'日常', emoji:'☀️', color:'#B45309', bg:'#FFFBEB'},
@@ -567,7 +567,7 @@ async function doLogin(){
       throw new Error('登录失败，请重试');
     }
     currentUser=data.user;
-    await bootWithSession(data);
+    await initApp();
   }catch(e){
     err.textContent=e.message||'登录失败，请重试';
     btn.disabled=false;btn.textContent='登录';
@@ -586,7 +586,7 @@ async function doSignup(){
     if(error)throw new Error('注册失败：'+error.message);
     if(data.session){
       currentUser=data.user;
-      await bootWithSession(data);
+      await initApp();
     }else{
       switchAuthTab('login',true);
       const loginErr=document.getElementById('login-err');
@@ -601,6 +601,7 @@ async function doSignup(){
 }
 
 async function doLogout(){
+  await sb.auth.signOut();
   currentUser=null;customCats=[];entries=[];
   document.getElementById('main-app').style.display='none';
   document.getElementById('auth-page').style.display='block';
@@ -608,7 +609,6 @@ async function doLogout(){
   document.getElementById('login-pwd').value='';
   document.getElementById('login-err').textContent='';
   switchAuthTab('login');
-  try{await sb.auth.signOut();}catch(e){}
 }
 
 // ── Init ──
@@ -1096,34 +1096,10 @@ function openVideoPlayer(src){
 }
 
 // ── Boot ──
-let _booted=false;
-async function bootWithSession(sessionOrData){
-  if(_booted)return;
-  _booted=true;
-  // 支持传入 session 对象或 {user, session} 对象
-  const user=sessionOrData.user||(sessionOrData.session&&sessionOrData.session.user);
-  if(user)currentUser=user;
-  if(!currentUser)return;
-  document.getElementById('auth-page').style.display='none';
-  await initApp();
-}
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(session&&(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION')){
-    await bootWithSession(session);
-  } else if(event==='SIGNED_OUT'){
-    _booted=false;
-    currentUser=null;customCats=[];entries=[];
-    document.getElementById('main-app').style.display='none';
-    document.getElementById('auth-page').style.display='block';
-  }
-});
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
-  if(session){
-    await bootWithSession(session);
-  } else if(!_booted){
-    document.getElementById('auth-page').style.display='block';
-  }
+  if(session){currentUser=session.user;await initApp();}
+  else{document.getElementById('auth-page').style.display='block';}
 })();
 </script>
 </body>
