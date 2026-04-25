@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="我的时刻">
@@ -227,6 +228,19 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.08);opacity:0.7;}}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── 骨架屏 ── */
+.skeleton{background:linear-gradient(90deg,#F3F4F6 25%,#E9EAEC 50%,#F3F4F6 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skeleton-card{margin:0 18px 12px;background:#fff;border-radius:18px;border:1.5px solid #F3F4F6;padding:14px 16px;}
+.skeleton-line{height:13px;margin-bottom:10px;}
+.skeleton-line.short{width:35%;}
+.skeleton-line.medium{width:65%;}
+.skeleton-line.long{width:90%;}
+.skeleton-badge{width:56px;height:22px;border-radius:10px;margin-bottom:12px;}
+.skeleton-count{width:44px;height:26px;border-radius:20px;display:inline-block;}
+.skeleton-cats{padding:12px 18px 4px;display:flex;gap:8px;}
+.skeleton-cat-chip{height:32px;border-radius:20px;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -248,8 +262,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
         <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">登录</div>
         <div class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">注册</div>
       </div>
-
-      <!-- 登录 -->
       <div class="auth-pane active" id="pane-login">
         <div class="auth-field">
           <label>邮箱</label>
@@ -267,8 +279,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
         <div class="auth-err" id="login-err"></div>
         <div class="switch-hint">还没有账号？<span onclick="switchAuthTab('signup')">立即注册</span></div>
       </div>
-
-      <!-- 注册 -->
       <div class="auth-pane" id="pane-signup">
         <div class="auth-field">
           <label>邮箱</label>
@@ -301,8 +311,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 
 <!-- 主 App -->
 <div class="app" id="main-app" style="display:none;">
-
-  <!-- 此刻 -->
   <div class="page active" id="page-now">
     <div class="topbar">
       <div>
@@ -340,7 +348,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     </div>
   </div>
 
-  <!-- 回顾 -->
   <div class="page" id="page-review">
     <div class="hist-topbar">
       <div class="hist-title">历史记录<span> 📖</span></div>
@@ -353,7 +360,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     <div class="entries" id="entries-list"></div>
   </div>
 
-  <!-- 个人 -->
   <div class="page" id="page-profile">
     <div class="profile-topbar">
       <div class="profile-topbar-title">个人设置<span> 🧩</span></div>
@@ -364,7 +370,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
         <div class="avatar-edit-badge">✏️</div>
       </div>
       <div class="profile-info">
-        <!-- 昵称显示 -->
         <div id="nickname-display">
           <div class="nickname-row">
             <div id="nickname-show" class="nickname-placeholder">未设置昵称</div>
@@ -375,7 +380,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
           <div class="profile-email" id="profile-email">—</div>
           <div class="profile-joined" id="profile-joined">—</div>
         </div>
-        <!-- 昵称编辑 -->
         <div id="nickname-edit" style="display:none;">
           <div class="nickname-edit-row">
             <input class="nickname-input" id="nickname-input" placeholder="输入昵称…" maxlength="20" onkeydown="if(event.key==='Enter')saveNick()">
@@ -413,7 +417,6 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     </div>
   </div>
 
-  <!-- Tabbar -->
   <div class="tabbar">
     <div class="tab active" id="tab-now" onclick="switchTab('now')">
       <div class="tab-icon">🌱</div>
@@ -520,6 +523,32 @@ let pressTimer=null,pressEl=null,pressActive=false;
 let hintShown=false,selectedAvatar='🪴';
 let userNickname='';
 
+// ── 骨架屏 ──
+function showSkeleton(){
+  document.getElementById('total-count').innerHTML='<div class="skeleton skeleton-count"></div>';
+  document.getElementById('home-sys-cats').innerHTML=
+    '<div class="skeleton-cats">' +
+    [68,56,72,64,60].map(w=>`<div class="skeleton skeleton-cat-chip" style="width:${w}px"></div>`).join('') +
+    '</div>';
+  document.getElementById('home-custom-cats').innerHTML='';
+  document.getElementById('entries-list').innerHTML=`
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-badge"></div>
+      <div class="skeleton skeleton-line long"></div>
+      <div class="skeleton skeleton-line medium"></div>
+      <div class="skeleton skeleton-line short"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-badge"></div>
+      <div class="skeleton skeleton-line long"></div>
+      <div class="skeleton skeleton-line medium"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-badge"></div>
+      <div class="skeleton skeleton-line long"></div>
+    </div>`;
+}
+
 // ── 眼睛按钮 ──
 const EYE_OPEN=`<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
 const EYE_CLOSED=`<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
@@ -563,7 +592,6 @@ async function saveNick(){
   renderNickname();
   cancelEditNick();
   toast(val?'昵称已保存 🌿':'昵称已清除');
-  // 存到 Supabase user metadata
   await sb.auth.updateUser({data:{nickname:val}});
 }
 
@@ -578,7 +606,6 @@ function switchAuthTab(mode,keepMsg=false){
     document.getElementById('reg-err').textContent='';
   }
 }
-
 function checkReg(){
   const email=document.getElementById('reg-email').value.trim();
   const p1=document.getElementById('reg-pwd1').value;
@@ -594,7 +621,6 @@ function checkReg(){
   else{h2.className='field-hint ok';h2.textContent='✓ 密码一致';}
   btn.disabled=!(email&&p1.length>=6&&p1===p2);
 }
-
 async function doLogin(){
   const email=document.getElementById('login-email').value.trim();
   const pwd=document.getElementById('login-pwd').value;
@@ -616,7 +642,6 @@ async function doLogin(){
     btn.disabled=false;btn.textContent='登录';
   }
 }
-
 async function doSignup(){
   const email=document.getElementById('reg-email').value.trim();
   const pwd=document.getElementById('reg-pwd1').value;
@@ -642,7 +667,6 @@ async function doSignup(){
     btn.disabled=false;btn.textContent='注册';
   }
 }
-
 async function doLogout(){
   await sb.auth.signOut();
   currentUser=null;customCats=[];entries=[];
@@ -654,13 +678,15 @@ async function doLogout(){
   switchAuthTab('login');
 }
 
-// ── Init ──
+// ── Init（加入骨架屏）──
 async function initApp(){
   document.getElementById('auth-page').style.display='none';
   document.getElementById('main-app').style.display='flex';
-  document.getElementById('entries-list').innerHTML='<div class="loading">加载中…</div>';
+  // 先显示骨架屏，让用户知道正在加载中
+  showSkeleton();
   try{
-    await loadCats();await loadEntries();
+    await loadCats();
+    await loadEntries();
   }catch(e){
     console.error('initApp error',e);
     toast('数据加载异常，请刷新页面重试');
@@ -782,7 +808,6 @@ async function deleteCat(){
 async function loadEntries(){
   const{data,error}=await sb.from('entries').select('*').eq('user_id',currentUser.id).order('ts',{ascending:false});
   if(error){toast('记录加载失败:'+error.message);console.error('loadEntries error',error);renderEntries();renderCount();return;}
-  console.log('loadEntries uid=',currentUser?.id,'count=',data?.length,'error=',error);
   entries=(data||[]).map(r=>({id:r.id,catId:r.cat_id,text:r.text||'',imgs:r.imgs||[],audios:r.audios||(r.audio?[r.audio]:[]),ts:r.ts,expanded:false}));
   renderEntries();renderCount();
 }
@@ -828,7 +853,6 @@ function renderEntries(){
     const cat=allCats().find(c=>c.id===e.catId)||SYS_CATS[0];
     const long=e.text&&e.text.length>100;
     const isEditing=editingEntryId===e.id;
-    // 显示模式：图片/动图/视频缩略图
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>{
       const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
       const isGif=s.startsWith('data:image/gif')||/\.gif/i.test(s);
@@ -836,7 +860,6 @@ function renderEntries(){
       return`<img class="entry-img" src="${s}"${isGif?' style="object-fit:contain"':''}>`;
     }).join('')}</div>`:'';
     const audios=(e.audios||[]).length?`<div class="entry-audio">${(e.audios||[]).map(a=>`<audio controls src="${a}" style="width:100%;height:32px;display:block;margin-bottom:4px"></audio>`).join('')}</div>`:'';
-    // 编辑模式
     const curImgs=editImgs[e.id]||e.imgs||[];
     const curAudios=editAudios[e.id]||e.audios||[];
     const textBlock=isEditing
@@ -883,10 +906,8 @@ function renderCount(){document.getElementById('total-count').textContent=entrie
 // ── 个人页 ──
 function updateProfilePage(){
   if(!currentUser)return;
-  // 昵称
   userNickname=currentUser.user_metadata?.nickname||'';
   renderNickname();
-  // 邮箱和加入时间（显示/编辑两套 DOM 都更新）
   const email=currentUser.email||'—';
   const d=new Date(currentUser.created_at);
   const joined=`加入于 ${d.getFullYear()}年${d.getMonth()+1}月`;
@@ -894,7 +915,6 @@ function updateProfilePage(){
   document.getElementById('profile-joined').textContent=joined;
   document.getElementById('profile-email2').textContent=email;
   document.getElementById('profile-joined2').textContent=joined;
-  // 统计
   document.getElementById('stat-entries').textContent=entries.length;
   document.getElementById('stat-cats').textContent=customCats.length;
   const days=new Set(entries.map(e=>e.ts.slice(0,10)));
@@ -946,7 +966,6 @@ async function handleImgs(e){
   for(const f of files){
     const isVideo=f.type.startsWith('video/');
     if(isVideo){
-      // 视频上传到 Supabase Storage，只存 URL
       toast('视频上传中…');
       const ext=f.name.split('.').pop()||'mp4';
       const path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
@@ -955,7 +974,6 @@ async function handleImgs(e){
       const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
       pendingImgs.push(publicUrl);
     }else{
-      // 图片继续用 base64
       await new Promise(resolve=>{
         const r=new FileReader();
         r.onload=ev=>{pendingImgs.push(ev.target.result);resolve();};
@@ -974,7 +992,7 @@ function renderImgPrev(){
 }
 function rmImg(i){pendingImgs.splice(i,1);renderImgPrev();}
 
-// ── 录音（支持多条）──
+// ── 录音 ──
 async function toggleRecord(){
   if(mediaRecorder&&mediaRecorder.state==='recording'){stopRec();return;}
   try{
@@ -1014,11 +1032,10 @@ function renderAudioList(){
 }
 function rmAudio(i){pendingAudios.splice(i,1);renderAudioList();}
 
-// ── 编辑模式媒体函数 ──
+// ── 编辑模式媒体 ──
 const editImgs={};
 const editAudios={};
 const editRecorders={};
-
 function triggerEditImg(id){document.getElementById('edit-img-input-'+id).click();}
 async function handleEditImgs(e,id){
   const files=[...e.target.files];
@@ -1057,9 +1074,7 @@ function rmEditImg(id,i){
   editImgs[id].splice(i,1);renderEditImgPrev(id);
 }
 async function toggleEditRecord(id){
-  if(editRecorders[id]&&editRecorders[id].state==='recording'){
-    editRecorders[id].stop();return;
-  }
+  if(editRecorders[id]&&editRecorders[id].state==='recording'){editRecorders[id].stop();return;}
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
     const chunks=[];
@@ -1107,7 +1122,6 @@ function toggleMenu(id){
 function closeMenu(id){document.getElementById(id).style.display='none';}
 function startEditEntry(id){
   document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
-  // 初始化编辑媒体状态（从 entry 复制）
   const entry=entries.find(e=>e.id===id);
   if(entry){editImgs[id]=[...(entry.imgs||[])];editAudios[id]=[...(entry.audios||[])];}
   editingEntryId=id;renderEntries();
@@ -1169,13 +1183,11 @@ async function doChangePwd(){
   const err=document.getElementById('pwd-err');
   if(!cur){err.style.color='#EF4444';err.textContent='请输入当前密码';return;}
   btn.disabled=true;btn.textContent='保存中…';err.textContent='';
-  // 先用当前密码重新验证
   const{error:signInErr}=await sb.auth.signInWithPassword({email:currentUser.email,password:cur});
   if(signInErr){
     err.style.color='#EF4444';err.textContent='当前密码错误';
     btn.disabled=false;btn.textContent='保存';return;
   }
-  // 更新密码
   const{error}=await sb.auth.updateUser({password:p1});
   if(error){
     err.style.color='#EF4444';err.textContent='修改失败：'+error.message;
