@@ -1,6 +1,6 @@
 {
-  "name": "我的时刻",
-  "short_name": "我的时刻",
+  "name": "时刻",
+  "short_name": "时刻",
   "description": "记录每一个真实瞬间",
   "start_url": "/",
   "display": "standalone",
