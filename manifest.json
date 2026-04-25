@@ -1,0 +1,22 @@
+{
+  "name": "我的时刻",
+  "short_name": "我的时刻",
+  "description": "记录每一个真实瞬间",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#34D399",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%2334D399'/><text x='96' y='130' font-size='100' text-anchor='middle'>🌿</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%2334D399'/><text x='256' y='340' font-size='280' text-anchor='middle'>🌿</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
