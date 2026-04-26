@@ -1,4 +1,4 @@
-const CACHE_NAME = 'moment-journal-v4';
+const CACHE_NAME = 'moment-journal-v5';
 
 // 安装时不预缓存任何东西，避免缓存旧文件
 self.addEventListener('install', event => {
