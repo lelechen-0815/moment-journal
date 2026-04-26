@@ -394,7 +394,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
     </div>
     <div class="stats-row">
       <div class="stat-card"><div class="stat-num" id="stat-entries">0</div><div class="stat-label">累计记录</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-days">0</div><div class="stat-label">连续天数</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-days">0</div><div class="stat-label">累计天数</div></div>
       <div class="stat-card"><div class="stat-num" id="stat-cats">0</div><div class="stat-label">我的分类</div></div>
     </div>
     <div class="p-section">
@@ -919,9 +919,7 @@ function updateProfilePage(){
   document.getElementById('stat-entries').textContent=entries.length;
   document.getElementById('stat-cats').textContent=customCats.length;
   const days=new Set(entries.map(e=>e.ts.slice(0,10)));
-  let streak=0,d2=new Date();
-  while(days.has(d2.toISOString().slice(0,10))){streak++;d2.setDate(d2.getDate()-1);}
-  document.getElementById('stat-days').textContent=streak;
+  document.getElementById('stat-days').textContent=days.size;
 }
 function openEmojiPicker(){document.getElementById('emoji-picker').classList.add('show');}
 function closeEmojiPicker(e){if(!e||e.target===document.getElementById('emoji-picker'))document.getElementById('emoji-picker').classList.remove('show');}
