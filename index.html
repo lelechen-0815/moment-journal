@@ -949,6 +949,15 @@ function updateProfilePage(){
   if(!currentUser)return;
   userNickname=currentUser.user_metadata?.nickname||'';
   renderNickname();
+  // 恢复头像
+  const avatarImg=currentUser.user_metadata?.avatar_img||'';
+  const avatarEmoji=currentUser.user_metadata?.avatar_emoji||'';
+  if(avatarImg){
+    document.getElementById('user-avatar').innerHTML=`<img src="${avatarImg}">`;
+  } else if(avatarEmoji){
+    selectedAvatar=avatarEmoji;
+    document.getElementById('user-avatar').innerHTML=`<span id="avatar-content">${avatarEmoji}</span>`;
+  }
   const email=currentUser.email||'—';
   const d=new Date(currentUser.created_at);
   const joined=`加入于 ${d.getFullYear()}年${d.getMonth()+1}月`;
@@ -963,16 +972,24 @@ function updateProfilePage(){
 }
 function openEmojiPicker(){document.getElementById('emoji-picker').classList.add('show');}
 function closeEmojiPicker(e){if(!e||e.target===document.getElementById('emoji-picker'))document.getElementById('emoji-picker').classList.remove('show');}
-function setAvatar(emoji){
+async function setAvatar(emoji){
   selectedAvatar=emoji;
   document.getElementById('user-avatar').innerHTML=`<span id="avatar-content">${emoji}</span>`;
   document.querySelectorAll('.emoji-opt').forEach(o=>o.classList.remove('selected'));
   closeEmojiPicker();
+  await sb.auth.updateUser({data:{avatar_emoji:emoji, avatar_img:''}});
+  toast('头像已保存 🌿');
 }
 function handleAvatarUpload(e){
   const file=e.target.files[0];if(!file)return;
   const r=new FileReader();
-  r.onload=ev=>{document.getElementById('user-avatar').innerHTML=`<img src="${ev.target.result}">`;closeEmojiPicker();};
+  r.onload=async ev=>{
+    const imgData=ev.target.result;
+    document.getElementById('user-avatar').innerHTML=`<img src="${imgData}">`;
+    closeEmojiPicker();
+    await sb.auth.updateUser({data:{avatar_img:imgData, avatar_emoji:''}});
+    toast('头像已保存 🌿');
+  };
   r.readAsDataURL(file);e.target.value='';
 }
 (function(){
