@@ -115,6 +115,7 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .entry-video{width:100%;max-height:220px;border-radius:10px;margin-top:8px;object-fit:contain;background:#000;}
 .video-wrap{position:relative;display:inline-block;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1.5px solid #F3F4F6;cursor:pointer;}
 .video-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
+.video-thumb-canvas{width:100%;height:100%;object-fit:cover;display:block;background:#E5E7EB;}
 .video-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);transition:background .15s;}
 .video-play-btn:hover{background:rgba(0,0,0,0.45);}
 .video-play-btn svg{width:28px;height:28px;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4));}
@@ -857,7 +858,7 @@ function renderEntries(){
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>{
       const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
       const isGif=s.startsWith('data:image/gif')||/\.gif/i.test(s);
-      if(isVid)return`<div class="video-wrap" onclick="openVideoPlayer('${s}')"><video src="${s}" muted playsinline preload="metadata"></video><div class="video-play-btn"><svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="22" fill="white" fill-opacity="0.9"/><polygon points="17,13 34,22 17,31" fill="#1a1a1a"/></svg></div></div>`;
+      if(isVid)return`<div class="video-wrap" onclick="openVideoPlayer('${s}')"><canvas class="video-thumb-canvas" data-src="${s}" width="80" height="80"></canvas><div class="video-play-btn"><svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="22" fill="white" fill-opacity="0.9"/><polygon points="17,13 34,22 17,31" fill="#1a1a1a"/></svg></div></div>`;
       return`<img class="entry-img" src="${s}"${isGif?' style="object-fit:contain"':''}>`;
     }).join('')}</div>`:'';
     const audios=(e.audios||[]).length?`<div class="entry-audio">${(e.audios||[]).map(a=>`<audio controls src="${a}" style="width:100%;height:32px;display:block;margin-bottom:4px"></audio>`).join('')}</div>`:'';
@@ -901,6 +902,8 @@ function renderEntries(){
       ${textBlock}${isEditing?'':imgs+audios}
     </div>`;
   }).join('');
+  // 渲染完后截取视频封面
+  setTimeout(captureVideoThumbs, 50);
 }
 function renderCount(){document.getElementById('total-count').textContent=entries.length+' 条';}
 
@@ -1195,6 +1198,34 @@ async function doChangePwd(){
   document.getElementById('pwd-modal').classList.remove('show');
   toast('密码已修改成功 🔒');
   btn.textContent='保存';
+}
+
+// ── 视频封面截帧 ──
+function captureVideoThumbs(){
+  document.querySelectorAll('.video-thumb-canvas').forEach(canvas=>{
+    if(canvas.dataset.captured)return;
+    canvas.dataset.captured='1';
+    const src=canvas.dataset.src;
+    const video=document.createElement('video');
+    video.src=src;
+    video.muted=true;
+    video.playsInline=true;
+    video.crossOrigin='anonymous';
+    video.currentTime=0.5;
+    video.addEventListener('seeked',()=>{
+      try{
+        const ctx=canvas.getContext('2d');
+        canvas.width=video.videoWidth||80;
+        canvas.height=video.videoHeight||80;
+        ctx.drawImage(video,0,0,canvas.width,canvas.height);
+        video.src='';
+      }catch(e){
+        // 跨域视频无法截帧，保持灰色
+      }
+    },{once:true});
+    video.addEventListener('loadeddata',()=>{video.currentTime=0.5;},{once:true});
+    video.load();
+  });
 }
 
 // ── Boot ──
