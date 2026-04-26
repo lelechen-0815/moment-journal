@@ -895,7 +895,7 @@ function renderEntries(){
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>{
       const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
       const isGif=s.startsWith('data:image/gif')||/\.gif/i.test(s);
-      if(isVid)return`<div class="video-wrap" onclick="openVideoPlayer('${s}')"><canvas class="video-thumb-canvas" data-src="${s}" width="80" height="80"></canvas><div class="video-play-btn"><svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="22" fill="white" fill-opacity="0.9"/><polygon points="17,13 34,22 17,31" fill="#1a1a1a"/></svg></div></div>`;
+      if(isVid){const{url,thumb}=parseVidSrc(s);return`<div class="video-wrap" onclick="openVideoPlayer('${url}')"><div style="width:100%;height:100%;background:#E5E7EB;${thumb?`background-image:url('${thumb}');background-size:cover;background-position:center;`:''}"></div><div class="video-play-btn"><svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="22" fill="white" fill-opacity="0.9"/><polygon points="17,13 34,22 17,31" fill="#1a1a1a"/></svg></div></div>`;}
       return`<img class="entry-img" src="${s}"${isGif?' style="object-fit:contain"':''}>`;
     }).join('')}</div>`:'';
     const audios=(e.audios||[]).length?`<div class="entry-audio">${(e.audios||[]).map(a=>`<audio controls src="${a}" style="width:100%;height:32px;display:block;margin-bottom:4px"></audio>`).join('')}</div>`:'';
@@ -904,8 +904,9 @@ function renderEntries(){
     const textBlock=isEditing
       ?`<textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
         <div class="img-previews" id="edit-img-prev-${e.id}">${curImgs.map((s,i)=>{
-          const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
-          return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmEditImg(${e.id},${i})">×</button></div>`;
+          const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s)||s.includes('::data:image');
+          if(isVid){const{url,thumb}=parseVidSrc(s);return`<div class="img-thumb">${thumb?`<img src="${thumb}" style="width:100%;height:100%;object-fit:cover;">`:`<video src="${url}" muted></video>`}<span class="video-badge">视频</span><button class="img-del" onclick="rmEditImg(${e.id},${i})">×</button></div>`;}
+          return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmEditImg(${e.id},${i})">×</button></div>`;
         }).join('')}</div>
         <div class="audio-list" id="edit-audio-list-${e.id}">${curAudios.map((a,i)=>`<div class="audio-preview"><audio controls src="${a}"></audio><button class="audio-del" onclick="rmEditAudio(${e.id},${i})">×</button></div>`).join('')}</div>
         <div class="media-bar" style="border-top:1px solid #F3F4F6;margin-top:4px;">
@@ -1008,6 +1009,31 @@ function handleAvatarUpload(e){
   });
 })();
 
+// ── 视频截帧工具 ──
+function captureVideoFrame(src){
+  return new Promise(resolve=>{
+    const video=document.createElement('video');
+    video.src=src;
+    video.muted=true;
+    video.playsInline=true;
+    video.currentTime=0.5;
+    video.addEventListener('seeked',()=>{
+      try{
+        const canvas=document.createElement('canvas');
+        canvas.width=video.videoWidth||320;
+        canvas.height=video.videoHeight||240;
+        canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',0.7));
+      }catch(e){resolve('');}
+      video.src='';
+    },{once:true});
+    video.addEventListener('loadeddata',()=>{video.currentTime=0.5;},{once:true});
+    video.addEventListener('error',()=>resolve(''),{once:true});
+    video.load();
+    setTimeout(()=>resolve(''),5000);
+  });
+}
+
 // ── Utils ──
 function fmtTime(iso){
   const d=new Date(iso);
@@ -1023,12 +1049,18 @@ async function handleImgs(e){
     const isVideo=f.type.startsWith('video/');
     if(isVideo){
       toast('视频上传中…');
+      // 先用本地 blob URL 截帧（不跨域，一定能成功）
+      const blobUrl=URL.createObjectURL(f);
+      const thumbData=await captureVideoFrame(blobUrl);
+      URL.revokeObjectURL(blobUrl);
+      // 再上传到 Supabase
       const ext=f.name.split('.').pop()||'mp4';
       const path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
       const{data,error}=await sb.storage.from('media').upload(path,f,{contentType:f.type,upsert:false});
       if(error){toast('视频上传失败：'+error.message);continue;}
       const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
-      pendingImgs.push(publicUrl);
+      // 存格式：video_url::thumb_base64
+      pendingImgs.push(thumbData?`${publicUrl}::${thumbData}`:publicUrl);
     }else{
       await new Promise(resolve=>{
         const r=new FileReader();
@@ -1040,10 +1072,20 @@ async function handleImgs(e){
   }
   e.target.value='';
 }
+function parseVidSrc(s){
+  // 解析 "videoUrl::thumbBase64" 格式
+  const idx=s.indexOf('::data:image');
+  if(idx>-1)return{url:s.slice(0,idx),thumb:s.slice(idx+2)};
+  return{url:s,thumb:''};
+}
 function renderImgPrev(){
   document.getElementById('img-previews').innerHTML=pendingImgs.map((s,i)=>{
-    const isVid=s.startsWith('data:video')||(!s.startsWith('data:')&&/\.(mp4|webm|mov)/i.test(s));
-    return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmImg(${i})">×</button></div>`;
+    const isVid=s.startsWith('data:video')||(!s.startsWith('data:')&&(/\.(mp4|webm|mov)/i.test(s)||s.includes('::data:image')));
+    if(isVid){
+      const{url,thumb}=parseVidSrc(s);
+      return`<div class="img-thumb">${thumb?`<img src="${thumb}" style="width:100%;height:100%;object-fit:cover;">`:`<video src="${url}" muted></video>`}<span class="video-badge">视频</span><button class="img-del" onclick="rmImg(${i})">×</button></div>`;
+    }
+    return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmImg(${i})">×</button></div>`;
   }).join('');
 }
 function rmImg(i){pendingImgs.splice(i,1);renderImgPrev();}
@@ -1101,12 +1143,15 @@ async function handleEditImgs(e,id){
     const isVideo=f.type.startsWith('video/');
     if(isVideo){
       toast('视频上传中…');
+      const blobUrl=URL.createObjectURL(f);
+      const thumbData=await captureVideoFrame(blobUrl);
+      URL.revokeObjectURL(blobUrl);
       const ext=f.name.split('.').pop()||'mp4';
       const path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
       const{data,error}=await sb.storage.from('media').upload(path,f,{contentType:f.type,upsert:false});
       if(error){toast('视频上传失败：'+error.message);continue;}
       const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
-      editImgs[id].push(publicUrl);
+      editImgs[id].push(thumbData?`${publicUrl}::${thumbData}`:publicUrl);
     }else{
       await new Promise(resolve=>{
         const r=new FileReader();
@@ -1121,8 +1166,9 @@ async function handleEditImgs(e,id){
 function renderEditImgPrev(id){
   const el=document.getElementById('edit-img-prev-'+id);if(!el)return;
   el.innerHTML=(editImgs[id]||[]).map((s,i)=>{
-    const isVid=s.startsWith('data:video')||(!s.startsWith('data:')&&/\.(mp4|webm|mov)/i.test(s));
-    return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmEditImg(${id},${i})">×</button></div>`;
+    const isVid=s.startsWith('data:video')||(!s.startsWith('data:')&&(/\.(mp4|webm|mov)/i.test(s)||s.includes('::data:image')));
+    if(isVid){const{url,thumb}=parseVidSrc(s);return`<div class="img-thumb">${thumb?`<img src="${thumb}" style="width:100%;height:100%;object-fit:cover;">`:`<video src="${url}" muted></video>`}<span class="video-badge">视频</span><button class="img-del" onclick="rmEditImg(${id},${i})">×</button></div>`;}
+    return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmEditImg(${id},${i})">×</button></div>`;
   }).join('');
 }
 function rmEditImg(id,i){
@@ -1362,7 +1408,7 @@ function jumpToDate(dateStr){
     const long=e.text&&e.text.length>100;
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>{
       const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
-      if(isVid)return`<div class="video-wrap" onclick="openVideoPlayer('${s}')"><canvas class="video-thumb-canvas" data-src="${s}" width="80" height="80"></canvas><div class="video-play-btn"><svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="white" fill-opacity="0.9"/><polygon points="17,13 34,22 17,31" fill="#1a1a1a"/></svg></div></div>`;
+      if(isVid){const{url,thumb}=parseVidSrc(s);return`<div class="video-wrap" onclick="openVideoPlayer('${url}')"><div style="width:100%;height:100%;background:#E5E7EB;${thumb?`background-image:url('${thumb}');background-size:cover;background-position:center;`:''}"></div><div class="video-play-btn"><svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="white" fill-opacity="0.9"/><polygon points="17,13 34,22 17,31" fill="#1a1a1a"/></svg></div></div>`;}
       return`<img class="entry-img" src="${s}">`;
     }).join('')}</div>`:'';
     const audios=(e.audios||[]).length?`<div class="entry-audio">${(e.audios||[]).map(a=>`<audio controls src="${a}" style="width:100%;height:32px;display:block;margin-bottom:4px"></audio>`).join('')}</div>`:'';
