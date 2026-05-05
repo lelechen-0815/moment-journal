@@ -560,8 +560,8 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 /* ════════════════════════════════════════════
    全局配置 & 初始化
 ════════════════════════════════════════════ */
-const SUPABASE_URL='https://rwvhvfmfxjspnxsitsxj.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3dmh2Zm1meGpzcG54c2l0c3hqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MjM4NDUsImV4cCI6MjA5MDM5OTg0NX0.KUbeye4vC9g3mC1gFyE7hF_4ZXY17xYEBDYrRcbvn-A';
+const SUPABASE_URL='https://taoptzowltnuxjbecuvv.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhb3B0em93bHRudXhqYmVjdXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NTA1MDYsImV4cCI6MjA5MzUyNjUwNn0.SZu_92rsBrrNc9UxYLKnhgdoPqP7qYo1Bk-fNpvfm3U';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const CONFIG={
@@ -810,12 +810,13 @@ async function loadEntries(reset=true){
   if(reset){entriesOffset=0;entriesHasMore=true;entries=[];}
   if(!entriesHasMore)return;
   entriesLoading=true;
+  const from=entriesOffset;
+  const to=entriesOffset+CONFIG.PAGE_SIZE-1;
   const{data,error}=await sb.from('entries')
     .select('*')
     .eq('user_id',currentUser.id)
     .order('ts',{ascending:false})
-    .limit(CONFIG.PAGE_SIZE)
-    .offset(entriesOffset);
+    .range(from,to);
   entriesLoading=false;
   if(error){handleError('记录加载失败',error);renderEntries();renderCount();return;}
   const rows=(data||[]).map(r=>({
