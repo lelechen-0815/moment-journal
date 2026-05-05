@@ -105,23 +105,13 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
 .img-previews{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px;}
 .img-thumb{position:relative;width:72px;height:72px;border-radius:12px;overflow:hidden;border:1.5px solid #E5E7EB;}
 .img-thumb img{width:100%;height:100%;object-fit:cover;}
-.img-thumb video{width:100%;height:100%;object-fit:cover;}
-.img-thumb .video-badge{position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,0.5);color:#fff;font-size:9px;padding:1px 4px;border-radius:4px;pointer-events:none;}
+
 .img-del{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.4);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
 .audio-preview{display:flex;align-items:center;gap:8px;background:#ECFDF5;border-radius:12px;padding:8px 12px;margin:4px 0;}
 .audio-preview audio{flex:1;height:32px;}
 .audio-del{background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:20px;line-height:1;padding:0 4px;}
 .audio-list{display:flex;flex-direction:column;gap:4px;margin:6px 0 4px;}
-.entry-video{width:100%;max-height:220px;border-radius:10px;margin-top:8px;object-fit:contain;background:#000;}
-.video-wrap{position:relative;display:inline-block;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1.5px solid #F3F4F6;cursor:pointer;}
-.video-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
-.video-thumb-canvas{width:100%;height:100%;object-fit:cover;display:block;background:#E5E7EB;}
-.video-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);transition:background .15s;}
-.video-play-btn:hover{background:rgba(0,0,0,0.45);}
-.video-play-btn svg{width:28px;height:28px;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4));}
-.video-fullscreen{position:fixed;inset:0;background:#000;z-index:1000;display:flex;align-items:center;justify-content:center;}
-.video-fullscreen video{max-width:100%;max-height:100%;}
-.video-close-btn{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1001;}
+
 .write-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
 .char-hint{font-size:12px;color:#D1D5DB;}
 .send-btn{display:flex;align-items:center;gap:6px;padding:9px 22px;background:#34D399;color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;}
@@ -335,14 +325,14 @@ body{font-family:-apple-system,system-ui,'Helvetica Neue',sans-serif;}
       <div id="img-previews" class="img-previews"></div>
       <div id="audio-preview"></div>
       <div class="media-bar">
-        <button class="media-btn" onclick="triggerImg()"><span style="font-size:16px">🖼️</span> 图片/视频</button>
+        <button class="media-btn" onclick="triggerImg()"><span style="font-size:16px">🖼️</span> 图片</button>
         <button class="media-btn" id="rec-btn" onclick="toggleRecord()">
           <span style="font-size:16px">🎙️</span>
           <span id="rec-label">语音</span>
           <span class="rec-timer" id="rec-timer" style="display:none"></span>
         </button>
       </div>
-      <input type="file" id="img-input" accept="image/*,image/gif,video/mp4,video/quicktime,video/webm" multiple style="display:none" onchange="handleImgs(event)">
+      <input type="file" id="img-input" accept="image/*,image/gif" multiple style="display:none" onchange="handleImgs(event)">
       <div class="write-footer">
         <span class="char-hint" id="char-hint">0 / 500</span>
         <button class="send-btn" onclick="saveEntry()"><span style="font-size:16px">🌟</span> 记录</button>
@@ -970,17 +960,9 @@ function triggerImg(){document.getElementById('img-input').click();}
 
 async function handleImgs(e){
   const files=[...e.target.files];
-  if(pendingImgs.length+files.length>CONFIG.MAX_IMGS){toast('最多 '+CONFIG.MAX_IMGS+' 张图片/视频');return;}
+  if(pendingImgs.length+files.length>CONFIG.MAX_IMGS){toast('最多 '+CONFIG.MAX_IMGS+' 张图片');return;}
   for(const f of files){
-    if(f.type.startsWith('video/')){
-      toast('视频上传中…');
-      const ext=f.name.split('.').pop()||'mp4';
-      const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;
-      const{error}=await sb.storage.from('media').upload(path,f,{contentType:f.type,upsert:false});
-      if(error){handleError('视频上传失败',error);continue;}
-      const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
-      pendingImgs.push(publicUrl);
-    }else if(f.type==='image/gif'){
+    if(f.type==='image/gif'){
       // GIF 不压缩，保留动画
       const r=new FileReader();
       await new Promise(res=>{r.onload=ev=>{pendingImgs.push(ev.target.result);res();};r.readAsDataURL(f);});
@@ -996,8 +978,7 @@ async function handleImgs(e){
 
 function renderImgPrev(){
   document.getElementById('img-previews').innerHTML=pendingImgs.map((s,i)=>{
-    const isVid=s.startsWith('data:video')||(!s.startsWith('data:')&&/\.(mp4|webm|mov)/i.test(s));
-    return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmImg(${i})">×</button></div>`;
+    return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmImg(${i})">×</button></div>`;
   }).join('');
 }
 function rmImg(i){pendingImgs.splice(i,1);renderImgPrev();}
@@ -1052,17 +1033,9 @@ function triggerEditImg(id){document.getElementById('edit-img-input-'+id).click(
 async function handleEditImgs(e,id){
   const files=[...e.target.files];
   if(!editImgs[id]){const entry=entries.find(x=>x.id===id);editImgs[id]=[...(entry?.imgs||[])];}
-  if(editImgs[id].length+files.length>CONFIG.MAX_IMGS){toast('最多 '+CONFIG.MAX_IMGS+' 张图片/视频');return;}
+  if(editImgs[id].length+files.length>CONFIG.MAX_IMGS){toast('最多 '+CONFIG.MAX_IMGS+' 张图片');return;}
   for(const f of files){
-    if(f.type.startsWith('video/')){
-      toast('视频上传中…');
-      const ext=f.name.split('.').pop()||'mp4';
-      const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;
-      const{error}=await sb.storage.from('media').upload(path,f,{contentType:f.type,upsert:false});
-      if(error){handleError('视频上传失败',error);continue;}
-      const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
-      editImgs[id].push(publicUrl);
-    }else if(f.type==='image/gif'){
+    if(f.type==='image/gif'){
       const r=new FileReader();
       await new Promise(res=>{r.onload=ev=>{editImgs[id].push(ev.target.result);res();};r.readAsDataURL(f);});
     }else{
@@ -1077,8 +1050,7 @@ async function handleEditImgs(e,id){
 function renderEditImgPrev(id){
   const el=document.getElementById('edit-img-prev-'+id);if(!el)return;
   el.innerHTML=(editImgs[id]||[]).map((s,i)=>{
-    const isVid=s.startsWith('data:video')||(!s.startsWith('data:')&&/\.(mp4|webm|mov)/i.test(s));
-    return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmEditImg(${id},${i})">×</button></div>`;
+    return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmEditImg(${id},${i})">×</button></div>`;
   }).join('');
 }
 function rmEditImg(id,i){
@@ -1126,35 +1098,7 @@ function rmEditAudio(id,i){
   editAudios[id].splice(i,1);renderEditAudioList(id);
 }
 
-// ── 视频全屏播放 ──
-function openVideoPlayer(src){
-  const overlay=document.createElement('div');
-  overlay.className='video-fullscreen';
-  overlay.innerHTML=`<video src="${src}" controls autoplay playsinline style="max-width:100%;max-height:100%;border-radius:8px;"></video><button class="video-close-btn" onclick="this.parentElement.remove()">✕</button>`;
-  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
-  document.body.appendChild(overlay);
-}
 
-// ── 视频封面截帧 ──
-function captureVideoThumbs(){
-  document.querySelectorAll('.video-thumb-canvas').forEach(canvas=>{
-    if(canvas.dataset.captured)return;
-    canvas.dataset.captured='1';
-    const src=canvas.dataset.src;
-    const video=document.createElement('video');
-    video.src=src;video.muted=true;video.playsInline=true;video.crossOrigin='anonymous';video.currentTime=0.5;
-    video.addEventListener('seeked',()=>{
-      try{
-        const ctx=canvas.getContext('2d');
-        canvas.width=video.videoWidth||80;canvas.height=video.videoHeight||80;
-        ctx.drawImage(video,0,0,canvas.width,canvas.height);
-        video.src='';
-      }catch(e){}
-    },{once:true});
-    video.addEventListener('loadeddata',()=>{video.currentTime=0.5;},{once:true});
-    video.load();
-  });
-}
 
 /* ════════════════════════════════════════════
    模块四：UI（渲染 / 交互）
@@ -1213,9 +1157,7 @@ function renderEntries(){
     const long=e.text&&e.text.length>100;
     const isEditing=editingEntryId===e.id;
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>{
-      const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
       const isGif=s.startsWith('data:image/gif')||/\.gif/i.test(s);
-      if(isVid)return`<div class="video-wrap" onclick="openVideoPlayer('${s}')"><canvas class="video-thumb-canvas" data-src="${s}" width="80" height="80"></canvas><div class="video-play-btn"><svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="white" fill-opacity="0.9"/><polygon points="17,13 34,22 17,31" fill="#1a1a1a"/></svg></div></div>`;
       return`<img class="entry-img" src="${s}"${isGif?' style="object-fit:contain"':''}>`;
     }).join('')}</div>`:''
     const audios=(e.audios||[]).length?`<div class="entry-audio">${(e.audios||[]).map(a=>`<audio controls src="${a}" style="width:100%;height:32px;display:block;margin-bottom:4px"></audio>`).join('')}</div>`:''
@@ -1224,15 +1166,14 @@ function renderEntries(){
     const textBlock=isEditing
       ?`<textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
         <div class="img-previews" id="edit-img-prev-${e.id}">${curImgs.map((s,i)=>{
-          const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
-          return`<div class="img-thumb">${isVid?`<video src="${s}" muted></video><span class="video-badge">视频</span>`:`<img src="${s}">`}<button class="img-del" onclick="rmEditImg(${e.id},${i})">×</button></div>`;
+          return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmEditImg(${e.id},${i})">×</button></div>`;
         }).join('')}</div>
         <div class="audio-list" id="edit-audio-list-${e.id}">${curAudios.map((a,i)=>`<div class="audio-preview"><audio controls src="${a}"></audio><button class="audio-del" onclick="rmEditAudio(${e.id},${i})">×</button></div>`).join('')}</div>
         <div class="media-bar" style="border-top:1px solid #F3F4F6;margin-top:4px;">
-          <button class="media-btn" onclick="triggerEditImg(${e.id})"><span style="font-size:15px">🖼️</span> 添加图片/视频</button>
+          <button class="media-btn" onclick="triggerEditImg(${e.id})"><span style="font-size:15px">🖼️</span> 添加图片</button>
           <button class="media-btn" id="edit-rec-btn-${e.id}" onclick="toggleEditRecord(${e.id})"><span style="font-size:15px">🎙️</span> <span id="edit-rec-label-${e.id}">录音</span></button>
         </div>
-        <input type="file" id="edit-img-input-${e.id}" accept="image/*,image/gif,video/mp4,video/quicktime,video/webm" multiple style="display:none" onchange="handleEditImgs(event,${e.id})">
+        <input type="file" id="edit-img-input-${e.id}" accept="image/*,image/gif" multiple style="display:none" onchange="handleEditImgs(event,${e.id})">
         <div class="edit-footer">
           <button class="cancel-edit-btn" onclick="cancelEditEntry()">取消</button>
           <button class="save-edit-btn" onclick="saveEditEntry(${e.id})">保存</button>
@@ -1259,7 +1200,6 @@ function renderEntries(){
       ${textBlock}${isEditing?'':imgs+audios}
     </div>`;
   }).join('');
-  setTimeout(captureVideoThumbs,50);
 }
 
 // ── 菜单 & 编辑 ──
@@ -1445,8 +1385,6 @@ function jumpToDate(dateStr){
     const cat=allCats().find(c=>c.id===e.catId)||SYS_CATS[0];
     const long=e.text&&e.text.length>100;
     const imgs=e.imgs?.length?`<div class="entry-imgs">${e.imgs.map(s=>{
-      const isVid=s.startsWith('data:video')||/\.(mp4|webm|mov)/i.test(s);
-      if(isVid)return`<div class="video-wrap" onclick="openVideoPlayer('${s}')"><canvas class="video-thumb-canvas" data-src="${s}" width="80" height="80"></canvas><div class="video-play-btn"><svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="white" fill-opacity="0.9"/><polygon points="17,13 34,22 17,31" fill="#1a1a1a"/></svg></div></div>`;
       return`<img class="entry-img" src="${s}">`;
     }).join('')}</div>`:''
     const audios=(e.audios||[]).length?`<div class="entry-audio">${(e.audios||[]).map(a=>`<audio controls src="${a}" style="width:100%;height:32px;display:block;margin-bottom:4px"></audio>`).join('')}</div>`:''
@@ -1460,7 +1398,6 @@ function jumpToDate(dateStr){
       ${imgs}${audios}
     </div>`;
   }).join('');
-  setTimeout(captureVideoThumbs,50);
 }
 
 /* ════════════════════════════════════════════
