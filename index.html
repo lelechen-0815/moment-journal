@@ -583,7 +583,7 @@ const AVATAR_EMOJIS=['🪴','🌱','🌸','🦋','🌊','⭐','🎯','🍀','�
 // ── 全局状态 ──
 let currentUser=null, customCats=[], entries=[];
 let activeCat=SYS_CATS[0].id, histCat='all';
-let editingCatId=null, editingEntryId=null;
+let editingCatId=null, editingEntryId=null, editingEntryCat={};
 let pendingImgs=[], pendingAudios=[];
 let hintShown=false, selectedAvatar='🪴', userNickname='';
 // 阶段三：分页状态
@@ -1163,8 +1163,20 @@ function renderEntries(){
     const audios=(e.audios||[]).length?`<div class="entry-audio">${(e.audios||[]).map(a=>`<audio controls src="${a}" style="width:100%;height:32px;display:block;margin-bottom:4px"></audio>`).join('')}</div>`:''
     const curImgs=editImgs[e.id]||e.imgs||[];
     const curAudios=editAudios[e.id]||e.audios||[];
+    const editCurCat=allCats().find(c=>c.id===(editingEntryCat[e.id]||e.catId))||SYS_CATS[0];
+    const sysCatOptions=SYS_CATS.map(c=>`<div onclick="setEditCat('${e.id}','${c.id}',event)" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600;" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background=''"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c.color};flex-shrink:0;"></span><span style="color:${c.color};">${c.name}</span></div>`).join('');
+    const customCatOptions=customCats.length?'<div style="height:1px;background:#F3F4F6;margin:4px 0;"></div>'+customCats.map(c=>`<div onclick="setEditCat('${e.id}','${c.id}',event)" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600;" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background=''"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c.color};flex-shrink:0;"></span><span style="color:${c.color};">${c.name}</span></div>`).join(''):'';
     const textBlock=isEditing
-      ?`<textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
+      ?`<div style="position:relative;margin-bottom:12px;">
+          <div id="edit-cat-btn-${e.id}" onclick="toggleEditCatMenu('${e.id}')" style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;background:${editCurCat.color};color:#fff;border:1.5px solid ${editCurCat.color};user-select:none;">
+            <span>${editCurCat.emoji||''}${editCurCat.name}</span>
+            <span style="font-size:10px;opacity:0.8;">▾</span>
+          </div>
+          <div id="edit-cat-menu-${e.id}" style="display:none;position:absolute;top:36px;left:0;background:#fff;border:1.5px solid #E5E7EB;border-radius:14px;padding:6px;min-width:140px;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+            ${sysCatOptions}${customCatOptions}
+          </div>
+        </div>
+        <textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
         <div class="img-previews" id="edit-img-prev-${e.id}">${curImgs.map((s,i)=>{
           return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmEditImg('${e.id}',${i})">×</button></div>`;
         }).join('')}</div>
@@ -1203,6 +1215,11 @@ function renderEntries(){
 }
 
 // ── 菜单 & 编辑 ──
+document.addEventListener('click',function(e){
+  if(!e.target.closest('[id^="edit-cat-btn-"],[id^="edit-cat-menu-"]')){
+    document.querySelectorAll('[id^="edit-cat-menu-"]').forEach(m=>m.style.display='none');
+  }
+});
 function toggleMenu(id){
   const m=document.getElementById(id);
   const show=m.style.display==='none';
@@ -1215,12 +1232,24 @@ function closeMenu(id){document.getElementById(id).style.display='none';}
 function startEditEntry(id){
   document.querySelectorAll('.dropdown').forEach(d=>d.style.display='none');
   const entry=entries.find(e=>e.id===id);
-  if(entry){editImgs[id]=[...(entry.imgs||[])];editAudios[id]=[...(entry.audios||[])];}
+  if(entry){editImgs[id]=[...(entry.imgs||[])];editAudios[id]=[...(entry.audios||[])];editingEntryCat[id]=entry.catId;}
   editingEntryId=id;renderEntries();
   setTimeout(()=>{const ta=document.getElementById('edit-ta-'+id);if(ta){ta.focus();ta.selectionStart=ta.value.length;}},50);
 }
+function toggleEditCatMenu(entryId){
+  const menu=document.getElementById('edit-cat-menu-'+entryId);
+  if(!menu)return;
+  const isHidden=menu.style.display==='none';
+  document.querySelectorAll('[id^="edit-cat-menu-"]').forEach(m=>m.style.display='none');
+  menu.style.display=isHidden?'block':'none';
+}
+function setEditCat(entryId,catId,event){
+  if(event)event.stopPropagation();
+  editingEntryCat[entryId]=catId;
+  renderEntries();
+}
 function cancelEditEntry(){
-  if(editingEntryId){delete editImgs[editingEntryId];delete editAudios[editingEntryId];}
+  if(editingEntryId){delete editImgs[editingEntryId];delete editAudios[editingEntryId];delete editingEntryCat[editingEntryId];}
   editingEntryId=null;renderEntries();
 }
 function toggleExpand(id){const e=entries.find(e=>e.id===id);if(e){e.expanded=!e.expanded;renderEntries();}}
