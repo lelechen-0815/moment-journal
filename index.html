@@ -814,7 +814,8 @@ async function loadEntries(reset=true){
     .select('*')
     .eq('user_id',currentUser.id)
     .order('ts',{ascending:false})
-    .range(entriesOffset,entriesOffset+CONFIG.PAGE_SIZE-1);
+    .limit(CONFIG.PAGE_SIZE)
+    .offset(entriesOffset);
   entriesLoading=false;
   if(error){handleError('记录加载失败',error);renderEntries();renderCount();return;}
   const rows=(data||[]).map(r=>({
