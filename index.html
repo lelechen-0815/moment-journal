@@ -561,6 +561,15 @@ const SUPABASE_URL='https://rwvhvfmfxjspnxsitsxj.supabase.co';
 const SUPABASE_KEY='sb_publishable_rqF_nrCa3h8tstmvrErb8g_it_apdp1';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
+// ── 应用配置常量 ──
+const CONFIG={
+  PASSWORD_RESET_REDIRECT: window.location.origin+'/reset.html',
+  MAX_IMGS: 9,
+  MAX_REC_SECONDS: 60,
+  LONG_PRESS_MS: 600,
+  MAX_TEXT_LEN: 500,
+};
+
 const SYS_CATS=[
   {id:'daily', name:'日常', emoji:'☀️', color:'#B45309', bg:'#FFFBEB'},
   {id:'food',  name:'吃饭', emoji:'🍜', color:'#B91C1C', bg:'#FEF2F2'},
@@ -629,7 +638,7 @@ async function doForgotPwd(){
   const err=document.getElementById('login-err');
   if(!email){err.style.color='#EF4444';err.textContent='请先填写邮箱';return;}
   err.style.color='#9CA3AF';err.textContent='发送中…';
-  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://my-moment-journal.com/reset.html'});
+  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:CONFIG.PASSWORD_RESET_REDIRECT});
   if(error){err.style.color='#EF4444';err.textContent='发送失败，请重试';}
   else{err.style.color='#059669';err.textContent='重置邮件已发送，请查收邮箱 📬';}
 }
@@ -807,7 +816,7 @@ async function addCat(){
   const name=inp.value.trim();
   if(!name)return;
   if(allCats().find(c=>c.name===name)){toast('分类名称已存在');inp.value='';return;}
-  const id='cat_'+Date.now();
+  const id='cat_'+crypto.randomUUID();
   const p=CAT_COLORS[customCats.length%CAT_COLORS.length];
   customCats.push({id,name,emoji:'',color:p.color,bg:p.bg});
   inp.value='';renderHomeCats();renderHistCats();updateProfilePage();
@@ -822,7 +831,7 @@ function startPress(id,el){
     el.classList.remove('pressing');
     navigator.vibrate&&navigator.vibrate(30);
     openCatModal(id);
-  },600);
+  },CONFIG.LONG_PRESS_MS);
 }
 function endPress(){
   pressActive=false;
@@ -878,7 +887,7 @@ async function loadEntries(){
 async function saveEntry(){
   const text=document.getElementById('write-text').value.trim();
   if(!text&&!pendingImgs.length&&!pendingAudios.length){toast('请输入内容再记录');return;}
-  const id=Date.now(),ts=new Date().toISOString();
+  const id=crypto.randomUUID(),ts=new Date().toISOString();
   const entry={id,catId:activeCat,text,imgs:[...pendingImgs],audios:[...pendingAudios],ts,expanded:false};
   entries.unshift(entry);
   document.getElementById('write-text').value='';
@@ -1039,22 +1048,21 @@ function fmtTime(iso){
   return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+
     ' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
-function updateChar(){document.getElementById('char-hint').textContent=document.getElementById('write-text').value.length+' / 500';}
+function updateChar(){document.getElementById('char-hint').textContent=document.getElementById('write-text').value.length+' / '+CONFIG.MAX_TEXT_LEN;}
 function triggerImg(){document.getElementById('img-input').click();}
 async function handleImgs(e){
   const files=[...e.target.files];
-  if(pendingImgs.length+files.length>9){toast('最多 9 张图片/视频');return;}
+  if(pendingImgs.length+files.length>CONFIG.MAX_IMGS){toast('最多 '+CONFIG.MAX_IMGS+' 张图片/视频');return;}
   for(const f of files){
     const isVideo=f.type.startsWith('video/');
     if(isVideo){
       toast('视频上传中…');
       const ext=f.name.split('.').pop()||'mp4';
-      const path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;
       const{data,error}=await sb.storage.from('media').upload(path,f,{contentType:f.type,upsert:false});
       if(error){toast('视频上传失败：'+error.message);continue;}
       const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
-      // 存格式：video_url::thumb_base64
-      pendingImgs.push(thumbData?`${publicUrl}::${thumbData}`:publicUrl);
+      pendingImgs.push(publicUrl);
     }else{
       await new Promise(resolve=>{
         const r=new FileReader();
@@ -1095,7 +1103,7 @@ async function toggleRecord(){
     recInterval=setInterval(()=>{
       recSeconds++;
       document.getElementById('rec-timer').textContent=String(Math.floor(recSeconds/60)).padStart(2,'0')+':'+String(recSeconds%60).padStart(2,'0');
-      if(recSeconds>=60){stopRec();toast('最长录音 60 秒');}
+      if(recSeconds>=CONFIG.MAX_REC_SECONDS){stopRec();toast('最长录音 '+CONFIG.MAX_REC_SECONDS+' 秒');}
     },1000);
   }catch{toast('无法访问麦克风，请确认在 HTTPS 下使用并允许权限');}
 }
@@ -1122,13 +1130,13 @@ function triggerEditImg(id){document.getElementById('edit-img-input-'+id).click(
 async function handleEditImgs(e,id){
   const files=[...e.target.files];
   if(!editImgs[id]){const entry=entries.find(x=>x.id===id);editImgs[id]=[...(entry?.imgs||[])];}
-  if(editImgs[id].length+files.length>9){toast('最多 9 张图片/视频');return;}
+  if(editImgs[id].length+files.length>CONFIG.MAX_IMGS){toast('最多 '+CONFIG.MAX_IMGS+' 张图片/视频');return;}
   for(const f of files){
     const isVideo=f.type.startsWith('video/');
     if(isVideo){
       toast('视频上传中…');
       const ext=f.name.split('.').pop()||'mp4';
-      const path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;
       const{data,error}=await sb.storage.from('media').upload(path,f,{contentType:f.type,upsert:false});
       if(error){toast('视频上传失败：'+error.message);continue;}
       const{data:{publicUrl}}=sb.storage.from('media').getPublicUrl(path);
