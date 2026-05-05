@@ -1166,20 +1166,20 @@ function renderEntries(){
     const textBlock=isEditing
       ?`<textarea class="edit-area" id="edit-ta-${e.id}" rows="4">${e.text||''}</textarea>
         <div class="img-previews" id="edit-img-prev-${e.id}">${curImgs.map((s,i)=>{
-          return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmEditImg(${e.id},${i})">×</button></div>`;
+          return`<div class="img-thumb"><img src="${s}"><button class="img-del" onclick="rmEditImg('${e.id}',${i})">×</button></div>`;
         }).join('')}</div>
-        <div class="audio-list" id="edit-audio-list-${e.id}">${curAudios.map((a,i)=>`<div class="audio-preview"><audio controls src="${a}"></audio><button class="audio-del" onclick="rmEditAudio(${e.id},${i})">×</button></div>`).join('')}</div>
+        <div class="audio-list" id="edit-audio-list-${e.id}">${curAudios.map((a,i)=>`<div class="audio-preview"><audio controls src="${a}"></audio><button class="audio-del" onclick="rmEditAudio('${e.id}',${i})">×</button></div>`).join('')}</div>
         <div class="media-bar" style="border-top:1px solid #F3F4F6;margin-top:4px;">
-          <button class="media-btn" onclick="triggerEditImg(${e.id})"><span style="font-size:15px">🖼️</span> 添加图片</button>
-          <button class="media-btn" id="edit-rec-btn-${e.id}" onclick="toggleEditRecord(${e.id})"><span style="font-size:15px">🎙️</span> <span id="edit-rec-label-${e.id}">录音</span></button>
+          <button class="media-btn" onclick="triggerEditImg('${e.id}')"><span style="font-size:15px">🖼️</span> 添加图片</button>
+          <button class="media-btn" id="edit-rec-btn-${e.id}" onclick="toggleEditRecord('${e.id}')"><span style="font-size:15px">🎙️</span> <span id="edit-rec-label-${e.id}">录音</span></button>
         </div>
-        <input type="file" id="edit-img-input-${e.id}" accept="image/*,image/gif" multiple style="display:none" onchange="handleEditImgs(event,${e.id})">
+        <input type="file" id="edit-img-input-${e.id}" accept="image/*,image/gif" multiple style="display:none" onchange="handleEditImgs(event,'${e.id}')">
         <div class="edit-footer">
           <button class="cancel-edit-btn" onclick="cancelEditEntry()">取消</button>
-          <button class="save-edit-btn" onclick="saveEditEntry(${e.id})">保存</button>
+          <button class="save-edit-btn" onclick="saveEditEntry('${e.id}')">保存</button>
         </div>`
-      :`${e.text?`<div class="entry-text${long&&!e.expanded?' clamped':''}" onclick="toggleExpand(${e.id})">${e.text}</div>`:''}
-        ${long?`<div class="expand-hint" onclick="toggleExpand(${e.id})">${e.expanded?'↑ 收起':'↓ 展开'}</div>`:''}`;
+      :`${e.text?`<div class="entry-text${long&&!e.expanded?' clamped':''}" onclick="toggleExpand('${e.id}')">${e.text}</div>`:''}
+        ${long?`<div class="expand-hint" onclick="toggleExpand('${e.id}')">${e.expanded?'↑ 收起':'↓ 展开'}</div>`:''}`;
     return`<div class="entry-card">
       <div class="entry-top">
         <div class="entry-badge" style="background:${cat.bg};color:${cat.color}">
@@ -1190,9 +1190,9 @@ function renderEntries(){
           <div style="position:relative">
             <button class="more-btn" onclick="toggleMenu('menu-${e.id}')">···</button>
             <div class="dropdown" id="menu-${e.id}" style="display:none">
-              <button class="dropdown-item" onclick="startEditEntry(${e.id})">编辑</button>
+              <button class="dropdown-item" onclick="startEditEntry('${e.id}')">编辑</button>
               <button class="dropdown-item" onclick="closeMenu('menu-${e.id}')">取消</button>
-              <button class="dropdown-item danger" onclick="deleteEntry(${e.id})">删除</button>
+              <button class="dropdown-item danger" onclick="deleteEntry('${e.id}')">删除</button>
             </div>
           </div>
         </div>
@@ -1393,8 +1393,8 @@ function jumpToDate(dateStr){
         <div class="entry-badge" style="background:${cat.bg};color:${cat.color}"><span style="font-size:13px">${cat.emoji||''}</span>${cat.name}</div>
         <div class="entry-right"><span class="entry-time">${fmtTime(e.ts)}</span></div>
       </div>
-      ${e.text?`<div class="entry-text${long&&!e.expanded?' clamped':''}" onclick="toggleExpand(${e.id})">${e.text}</div>`:''}
-      ${long?`<div class="expand-hint" onclick="toggleExpand(${e.id})">${e.expanded?'↑ 收起':'↓ 展开'}</div>`:''}
+      ${e.text?`<div class="entry-text${long&&!e.expanded?' clamped':''}" onclick="toggleExpand('${e.id}')">${e.text}</div>`:''}
+      ${long?`<div class="expand-hint" onclick="toggleExpand('${e.id}')">${e.expanded?'↑ 收起':'↓ 展开'}</div>`:''}
       ${imgs}${audios}
     </div>`;
   }).join('');
